@@ -66,6 +66,11 @@ const defaultMenu = [
     icon: 'BiAbacus',
     path: '/admin/stockmovementvehicle',
   },
+  {
+    name: 'Transaction',
+    icon: 'BiAbacus',
+    path: '/admin/transaction',
+  },
 ];
 
 

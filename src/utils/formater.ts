@@ -120,6 +120,7 @@ export const displayMoney = (value: number, locales: string = 'in-ID'): string =
 }
 
 export const displayTon = (kg: number, locales: string = 'in-ID'): string => {
-	const ton = kg / 1000;
+	// const ton = kg / 1000;
+	const ton = kg ;
 	return displayNumber(ton, locales) + ' ton';
 }

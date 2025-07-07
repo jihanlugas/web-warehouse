@@ -19,6 +19,7 @@ import { useState, useEffect } from 'react';
 import TextFieldNumber from '@/components/formik/text-field-number';
 import { PageWarehouse, WarehouseView } from '@/types/warehouse';
 import { PageVehicle, VehicleView } from '@/types/vehicle';
+import { displayNumber } from '@/utils/formater';
 
 
 type Props = object
@@ -315,7 +316,7 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <div>Net Quantity</div>
-                      <div>{(parseFloat(values.sentGrossQuantity as string || "0") - parseFloat(values.sentTareQuantity as string || "0")) }</div>
+                      <div>{displayNumber((parseFloat(values.sentGrossQuantity as string || "0") - parseFloat(values.sentTareQuantity as string || "0")))}</div>
                     </div>
                     <div className="mb-8 max-w-xl">
                       <ButtonSubmit

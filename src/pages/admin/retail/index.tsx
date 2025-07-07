@@ -89,8 +89,12 @@ const Index: NextPage<Props> = () => {
   const [filter, setFilter] = useState<PageRetail>({
     customerId: '',
     notes: '',
-    startTotalAmount: '',
-    endTotalAmount: '',
+    startTotalPrice: '',
+    endTotalPrice: '',
+    startTotalPayment: '',
+    endTotalPayment: '',
+    startOutstanding: '',
+    endOutstanding: '',
     startCreateDt: '',
     endCreateDt: '',
   })
@@ -139,9 +143,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full'>
-              <span>{getValue() as string}</span>
-            </div>
+          <div className='w-full'>
+            <span>{getValue() as string}</span>
+          </div>
         )
       },
     },
@@ -158,9 +162,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full'>
-              <span>{getValue() as string}</span>
-            </div>
+          <div className='w-full'>
+            <span>{getValue() as string}</span>
+          </div>
         )
       },
     },
@@ -176,9 +180,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full capitalize'>
-              <span>{displayMoney(getValue() as number)}</span>
-            </div>
+          <div className='w-full capitalize'>
+            <span>{displayMoney(getValue() as number)}</span>
+          </div>
         )
       },
     },
@@ -194,9 +198,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full capitalize'>
-              {displayDateTime(getValue() as string)}
-            </div>
+          <div className='w-full capitalize'>
+            {displayDateTime(getValue() as string)}
+          </div>
         )
       },
     },

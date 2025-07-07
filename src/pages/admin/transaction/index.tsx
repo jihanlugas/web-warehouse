@@ -2,7 +2,7 @@ import Breadcrumb from "@/components/component/breadcrumb";
 import ModalDeleteVerify from "@/components/modal/modal-delete-verify";
 import Table from "@/components/table/table";
 import { Api } from "@/lib/api";
-import { PurchaseorderView, PagePurchaseorder } from "@/types/purchaseorder";
+import { TransactionView, PageTransaction } from "@/types/transaction";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo } from "@/types/pagination";
 import { displayDateTime, displayMoney } from "@/utils/formater";
@@ -18,21 +18,19 @@ import { useEffect, useRef, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import { CgChevronDown } from "react-icons/cg";
 import { TbFilter, TbFilterFilled } from "react-icons/tb";
-import ModalFilter from "@/components/modal/modal-filter-purchaseorder";
+import ModalFilter from "@/components/modal/modal-filter-transaction";
 import MainAdmin from "@/components/layout/main-admin";
-import ModalPurchaseorderTransaction from "@/components/modal/modal-purchaseorder-transaction";
+import { CustomerView } from "@/types/customer";
 
 type Props = object
 
 type PropsDropdownMore = {
   toggleModalDelete: (id: string, name: string) => void
-  toggleModalTransaction: (id: string, refresh?: boolean) => void
 }
 
-const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDropdownMore> = ({
+const DropdownMore: NextPage<CellContext<TransactionView, unknown> & PropsDropdownMore> = ({
   row,
   toggleModalDelete,
-  toggleModalTransaction,
 }) => {
   const refMore = useRef<HTMLDivElement>(null);
   const [moreBar, setMoreBar] = useState(false);
@@ -59,11 +57,6 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
     toggleModalDelete(id, name)
   }
 
-  const handleClickTransaction = (id) => {
-    setMoreBar(false);
-    toggleModalTransaction(id)
-  }
-
   return (
     <div className="relative inline-block py-2 text-right" ref={refMore}>
       <button className="flex justify-center items-center text-primary-500" type="button" onClick={() => setMoreBar(!moreBar)} >
@@ -72,16 +65,12 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          <button onClick={() => handleClickTransaction(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
-            {'Transaction'}
-          </button>
-          <hr className="border-b border-gray-200" />
-          <Link href={{ pathname: '/admin/purchaseorder/[id]', query: { id: row.original.id } }}>
+          <Link href={{ pathname: '/admin/transaction/[id]', query: { id: row.original.id } }}>
             <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'} title='Edit'>
               {'Detail'}
             </div>
           </Link>
-          <button onClick={() => handleClickDelete(row.original.id, row.original.number)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+          <button onClick={() => handleClickDelete(row.original.id, row.original.amount)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Delete'}
           </button>
         </div>
@@ -92,25 +81,19 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
 
 const Index: NextPage<Props> = () => {
 
-  const [purchaseorder, setPurchaseorder] = useState<PurchaseorderView[]>([]);
+  const [transaction, setTransaction] = useState<TransactionView[]>([]);
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
-  const [showModalTransaction, setShowModalTransaction] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
-  const [selectedId, setSelectedId] = useState<string>('');
 
-  const [filter, setFilter] = useState<PagePurchaseorder>({
+  const [filter, setFilter] = useState<PageTransaction>({
     customerId: '',
-    notes: '',
-    startTotalPrice: '',
-    endTotalPrice: '',
-    startTotalPayment: '',
-    endTotalPayment: '',
-    startOutstanding: '',
-    endOutstanding: '',
-    startCreateDt: '',
-    endCreateDt: '',
+    relatedId: '',
+    relatedType: '',
+    createName: '',
+    startAmount: '',
+    endAmount: '',
   })
 
   const [pageInfo, setPageInfo] = useState<PageInfo>({
@@ -120,20 +103,20 @@ const Index: NextPage<Props> = () => {
     page: 0,
   });
 
-  const [pageRequest, setPageRequest] = useState<PagePurchaseorder>({
+  const [pageRequest, setPageRequest] = useState<PageTransaction>({
     limit: 10,
     page: 1,
-    preloads: "Customer",
+    preloads: "Customer,Purchaseorder,Retail",
   });
 
-  const column: ColumnDef<PurchaseorderView>[] = [
+  const column: ColumnDef<TransactionView>[] = [
     {
-      id: 'number',
-      accessorKey: 'number',
+      id: 'related_type',
+      accessorKey: 'relatedType',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Purchaseorder Number"}
+            {"Type"}
           </div>
         );
       },
@@ -141,6 +124,25 @@ const Index: NextPage<Props> = () => {
         return (
           <div className='w-full capitalize'>
             <span data-tooltip-id={`tootltip-name-${row.original.id}`}>{getValue() as string}</span>
+          </div>
+        )
+      },
+    },
+    {
+      id: 'customer',
+      accessorKey: 'customer',
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"Customer"}
+          </div>
+        );
+      },
+      cell: ({ getValue, row }) => {
+        const customer = getValue() as CustomerView
+        return (
+          <div className='w-full capitalize'>
+            <span data-tooltip-id={`tootltip-name-${row.original.id}`}>{customer?.name}</span>
           </div>
         )
       },
@@ -164,91 +166,18 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'customer',
-      accessorKey: 'customer.name',
-      enableSorting: false,
+      id: 'amount',
+      accessorKey: 'amount',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Customer"}
+            {"Amount"}
           </div>
         );
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full'>
-              <span>{getValue() as string}</span>
-            </div>
-        )
-      },
-    },
-    {
-      id: 'status',
-      accessorKey: 'status',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Status"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-            <div className='w-full'>
-              <span>{getValue() as string}</span>
-            </div>
-        )
-      },
-    },
-    {
-      id: 'total_price',
-      accessorKey: 'totalPrice',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Total Price"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-            <div className='w-full capitalize text-right'>
-              <span>{displayMoney(getValue() as number)}</span>
-            </div>
-        )
-      },
-    },
-    {
-      id: 'total_payment',
-      accessorKey: 'totalPayment',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Total Payment"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-            <div className='w-full capitalize text-right'>
-              <span>{displayMoney(getValue() as number)}</span>
-            </div>
-        )
-      },
-    },
-    {
-      id: 'outstanding',
-      accessorKey: 'outstanding',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Outstanding"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-            <div className='w-full capitalize text-right'>
+            <div className='w-full text-right'>
               <span>{displayMoney(getValue() as number)}</span>
             </div>
         )
@@ -283,7 +212,6 @@ const Index: NextPage<Props> = () => {
         return (
           <DropdownMore
             toggleModalDelete={toggleModalDelete}
-            toggleModalTransaction={toggleModalTransaction}
             {...props}
           />
         );
@@ -292,13 +220,13 @@ const Index: NextPage<Props> = () => {
   ]
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['purchaseorder', pageRequest],
-    queryFn: ({ queryKey }) => Api.get('/purchaseorder', queryKey[1] as object),
+    queryKey: ['transaction', pageRequest],
+    queryFn: ({ queryKey }) => Api.get('/transaction', queryKey[1] as object),
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationKey: ['purchaseorder', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/purchaseorder/' + id)
+    mutationKey: ['transaction', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/transaction/' + id)
   });
 
   const toggleModalFilter = () => {
@@ -309,14 +237,6 @@ const Index: NextPage<Props> = () => {
     setDeleteId(id);
     setDeleteVerify(verify);
     setShowModalDelete(!showModalDelete);
-  };
-
-  const toggleModalTransaction = (id = '', refresh = false) => {
-    setSelectedId(id);
-    setShowModalTransaction(!showModalTransaction);
-    if (refresh) {
-      refetch()
-    }
   };
 
   const handleDelete = () => {
@@ -339,7 +259,7 @@ const Index: NextPage<Props> = () => {
 
   useEffect(() => {
     if (data?.status) {
-      setPurchaseorder(data.payload.list);
+      setTransaction(data.payload.list);
       setPageInfo({
         pageCount: data.payload.totalPage,
         pageSize: data.payload.dataPerPage,
@@ -361,7 +281,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Purchaseorder'}</title>
+        <title>{process.env.APP_NAME + ' - Transaction'}</title>
       </Head>
       <ModalFilter
         show={showModalFilter}
@@ -381,15 +301,10 @@ const Index: NextPage<Props> = () => {
           <div className='text-sm mb-4 text-gray-700'>Data related to this will also be deleted</div>
         </div>
       </ModalDeleteVerify>
-      <ModalPurchaseorderTransaction
-        show={showModalTransaction}
-        onClickOverlay={toggleModalTransaction}
-        id={selectedId}
-      />
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Purchaseorder', path: '' },
+            { name: 'Transaction', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -405,10 +320,10 @@ const Index: NextPage<Props> = () => {
                   </button>
                 </div>
                 <div className='ml-4'>
-                  <Link href={{ pathname: '/admin/purchaseorder/new' }}>
+                  <Link href={{ pathname: '/admin/transaction/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Purchaseorder</div>
+                      <div>New Transaction</div>
                     </div>
                   </Link>
                 </div>
@@ -417,7 +332,7 @@ const Index: NextPage<Props> = () => {
             <div className=''>
               <Table
                 columns={column}
-                data={purchaseorder}
+                data={transaction}
                 setPageRequest={setPageRequest}
                 pageRequest={pageRequest}
                 pageInfo={pageInfo}

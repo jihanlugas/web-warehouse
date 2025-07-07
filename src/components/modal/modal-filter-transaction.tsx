@@ -1,5 +1,5 @@
 import Modal from "@/components/modal/modal";
-import { PagePurchaseorder } from "@/types/purchaseorder";
+import { PageTransaction } from "@/types/transaction";
 import { NextPage } from "next/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
@@ -7,19 +7,20 @@ import { Form, Formik } from "formik";
 import * as Yup from 'yup';
 import ButtonSubmit from "@/components/formik/button-submit";
 import TextField from "@/components/formik/text-field";
+import TextAreaField from "@/components/formik/text-area-field";
 import DateField from "@/components/formik/date-field";
-import { Api } from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
-import { CustomerView, PageCustomer } from "@/types/customer";
-import DropdownField from "../formik/dropdown-field";
 import TextFieldNumber from "../formik/text-field-number";
+import { CustomerView, PageCustomer } from "@/types/customer";
+import { Api } from "@/lib/api";
+import DropdownField from "../formik/dropdown-field";
+import { useQuery } from "@tanstack/react-query";
 
 
 type Props = {
   show: boolean;
   onClickOverlay: () => void;
-  filter: PagePurchaseorder
-  setFilter: Dispatch<SetStateAction<PagePurchaseorder>>
+  filter: PageTransaction
+  setFilter: Dispatch<SetStateAction<PageTransaction>>
 }
 
 const pageRequestCustomer: PageCustomer = {
@@ -29,9 +30,9 @@ const pageRequestCustomer: PageCustomer = {
 const schema = Yup.object().shape({
 });
 
-const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
+const ModalFilterTransaction: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
 
-  const [initFormikValue, setInitFormikValue] = useState<PagePurchaseorder>(filter)
+  const [initFormikValue, setInitFormikValue] = useState<PageTransaction>(filter)
   const [customers, setCustomers] = useState<CustomerView[]>([]);
 
   const { isLoading: isLoadingCustomer, data: dataCustomer } = useQuery({
@@ -39,7 +40,7 @@ const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filte
     queryFn: ({ queryKey }) => Api.get('/customer', queryKey[1] as object),
   });
 
-  const handleSubmit = async (values: PagePurchaseorder) => {
+  const handleSubmit = async (values: PageTransaction) => {
     setFilter(values)
     onClickOverlay()
   }
@@ -47,14 +48,11 @@ const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filte
   const handleClear = () => {
     setFilter({
       customerId: '',
-      notes: '',
+      relatedId: '',
+      relatedType: '',
       createName: '',
-      startTotalPrice: '',
-      endTotalPrice: '',
-      startTotalPayment: '',
-      endTotalPayment: '',
-      startOutstanding: '',
-      endOutstanding: '',
+      startAmount: '',
+      endAmount: '',
       startCreateDt: '',
       endCreateDt: '',
     })
@@ -86,7 +84,7 @@ const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filte
     <Modal show={show} onClickOverlay={() => onClickOverlay()} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Filter Purchaseorder</div>
+          <div>Filter Transaction</div>
           <button type="button" onClick={() => onClickOverlay()} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -118,46 +116,22 @@ const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filte
                     </div>
                     <div className="mb-4">
                       <TextField
-                        label={'Notes'}
-                        name={'notes'}
+                        label={'Transaction Name'}
+                        name={'name'}
                         type={'text'}
-                        placeholder={'Notes'}
+                        placeholder={'Transaction Name'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <TextFieldNumber
-                        label={'Total Price From'}
-                        name={'startTotalPrice'}
-                        placeholder={'Total Price From'}
+                        label={'Amount From'}
+                        name={'startAmount'}
+                        placeholder={'Amount From'}
                       />
                       <TextFieldNumber
-                        label={'Total Price To'}
-                        name={'endTotalPrice'}
-                        placeholder={'Total Price To'}
-                      />
-                    </div>
-                    <div className="mb-4 grid grid-cols-2 gap-2">
-                      <TextFieldNumber
-                        label={'Total Payment From'}
-                        name={'startTotalPayment'}
-                        placeholder={'Total Payment From'}
-                      />
-                      <TextFieldNumber
-                        label={'Total Payment To'}
-                        name={'endTotalPayment'}
-                        placeholder={'Total Payment To'}
-                      />
-                    </div>
-                    <div className="mb-4 grid grid-cols-2 gap-2">
-                      <TextFieldNumber
-                        label={'Outstanding From'}
-                        name={'startOutstanding'}
-                        placeholder={'Outstanding From'}
-                      />
-                      <TextFieldNumber
-                        label={'Outstanding To'}
-                        name={'endOutstanding'}
-                        placeholder={'Outstanding To'}
+                        label={'Amount To'}
+                        name={'endAmount'}
+                        placeholder={'Amount To'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
@@ -196,4 +170,4 @@ const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filte
   )
 }
 
-export default ModalFilterPurchaseorder;
+export default ModalFilterTransaction;

@@ -14,6 +14,7 @@ import moment from "moment";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ModalConfirm from "@/components/modal/modal-confirm";
 import ModalEditInbound from "@/components/modal/modal-edit-inbound";
+import { PiFolderOpenDuotone } from "react-icons/pi";
 
 type Props = object
 
@@ -159,34 +160,35 @@ const Index: NextPage<Props> = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {inbound.map((data) => (
                         <div key={data.id} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
-                          <div className="flex justify-between mb-4">
-                            <div className="text-xl">
-                              <div className="mb-2">{data.number}</div>
-                              <div className="mb-2">
-                                <div className="text-base">{data?.stockmovement?.fromWarehouse?.name}</div>
-                              </div>
-                              <div className="mb-2">
-                                <div className="text-sm uppercase">{data?.vehicle?.plateNumber}</div>
-                                <div className="text-sm">{data?.vehicle?.driverName}</div>
-                              </div>
-                              <div className="text-sm flex">
-                                <div className="">{'Sent time : '}</div>
-                                <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
-                              </div>
-                              <div className="text-sm flex">
-                                <div className="">{'Recived time : '}</div>
-                                <div className="ml-4">{data.recivedTime ? displayDateTime(data.recivedTime) : '-'}</div>
+                          <div className="flex justify-between items-center">
+                            <div className="text-base">
+                              <div className="font-bold">{data.number}</div>
+                              <div className="">
+                                <div className="">{data?.stockmovement?.fromWarehouse?.name}</div>
                               </div>
                             </div>
-                            <div>
-                              <DeliveryState inbound={data} />
+                            <div><DeliveryState inbound={data} /></div>
+                          </div>
+                          <hr className="my-2 border-gray-200" />
+                          <div className="mb-2">
+                            <div className="mb-2">
+                              <div className="text-sm uppercase">{data?.vehicle?.plateNumber}</div>
+                              <div className="text-sm">{data?.vehicle?.driverName}</div>
+                            </div>
+                            <div className="text-sm flex">
+                              <div className="">{'Sent time : '}</div>
+                              <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
+                            </div>
+                            <div className="text-sm flex">
+                              <div className="">{'Recived time : '}</div>
+                              <div className="ml-4">{data.recivedTime ? displayDateTime(data.recivedTime) : '-'}</div>
                             </div>
                           </div>
                           <div className="text-right text-xs mb-2">
                             <div className="">{data.createName}</div>
                             <div>{displayDateTime(data.createDt)}</div>
                           </div>
-                          <hr className="mb-4 border-gray-200" />
+                          <hr className="my-2 border-gray-200" />
                           <div className="text-primary-400 flex justify-end">
                             {data.recivedTime ? (
                               <button
@@ -226,7 +228,12 @@ const Index: NextPage<Props> = () => {
                       ))}
                     </div>
                   ) : (
-                    <div>No Data</div>
+                    <div className='w-full text-center my-16'>
+                      <div className='flex justify-center items-center mb-4'>
+                        <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
+                      </div>
+                      <div className="text-xl">{'No data found'}</div>
+                    </div>
                   )}
                 </div>
               )}

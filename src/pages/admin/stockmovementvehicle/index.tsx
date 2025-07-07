@@ -87,7 +87,8 @@ const Index: NextPage<Props> = () => {
   const [deleteVerify, setDeleteVerify] = useState<string>('');
 
   const [filter, setFilter] = useState<PageStockmovementvehicle>({
-    stockmovementId: '',
+    fromWarehouseId: '',
+    toWarehouseId: '',
     productId: '',
     vehicleId: '',
     startSentGrossQuantity: '',
@@ -209,7 +210,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Destination"}
+            {"Status"}
           </div>
         );
       },

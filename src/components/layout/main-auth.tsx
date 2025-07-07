@@ -6,11 +6,11 @@ import SidebarAdmin from '@/components/layout/sidebar-admin';
 import { Api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
 import { AiOutlineLoading } from 'react-icons/ai'
-import { UserView } from '@/types/user';
 import { USER_ROLE_ADMIN } from '@/utils/constant';
+import { LoginUser } from '@/types/auth';
 
 type Props = {
-  children: React.ReactNode
+  children: React.ReactElement<{ loginUser: LoginUser }>
 }
 
 const Loading: React.FC = () => {
@@ -25,19 +25,19 @@ const Loading: React.FC = () => {
 
 const MainAuth: React.FC<Props> = ({ children }) => {
   const [sidebar, setSidebar] = useState<boolean>(false);
-  const [user, setUser] = useState<UserView>();
-
-
-  const { data: loginUser, isLoading } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
-
-  const { data: dataRefreshToken } = useQuery({
-    queryKey: ['refresh-token'],
-    queryFn: () => Api.get('/auth/refresh-token'),
-    refetchInterval: 1000 * 60 * (process.env.REFRESH_TOKEN_MINUTES as unknown as number),
-  })
+    const [loginUser, setLoginUser] = useState<LoginUser>();
+  
+  
+    const { data: dataLoginUser, isLoading } = useQuery({
+      queryKey: ['init'],
+      queryFn: () => Api.get('/auth/init'),
+    })
+  
+    const { data: dataRefreshToken } = useQuery({
+      queryKey: ['refresh-token'],
+      queryFn: () => Api.get('/auth/refresh-token'),
+      refetchInterval: 1000 * 60 * (process.env.REFRESH_TOKEN_MINUTES as unknown as number),
+    })
 
   useEffect(() => {
     if (dataRefreshToken && dataRefreshToken.status) {
@@ -54,8 +54,10 @@ const MainAuth: React.FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
-    setUser(loginUser?.payload?.user)
-  }, [loginUser])
+    if (dataLoginUser?.status) {
+      setLoginUser(dataLoginUser?.payload)
+    }
+  }, [dataLoginUser])
 
 
   return (
@@ -64,16 +66,16 @@ const MainAuth: React.FC<Props> = ({ children }) => {
         <meta name="theme-color" content={'currentColor'} />
       </Head>
       <main className={''}>
-        {!isLoading && user ? (
+        {!isLoading && loginUser ? (
           <>
             <Header sidebar={sidebar} setSidebar={setSidebar} />
-            {user.role === USER_ROLE_ADMIN ? (
+            {loginUser.user.role === USER_ROLE_ADMIN ? (
               <SidebarAdmin sidebar={sidebar} onClickOverlay={onClickOverlay} />
             ) : (
-              <SidebarUser sidebar={sidebar} onClickOverlay={onClickOverlay} userprivilege={user.userprivilege} />
+              <SidebarUser sidebar={sidebar} onClickOverlay={onClickOverlay} userprivilege={loginUser.user.userprivilege} />
             )}
             <div className={`block duration-300 ease-in-out pt-16 min-h-svh overflow-y-auto`}>
-              {children}
+              {React.isValidElement(children) ? React.cloneElement(children, { loginUser }) : children}
             </div>
           </>
         ) : (

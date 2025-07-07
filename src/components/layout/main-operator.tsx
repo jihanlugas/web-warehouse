@@ -5,12 +5,12 @@ import SidebarOperator from '@/components/layout/sidebar-operator';
 import { Api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
 import { AiOutlineLoading } from 'react-icons/ai'
-import { UserView } from '@/types/user';
 import { USER_ROLE_OPERATOR } from '@/utils/constant';
 import { useRouter } from 'next/router';
+import { LoginUser } from '@/types/auth';
 
 type Props = {
-  children: React.ReactNode
+  children: React.ReactElement<{ loginUser: LoginUser }>
 }
 
 const Loading: React.FC = () => {
@@ -25,10 +25,10 @@ const MainOperator: React.FC<Props> = ({ children }) => {
   const router = useRouter();
 
   const [sidebar, setSidebar] = useState<boolean>(false);
-  const [user, setUser] = useState<UserView>();
+  const [loginUser, setLoginUser] = useState<LoginUser>();
 
 
-  const { data: loginUser, isLoading } = useQuery({
+  const { data: dataLoginUser, isLoading } = useQuery({
     queryKey: ['init'],
     queryFn: () => Api.get('/auth/init'),
   })
@@ -54,15 +54,16 @@ const MainOperator: React.FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
-    setUser(loginUser?.payload?.user)
-  }, [loginUser])
+    if (dataLoginUser?.status) {
+      setLoginUser(dataLoginUser?.payload)
+    }
+  }, [dataLoginUser])
 
   useEffect(() => {
-    if (user && user.role !== USER_ROLE_OPERATOR) {
+    if (loginUser?.user && loginUser?.user.role !== USER_ROLE_OPERATOR) {
       router.replace('/404')
     }
-  }, [user])
-
+  }, [loginUser])
 
   return (
     <>
@@ -70,16 +71,16 @@ const MainOperator: React.FC<Props> = ({ children }) => {
         <meta name="theme-color" content={'currentColor'} />
       </Head>
       <main className={''}>
-        {!isLoading && user ? (
+        {!isLoading && loginUser ? (
           <>
             <Header sidebar={sidebar} setSidebar={setSidebar} />
             <SidebarOperator
               sidebar={sidebar}
               onClickOverlay={onClickOverlay}
-              userprivilege={user.userprivilege}
+              userprivilege={loginUser.user.userprivilege}
             />
             <div className={`block duration-300 ease-in-out pt-16 min-h-svh overflow-y-auto`}>
-              {children}
+              {React.isValidElement(children) ? React.cloneElement(children, { loginUser }) : children}
             </div>
           </>
         ) : (

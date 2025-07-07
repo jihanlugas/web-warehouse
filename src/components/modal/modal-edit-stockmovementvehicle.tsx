@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { UpdateOutbound } from "@/types/outbound";
+import { UpdateStockmovementvehiclePurcahseorder } from "@/types/stockmovementvehicle";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -24,7 +24,7 @@ const schema = Yup.object().shape({
 
 });
 
-const defaultInitFormikValue: UpdateOutbound = {
+const defaultInitFormikValue: UpdateStockmovementvehiclePurcahseorder = {
   sentGrossQuantity: '',
   sentTareQuantity: '',
   sentNetQuantity: '',
@@ -34,20 +34,20 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
 
-  const [initFormikValue, setInitFormikValue] = useState<UpdateOutbound>(defaultInitFormikValue)
+  const [initFormikValue, setInitFormikValue] = useState<UpdateStockmovementvehiclePurcahseorder>(defaultInitFormikValue)
 
   const preloads = ''
   const { data, isLoading } = useQuery({
-    queryKey: ['outbound', selectedId, preloads],
+    queryKey: ['stockmovementvehicle', selectedId, preloads],
     queryFn: ({ queryKey }) => {
       const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/outbound/' + selectedId, { preloads }) : null
+      return selectedId ? Api.get('/stockmovementvehicle/' + selectedId, { preloads }) : null
     },
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['outbound', 'update', selectedId],
-    mutationFn: (val: FormikValues) => Api.put('/outbound/' + selectedId, val),
+    mutationKey: ['stockmovementvehicle', 'purchaseorder', 'update', selectedId],
+    mutationFn: (val: FormikValues) => Api.put('/stockmovementvehicle/purchaseorder/' + selectedId, val),
   });
 
 
@@ -71,7 +71,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     }
   }, [show, id])
 
-  const handleSubmit = async (values: UpdateOutbound, formikHelpers: FormikHelpers<UpdateOutbound>) => {
+  const handleSubmit = async (values: UpdateStockmovementvehiclePurcahseorder, formikHelpers: FormikHelpers<UpdateStockmovementvehiclePurcahseorder>) => {
     values.sentGrossQuantity = parseFloat(values.sentGrossQuantity as string) || 0
     values.sentTareQuantity = parseFloat(values.sentTareQuantity as string) || 0
     values.sentNetQuantity = values.sentGrossQuantity - values.sentTareQuantity
@@ -96,7 +96,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Edit Outbound</div>
+          <div>Edit Delivery</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>

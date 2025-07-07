@@ -5,12 +5,12 @@ import SidebarAdmin from '@/components/layout/sidebar-admin';
 import { Api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
 import { AiOutlineLoading } from 'react-icons/ai'
-import { UserView } from '@/types/user';
 import { USER_ROLE_ADMIN } from '@/utils/constant';
 import { useRouter } from 'next/router';
+import { LoginUser } from '@/types/auth';
 
 type Props = {
-  children: React.ReactNode
+  children: React.ReactElement<{ loginUser: LoginUser }>
 }
 
 const Loading: React.FC = () => {
@@ -27,10 +27,10 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
   const router = useRouter();
 
   const [sidebar, setSidebar] = useState<boolean>(false);
-  const [user, setUser] = useState<UserView>();
+  const [loginUser, setLoginUser] = useState<LoginUser>();
 
 
-  const { data: loginUser, isLoading } = useQuery({
+  const { data: dataLoginUser, isLoading } = useQuery({
     queryKey: ['init'],
     queryFn: () => Api.get('/auth/init'),
   })
@@ -56,14 +56,14 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
-    setUser(loginUser?.payload?.user)
-  }, [loginUser])
+    setLoginUser(dataLoginUser?.payload)
+  }, [dataLoginUser])
 
   useEffect(() => {
-    if (user && user.role !== USER_ROLE_ADMIN) {
+    if (dataLoginUser?.user && dataLoginUser?.user?.role !== USER_ROLE_ADMIN) {
       router.replace('/404')
     }
-  }, [user])
+  }, [dataLoginUser])
 
 
   return (
@@ -72,12 +72,12 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
         <meta name="theme-color" content={'currentColor'} />
       </Head>
       <main className={''}>
-        {!isLoading && user ? (
+        {!isLoading && loginUser ? (
           <>
             <Header sidebar={sidebar} setSidebar={setSidebar} />
             <SidebarAdmin sidebar={sidebar} onClickOverlay={onClickOverlay} />
             <div className={`block duration-300 ease-in-out pt-16 min-h-svh overflow-y-auto`}>
-              {children}
+              {React.isValidElement(children) ? React.cloneElement(children, { loginUser }) : children}
             </div>
           </>
         ) : (

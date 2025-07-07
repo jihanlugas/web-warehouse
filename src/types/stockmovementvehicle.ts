@@ -1,4 +1,6 @@
 import { Paging } from "./pagination";
+import { PurchaseorderView } from "./purchaseorder";
+import { RetailView } from "./retail";
 import { StockmovementView } from "./stockmovement";
 import { VehicleView } from "./vehicle";
 
@@ -26,40 +28,39 @@ export declare interface StockmovementvehicleView {
     vehicle?: VehicleView;
     stockmovement?: StockmovementView;
     stockmovementvehicle?: StockmovementvehicleView;
+    purchaseorder?: PurchaseorderView;
+    retail?: RetailView;
 }
 
-export declare interface CreateStockmovementvehicle {
-    stockmovementId: string;
+export declare interface CreateStockmovementvehiclePurcahseorder {
+    fromWarehouseId: string;
+    purchaseorderId: string;
     productId: string;
+    isNewVehiclerdriver: boolean;
+    plateNumber: string;
     vehicleId: string;
-    sentGrossQuantity: number;
-    sentTareQuantity: number;
-    sentNetQuantity: number;
-    sentTime?: string;
-    recivedGrossQuantity: number;
-    recivedTareQuantity: number;
-    recivedNetQuantity: number;
-    recivedTime?: string;
+    vehicleName: string;
+    nik: string;
+    driverName: string;
+    phoneNumber: string;
+    sentGrossQuantity: string | number;
+    sentTareQuantity: string | number;
+    sentNetQuantity: string | number;
 }
 
-export declare interface UpdateStockmovementvehicle  {
-    stockmovementId: string;
-    productId: string;
-    vehicleId: string;
-    sentGrossQuantity: number;
-    sentTareQuantity: number;
-    sentNetQuantity: number;
-    sentTime?: string;
-    recivedGrossQuantity: number;
-    recivedTareQuantity: number;
-    recivedNetQuantity: number;
-    recivedTime?: string;
+export declare interface UpdateStockmovementvehiclePurcahseorder {
+    sentGrossQuantity: string | number;
+    sentTareQuantity: string | number;
+    sentNetQuantity: string | number;
 }
 
 export declare interface PageStockmovementvehicle extends Paging {
-    stockmovementId?: string;
+    fromWarehouseId?: string;
+    toWarehouseId?: string;
+    type?: string;
     productId?: string;
     vehicleId?: string;
+    relatedId?: string;
     startSentGrossQuantity?: string | number;
     startSentTareQuantity?: string | number;
     startSentNetQuantity?: string | number;

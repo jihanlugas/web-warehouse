@@ -3,7 +3,7 @@ import ModalDeleteVerify from "@/components/modal/modal-delete-verify";
 import { Api } from "@/lib/api";
 import { StockinView, PageStockin } from "@/types/stockin";
 import PageWithLayoutType from "@/types/layout";
-import { displayDateTime, displayNumber, displayTon } from "@/utils/formater";
+import { displayDateTime, displayTon } from "@/utils/formater";
 import notif from "@/utils/notif";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Head from "next/head";
@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
+import { PiFolderOpenDuotone } from "react-icons/pi";
 
 type Props = object
 
@@ -121,7 +122,9 @@ const Index: NextPage<Props> = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {stockin.map((data, key) => (
                         <div key={key} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
-                          <div className="text-lg">{displayTon(data.netQuantity)}</div>
+                          <div className="text-lg">{data?.product?.name}</div>
+                          <div className="">{displayTon(data.netQuantity)}</div>
+                          <hr className="my-2 border-gray-200" />
                           <div className="text-sm">{data.remark}</div>
                           <div className="text-sm text-right mt-4">
                             <div className="">{displayDateTime(data.createDt)}</div>
@@ -131,7 +134,12 @@ const Index: NextPage<Props> = () => {
                       ))}
                     </div>
                   ) : (
-                    <div>No Data</div>
+                    <div className='w-full text-center my-16'>
+                      <div className='flex justify-center items-center mb-4'>
+                        <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
+                      </div>
+                      <div className="text-xl">{'No data found'}</div>
+                    </div>
                   )}
                 </div>
               )}

@@ -4,6 +4,7 @@ import { WarehouseView } from "./warehouse";
 
 export declare interface UserView {
     id: string;
+    warehouseId: string;
     role: string;
     email: string;
     username: string;

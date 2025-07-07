@@ -1,14 +1,17 @@
 import { CustomerView } from "./customer";
 import { Paging } from "./pagination";
 import { StockmovementView } from "./stockmovement";
-import { TransactionView } from "./transtaction";
+import { TransactionView } from "./transaction";
 
 export declare interface RetailView {
     id: string;
     customerId: string;
-    totalAmount: number;
+    totalPrice: number;
+    totalPayment: number;
+    outstanding: number;
     notes: string;
     number: string;
+    status: string;
     createBy: string;
     createDt: string;
     updateBy: string;
@@ -63,8 +66,14 @@ export declare interface UpdateRetailStockmomentvehicle {
 export declare interface PageRetail extends Paging {
     customerId?: string;
     notes?: string;
-    startTotalAmount?: string | number;
-    endTotalAmount?: string | number;
+    number?: string;
+    status?: string;
+    startTotalPrice?: string | number;
+    endTotalPrice?: string | number;
+    startTotalPayment?: string | number;
+    endTotalPayment?: string | number;
+    startOutstanding?: string | number;
+    endOutstanding?: string | number;
     createName?: string;
     startCreateDt?: string | DateConstructor;
     endCreateDt?: string | DateConstructor;

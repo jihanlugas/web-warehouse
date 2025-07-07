@@ -1,5 +1,7 @@
 import { Paging } from "./pagination";
 import { ProductView } from "./product";
+import { PurchaseorderView } from "./purchaseorder";
+import { RetailView } from "./retail";
 import { WarehouseView } from "./warehouse";
 
 export declare interface StockmovementView {
@@ -19,6 +21,8 @@ export declare interface StockmovementView {
     fromWarehouse?: WarehouseView;
     toWarehouse?: WarehouseView;
     product?: ProductView;
+    purchaseorder?: PurchaseorderView;
+    retail?: RetailView;
 }
 
 export declare interface CreateStockmovement {

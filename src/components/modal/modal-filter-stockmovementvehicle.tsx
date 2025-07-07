@@ -32,7 +32,10 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
 
   const handleClear = () => {
     setFilter({
-      stockmovementId: '',
+      fromWarehouseId: '',
+      toWarehouseId: '',
+      type: '',
+      relatedId: '',
       productId: '',
       vehicleId: '',
       startSentGrossQuantity: '',

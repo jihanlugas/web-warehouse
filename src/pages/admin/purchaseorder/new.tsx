@@ -84,12 +84,6 @@ const New: NextPage<Props> = () => {
   const [customers, setCustomers] = useState<CustomerView[]>([]);
   const [products, setProducts] = useState<ProductView[]>([]);
 
-
-  const { data: loginUser } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
-
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['purchaseorder', 'create'],
     mutationFn: (val: FormikValues) => Api.post('/purchaseorder', val),
@@ -123,8 +117,8 @@ const New: NextPage<Props> = () => {
   const handleChangeCustomerType = (setFieldValue, val: boolean) => {
     setFieldValue('isNewCustomer', val);
     setFieldValue('customerId', '');
-    setFieldValue('newCustomer', '');
-    setFieldValue('newCustomerPhone', '');
+    setFieldValue('customerName', '');
+    setFieldValue('customerPhoneNumber', '');
   }
 
   const handleSubmit = async (values: CreatePurchaseorder, formikHelpers: FormikHelpers<CreatePurchaseorder>) => {

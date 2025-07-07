@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { UpdateInbound } from "@/types/inbound";
+import { InboundView, UpdateInbound } from "@/types/inbound";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import ButtonSubmit from "@/components/formik/button-submit";
 import notif from "@/utils/notif";
 import TextFieldNumber from "../formik/text-field-number";
+import { displayDateTime, displayNumber } from "@/utils/formater";
 
 
 type Props = {
@@ -32,10 +33,11 @@ const defaultInitFormikValue: UpdateInbound = {
 const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
+  const [inbound, setInbound] = useState<InboundView>(null)
 
   const [initFormikValue, setInitFormikValue] = useState<UpdateInbound>(defaultInitFormikValue)
 
-  const preloads = ''
+  const preloads = 'Stockmovement,Stockmovement.FromWarehouse'
   const { data, isLoading } = useQuery({
     queryKey: ['inbound', selectedId, preloads],
     queryFn: ({ queryKey }) => {
@@ -53,6 +55,7 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   useEffect(() => {
     if (data) {
       if (data?.status) {
+        setInbound(data.payload)
         setInitFormikValue({
           recivedGrossQuantity: data.payload.recivedGrossQuantity,
           recivedTareQuantity: data.payload.recivedTareQuantity,
@@ -66,6 +69,7 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     if (show) {
       setSelectedId(id)
     } else {
+      setInbound(null)
       setSelectedId('')
     }
   }, [show, id])
@@ -95,7 +99,7 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Edit Inbound</div>
+          <div>{inbound?.number}</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -109,46 +113,70 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
           </div>
         ) : (
           <div>
-            <div className="ml-auto">
-              <Formik
-                initialValues={initFormikValue}
-                validationSchema={schema}
-                enableReinitialize={true}
-                onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
-              >
-                {({ values }) => {
-                  return (
-                    <Form noValidate={true}>
-                      <div className="mb-4">
-                        <TextFieldNumber
-                          label={'Tare Quantity'}
-                          name={`recivedTareQuantity`}
-                          placeholder={'Tare Quantity'}
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <TextFieldNumber
-                          label={'Gross Quantity'}
-                          name={`recivedGrossQuantity`}
-                          placeholder={'Gross Quantity'}
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <div>Net Quantity</div>
-                      <div>{(parseFloat(values.recivedGrossQuantity as string || "0") - parseFloat(values.recivedTareQuantity as string || "0"))}</div>
-                      </div>
-                      <div className="mb-4">
-                        <ButtonSubmit
-                          label={'Save'}
-                          disabled={isPending}
-                          loading={isPending}
-                        />
-                      </div>
-                    </Form>
-                  )
-                }}
-              </Formik>
-            </div>
+            {inbound && (
+              <div className="ml-auto">
+                <div className="mb-4">
+                  <div className="text-lg mb-2">
+                    <div>{inbound.stockmovement?.fromWarehouse?.name}</div>
+                  </div>
+                  <div className="mb-2 grid grid-cols-2 gap-4">
+                    <div className="">Tare Quantity</div>
+                    <div className="">{displayNumber(inbound.sentTareQuantity)}</div>
+                  </div>
+                  <div className="mb-2 grid grid-cols-2 gap-4">
+                    <div className="">Gross Quantity</div>
+                    <div className="">{displayNumber(inbound.sentGrossQuantity)}</div>
+                  </div>
+                  <div className="mb-2 grid grid-cols-2 gap-4">
+                    <div className="">Net Quantity</div>
+                    <div className="">{displayNumber(inbound.sentNetQuantity)}</div>
+                  </div>
+                  <div className="mb-2 grid grid-cols-2 gap-4">
+                    <div className="">Sent Time</div>
+                    <div className="">{displayDateTime(inbound.sentTime)}</div>
+                  </div>
+                </div>
+                <hr className="border-gray-300 my-2" />
+                <Formik
+                  initialValues={initFormikValue}
+                  validationSchema={schema}
+                  enableReinitialize={true}
+                  onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
+                >
+                  {({ values }) => {
+                    return (
+                      <Form noValidate={true}>
+                        <div className="mb-4">
+                          <TextFieldNumber
+                            label={'Tare Quantity'}
+                            name={`recivedTareQuantity`}
+                            placeholder={'Tare Quantity'}
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <TextFieldNumber
+                            label={'Gross Quantity'}
+                            name={`recivedGrossQuantity`}
+                            placeholder={'Gross Quantity'}
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <div>Net Quantity</div>
+                          <div>{displayNumber((parseFloat(values.recivedGrossQuantity as string || "0") - parseFloat(values.recivedTareQuantity as string || "0")))}</div>
+                        </div>
+                        <div className="mb-4">
+                          <ButtonSubmit
+                            label={'Save'}
+                            disabled={isPending}
+                            loading={isPending}
+                          />
+                        </div>
+                      </Form>
+                    )
+                  }}
+                </Formik>
+              </div>
+            )}
           </div>
         )}
       </div>
