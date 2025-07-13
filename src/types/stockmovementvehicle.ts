@@ -1,4 +1,5 @@
 import { Paging } from "./pagination";
+import { ProductView } from "./product";
 import { PurchaseorderView } from "./purchaseorder";
 import { RetailView } from "./retail";
 import { StockmovementView } from "./stockmovement";
@@ -30,9 +31,10 @@ export declare interface StockmovementvehicleView {
     stockmovementvehicle?: StockmovementvehicleView;
     purchaseorder?: PurchaseorderView;
     retail?: RetailView;
+    product?: ProductView;
 }
 
-export declare interface CreateStockmovementvehiclePurcahseorder {
+export declare interface CreateStockmovementvehiclePurchaseorder {
     fromWarehouseId: string;
     purchaseorderId: string;
     productId: string;
@@ -48,7 +50,29 @@ export declare interface CreateStockmovementvehiclePurcahseorder {
     sentNetQuantity: string | number;
 }
 
-export declare interface UpdateStockmovementvehiclePurcahseorder {
+export declare interface UpdateStockmovementvehiclePurchaseorder {
+    sentGrossQuantity: string | number;
+    sentTareQuantity: string | number;
+    sentNetQuantity: string | number;
+}
+
+export declare interface CreateStockmovementvehicleRetail {
+    fromWarehouseId: string;
+    retailId: string;
+    productId: string;
+    isNewVehiclerdriver: boolean;
+    plateNumber: string;
+    vehicleId: string;
+    vehicleName: string;
+    nik: string;
+    driverName: string;
+    phoneNumber: string;
+    sentGrossQuantity: string | number;
+    sentTareQuantity: string | number;
+    sentNetQuantity: string | number;
+}
+
+export declare interface UpdateStockmovementvehicleRetail {
     sentGrossQuantity: string | number;
     sentTareQuantity: string | number;
     sentNetQuantity: string | number;

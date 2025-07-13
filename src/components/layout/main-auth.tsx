@@ -68,7 +68,7 @@ const MainAuth: React.FC<Props> = ({ children }) => {
       <main className={''}>
         {!isLoading && loginUser ? (
           <>
-            <Header sidebar={sidebar} setSidebar={setSidebar} />
+            <Header sidebar={sidebar} setSidebar={setSidebar} loginUser={loginUser} />
             {loginUser.user.role === USER_ROLE_ADMIN ? (
               <SidebarAdmin sidebar={sidebar} onClickOverlay={onClickOverlay} />
             ) : (

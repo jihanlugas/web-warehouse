@@ -135,7 +135,7 @@ const Index: NextPage<Props> = () => {
       <ModalConfirm
         show={showModalConfirm}
         onClickOverlay={toggleModalConfirm}
-        onDelete={handleRecived}
+        onConfirm={handleRecived}
         isLoading={isPendingRecived}
       >
         <div>

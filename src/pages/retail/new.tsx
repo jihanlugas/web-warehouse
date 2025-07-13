@@ -15,8 +15,8 @@ import DropdownField from '@/components/formik/dropdown-field';
 import { useState, useEffect } from 'react';
 import TextFieldNumber from '@/components/formik/text-field-number';
 import { PageVehicle, VehicleView } from '@/types/vehicle';
-import { PagePurchaseorder, PurchaseorderView } from '@/types/purchaseorder';
-import { CreateStockmovementvehiclePurchaseorder } from '@/types/stockmovementvehicle';
+import { PageRetail, RetailView } from '@/types/retail';
+import { CreateStockmovementvehicleRetail } from '@/types/stockmovementvehicle';
 import { displayMoney, displayNumber, displayPhoneNumber } from '@/utils/formater';
 
 
@@ -24,7 +24,7 @@ type Props = object
 
 const schema = Yup.object().shape({
   isNewVehiclerdriver: Yup.boolean(),
-  purchaseorderId: Yup.string().required('Required Field'),
+  retailId: Yup.string().required('Required Field'),
   vehicleId: Yup.string().when('isNewVehiclerdriver', {
     is: false,
     then: schema => schema.required('Customer is required'),
@@ -55,10 +55,10 @@ const schema = Yup.object().shape({
   sentNetQuantity: Yup.number(),
 });
 
-const initFormikValue: CreateStockmovementvehiclePurchaseorder = {
+const initFormikValue: CreateStockmovementvehicleRetail = {
   isNewVehiclerdriver: false,
   fromWarehouseId: '',
-  purchaseorderId: '',
+  retailId: '',
   productId: '',
   plateNumber: '',
   vehicleId: '',
@@ -71,9 +71,9 @@ const initFormikValue: CreateStockmovementvehiclePurchaseorder = {
   sentNetQuantity: '',
 }
 
-const pageRequestPurchaseorder: PagePurchaseorder = {
+const pageRequestRetail: PageRetail = {
   limit: -1,
-  preloads: "Customer,Stockmovements,Stockmovements.Product,Purchaseorderproducts,Purchaseorderproducts.Product",
+  preloads: "Customer,Stockmovements,Stockmovements.Product,Retailproducts,Retailproducts.Product",
   status: "OPEN",
 }
 
@@ -84,9 +84,9 @@ const pageRequestVehicle: PageVehicle = {
 const New: NextPage<Props> = () => {
 
   const router = useRouter();
-  const [purchaseorder, setPurchaseorder] = useState<PurchaseorderView>(null);
+  const [retail, setRetail] = useState<RetailView>(null);
   const [products, setProducts] = useState<unknown[]>([]);
-  const [purchaseorders, setPurchaseorders] = useState<(PurchaseorderView & {label: string})[]>([]);
+  const [retails, setRetails] = useState<(RetailView & {label: string})[]>([]);
   const [vehicles, setVehicles] = useState<VehicleView[]>([]);
 
 
@@ -96,14 +96,13 @@ const New: NextPage<Props> = () => {
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['stockmovementvehicle', 'purchaseorder', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/stockmovementvehicle/purchaseorder', val),
+    mutationKey: ['stockmovementvehicle', 'retail', 'create'],
+    mutationFn: (val: FormikValues) => Api.post('/stockmovementvehicle/retail', val),
   });
 
-  
-  const { isLoading: isLoadingPurchaseorder, data: dataPurchaseorder } = useQuery({
-    queryKey: ['purchaseorder', pageRequestPurchaseorder],
-    queryFn: ({ queryKey }) => Api.get('/purchaseorder', queryKey[1] as object),
+  const { isLoading: isLoadingRetail, data: dataRetail } = useQuery({
+    queryKey: ['retail', pageRequestRetail],
+    queryFn: ({ queryKey }) => Api.get('/retail', queryKey[1] as object),
   });
 
   const { isLoading: isLoadingVehicle, data: dataVehicle } = useQuery({
@@ -113,18 +112,18 @@ const New: NextPage<Props> = () => {
 
 
   useEffect(() => {
-    if (dataPurchaseorder?.status) {
+    if (dataRetail?.status) {
       const newList = []
-      dataPurchaseorder.payload.list.map(data => {
+      dataRetail.payload.list.map(data => {
         newList.push({
           ...data,
           label: data.number + ' | ' + data.customer.name
         })
       })
-      setPurchaseorders(newList);
-      // setPurchaseorders(dataPurchaseorder.payload.list);
+      setRetails(newList);
+      // setRetails(dataRetail.payload.list);
     }
-  }, [dataPurchaseorder]);
+  }, [dataRetail]);
 
   useEffect(() => {
     if (dataVehicle?.status) {
@@ -141,7 +140,7 @@ const New: NextPage<Props> = () => {
     setFieldValue('phoneNumber', '');
   }
 
-  const handleSubmit = async (values: CreateStockmovementvehiclePurchaseorder, formikHelpers: FormikHelpers<CreateStockmovementvehiclePurchaseorder>) => {
+  const handleSubmit = async (values: CreateStockmovementvehicleRetail, formikHelpers: FormikHelpers<CreateStockmovementvehicleRetail>) => {
     values.fromWarehouseId = loginUser.payload.user.warehouseId
     values.sentGrossQuantity = parseFloat(values.sentGrossQuantity as string) || 0
     values.sentTareQuantity = parseFloat(values.sentTareQuantity as string) || 0
@@ -151,7 +150,7 @@ const New: NextPage<Props> = () => {
         if (status) {
           notif.success(message);
           // formikHelpers.resetForm();
-          router.push('/purchaseorder')
+          router.push('/retail')
         } else if (payload?.listError) {
           formikHelpers.setErrors(payload.listError);
         } else {
@@ -164,28 +163,28 @@ const New: NextPage<Props> = () => {
     });
   }
 
-  const handleChangePurchaseorder = (e, setFieldValue) => {
+  const handleChangeRetail = (e, setFieldValue) => {
     const newProduct = []
-    const data = purchaseorders.find(purchaseorder => purchaseorder.id == e.target.value)
-    purchaseorders.find(purchaseorder => purchaseorder.id == e.target.value)
-    setFieldValue('purchaseorderId', e.target.value)
+    const data = retails.find(retail => retail.id == e.target.value)
+    retails.find(retail => retail.id == e.target.value)
+    setFieldValue('retailId', e.target.value)
 
-    data.purchaseorderproducts.map(purchaseorderproduct => {
-      newProduct.push({id: purchaseorderproduct.product?.id, name: purchaseorderproduct.product?.name})
+    data.retailproducts.map(retailproduct => {
+      newProduct.push({id: retailproduct.product?.id, name: retailproduct.product?.name})
     })
     setProducts(newProduct)
-    setPurchaseorder(data)
+    setRetail(data)
   }
 
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - New Purchase Order'}</title>
+        <title>{process.env.APP_NAME + ' - New Retail'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Purcahse Order', path: '/purchaseorder' },
+            { name: 'Purcahse Order', path: '/retail' },
             { name: 'New', path: '' },
           ]}
         />
@@ -205,28 +204,29 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-2 max-w-xl">
                       <DropdownField
-                        label={"Purchaseorder"}
-                        name={"purchaseorderId"}
-                        items={purchaseorders}
+                        label={"Retail"}
+                        name={"retailId"}
+                        items={retails}
                         keyValue={"id"}
                         keyLabel={"label"}
-                        isLoading={isLoadingPurchaseorder}
-                        placeholder="Select Purchaseorder"
+                        isLoading={isLoadingRetail}
+                        placeholder="Select Retail"
                         placeholderValue={""}
                         field={true}
-                        onChange={(e) => handleChangePurchaseorder(e, setFieldValue)}
+                        onChange={(e) => handleChangeRetail(e, setFieldValue)}
                         required
                       />
                     </div>
-                    {purchaseorder && (
+                    {retail && (
                       <div className='max-w-xl bg-gray-100 p-2 rounded'>
-                        <div className='text-lg font-bold'>{purchaseorder.number}</div>
-                        <div className='mb-2'>{purchaseorder.customer?.name}</div>
-                        <div className='mb-2'>{displayPhoneNumber(purchaseorder.customer?.phoneNumber)}</div>
+                        <div className='text-lg font-bold'>{retail.number}</div>
+                        <div className='mb-2'>{retail.customer?.name}</div>
+                        <div className='mb-2'>{displayPhoneNumber(retail.customer?.phoneNumber)}</div>
+                        
                       </div>
                     )}
                   </div>
-                  {purchaseorder && (
+                  {retail && (
                     <div className='bg-white mb-4 p-4 rounded shadow'>
                       <div className='mb-4'>
                         <div className='text-xl'>New Delivery</div>

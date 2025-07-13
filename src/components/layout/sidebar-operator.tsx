@@ -49,7 +49,7 @@ const defaultMenu = [
   {
     name: 'Retail',
     icon: 'AiOutlineProduct',
-    path: '/reail',
+    path: '/retail',
   },
 ];
 

@@ -126,14 +126,38 @@ const ModalFilterRetail: NextPage<Props> = ({ show, onClickOverlay, filter, setF
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <TextFieldNumber
-                        label={'Total Amount From'}
-                        name={'startTotalAmount'}
-                        placeholder={'Total Amount From'}
+                        label={'Total Price From'}
+                        name={'startTotalPrice'}
+                        placeholder={'Total Price From'}
                       />
                       <TextFieldNumber
-                        label={'Total Amount To'}
-                        name={'endTotalAmount'}
-                        placeholder={'Total Amount To'}
+                        label={'Total Price To'}
+                        name={'endTotalPrice'}
+                        placeholder={'Total Price To'}
+                      />
+                    </div>
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <TextFieldNumber
+                        label={'Total Payment From'}
+                        name={'startTotalPayment'}
+                        placeholder={'Total Payment From'}
+                      />
+                      <TextFieldNumber
+                        label={'Total Payment To'}
+                        name={'endTotalPayment'}
+                        placeholder={'Total Payment To'}
+                      />
+                    </div>
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <TextFieldNumber
+                        label={'Outstanding From'}
+                        name={'startOutstanding'}
+                        placeholder={'Outstanding From'}
+                      />
+                      <TextFieldNumber
+                        label={'Outstanding To'}
+                        name={'endOutstanding'}
+                        placeholder={'Outstanding To'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">

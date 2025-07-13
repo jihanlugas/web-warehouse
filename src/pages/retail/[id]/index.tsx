@@ -26,7 +26,7 @@ const Index: NextPage<Props> = ({ id }) => {
 
   const [showModalEditStockmovementvehicle, setShowModalEditStockmovementvehicle] = useState<boolean>(false);
 
-  const preloads = 'Stockmovement,Stockmovement.Purchaseorder,Stockmovement.Purchaseorder.Customer,Vehicle'
+  const preloads = 'Stockmovement,Stockmovement.Retail,Stockmovement.Retail.Customer,Vehicle'
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['stockmovementvehicle', id, preloads],
     queryFn: ({ queryKey }) => {
@@ -54,7 +54,7 @@ const Index: NextPage<Props> = ({ id }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Purchase Order Detail'}</title>
+        <title>{process.env.APP_NAME + ' - Retail Detail'}</title>
       </Head>
       <ModalEditStockmovementvehicle
         show={showModalEditStockmovementvehicle}
@@ -64,7 +64,7 @@ const Index: NextPage<Props> = ({ id }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Purchase Order', path: '/purchaseorder' },
+            { name: 'Retail', path: '/retail' },
             { name: stockmovementvehicle?.number || id, path: '' },
           ]}
         />
@@ -79,7 +79,7 @@ const Index: NextPage<Props> = ({ id }) => {
             <div>
               <div className="mb-4">
                 <div className="text-xl flex justify-between items-center mb-2">
-                  <div>Purchase Order</div>
+                  <div>Retail</div>
                   <button
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
@@ -90,14 +90,14 @@ const Index: NextPage<Props> = ({ id }) => {
                   </button>
                 </div>
                 <div className="mb-4">
-                  <div className="text-lg mb-4">{stockmovementvehicle?.stockmovement?.purchaseorder?.number || '-'}</div>
+                  <div className="text-lg mb-4">{stockmovementvehicle?.stockmovement?.retail?.number || '-'}</div>
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4">
                     <div className="text-gray-600">{'Customer'}</div>
-                    <div className="col-span-1 sm:col-span-4">{stockmovementvehicle?.stockmovement?.purchaseorder?.customer?.name || '-'}</div>
+                    <div className="col-span-1 sm:col-span-4">{stockmovementvehicle?.stockmovement?.retail?.customer?.name || '-'}</div>
                     <div className="text-gray-600">{'Address'}</div>
-                    <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{stockmovementvehicle?.stockmovement?.purchaseorder?.customer?.address || '-'}</div>
+                    <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{stockmovementvehicle?.stockmovement?.retail?.customer?.address || '-'}</div>
                     <div className="text-gray-600">{'Phone Number'}</div>
-                    <div className="col-span-1 sm:col-span-4">{displayPhoneNumber(stockmovementvehicle?.stockmovement?.purchaseorder?.customer?.phoneNumber) || '-'}</div>
+                    <div className="col-span-1 sm:col-span-4">{displayPhoneNumber(stockmovementvehicle?.stockmovement?.retail?.customer?.phoneNumber) || '-'}</div>
                   </div>
                 </div>
                 <div className="mb-4">

@@ -14,7 +14,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import TextAreaField from '../formik/text-area-field';
 import TextFieldNumber from '../formik/text-field-number';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { PurchaseorderView } from '@/types/purchaseorder';
+import { RetailView } from '@/types/retail';
 import { displayDate, displayMoney, displayPhoneNumber, displayTon } from '@/utils/formater';
 import { PiFolderOpenDuotone } from 'react-icons/pi';
 import { Tooltip } from 'react-tooltip';
@@ -37,25 +37,25 @@ const schema = Yup.object().shape({
 
 const defaultInitFormikValue: CreateTransaction = {
   relatedId: '',
-  relatedType: 'PURCHASE_ORDER',
+  relatedType: 'RETAIL',
   type: 'PAYMENT',
   amount: '',
   notes: '',
 }
 
-const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => {
+const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
   const [initFormikValue, setInitFormikValue] = useState<CreateTransaction>(defaultInitFormikValue)
-  const [purchaseorder, setPurchaseorder] = useState<PurchaseorderView>(null)
+  const [retail, setRetail] = useState<RetailView>(null)
 
 
   const preloads = 'Customer,Stockmovementvehicles,Stockmovementvehicles.Vehicle,Stockmovementvehicles.Product,Stockmovementvehicles.Stockmovement,Transactions'
   const { data, isLoading } = useQuery({
-    queryKey: ['purchaseorder', selectedId, preloads],
+    queryKey: ['retail', selectedId, preloads],
     queryFn: ({ queryKey }) => {
       const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/purchaseorder/' + selectedId, { preloads }) : null
+      return selectedId ? Api.get('/retail/' + selectedId, { preloads }) : null
     },
   })
 
@@ -85,7 +85,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
   useEffect(() => {
     if (data) {
       if (data?.status) {
-        setPurchaseorder(data.payload)
+        setRetail(data.payload)
         setInitFormikValue({
           ...initFormikValue,
           relatedId: data.payload.id,
@@ -99,7 +99,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
       setSelectedId(id)
     } else {
       setSelectedId('')
-      setPurchaseorder(null)
+      setRetail(null)
     }
   }, [show, id])
 
@@ -141,21 +141,21 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
           </div>
         ) : (
           <div>
-            {purchaseorder && (
+            {retail && (
               <>
                 <div className="mb-4">
                   <div className='mb-2'>
-                    <div className='text-xl'>Purchaseorder</div>
+                    <div className='text-xl'>Retail</div>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4">
                     <div className="text-gray-600">{'Number'}</div>
-                    <div className="col-span-1 sm:col-span-4">{purchaseorder?.number}</div>
+                    <div className="col-span-1 sm:col-span-4">{retail?.number}</div>
                     <div className="text-gray-600">{'Customer'}</div>
-                    <div className="col-span-1 sm:col-span-4">{purchaseorder.customer?.name}</div>
+                    <div className="col-span-1 sm:col-span-4">{retail.customer?.name}</div>
                     <div className="text-gray-600">{'Phone Number'}</div>
-                    <div className="col-span-1 sm:col-span-4">{displayPhoneNumber(purchaseorder.customer?.phoneNumber)}</div>
+                    <div className="col-span-1 sm:col-span-4">{displayPhoneNumber(retail.customer?.phoneNumber)}</div>
                     <div className="text-gray-600">{'Notes'}</div>
-                    <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{purchaseorder?.notes || '-'}</div>
+                    <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{retail?.notes || '-'}</div>
                   </div>
                 </div>
                 <div className='mb-4'>
@@ -186,9 +186,9 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                       </tr>
                     </thead>
                     <tbody>
-                      {purchaseorder.stockmovementvehicles.length > 0 ? (
+                      {retail.stockmovementvehicles.length > 0 ? (
                         <>
-                          {purchaseorder.stockmovementvehicles.map((stockmovementvehicle) => {
+                          {retail.stockmovementvehicles.map((stockmovementvehicle) => {
                             return (
                               <tr key={stockmovementvehicle.id} className="p-4 border-2 border-gray-400">
                                 <td className="border-2 border-gray-400 ">
@@ -273,12 +273,12 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                     <div className="col-span-2">
                       <div className="flex justify-between items-center mb-2">
                         <div>Total Price</div>
-                        <div>{displayMoney(purchaseorder.totalPrice)}</div>
+                        <div>{displayMoney(retail.totalPrice)}</div>
                       </div>
                       <hr className='border-1 border-gray-100 my-2' />
-                      {purchaseorder.transactions && (
+                      {retail.transactions && (
                         <>
-                          {purchaseorder.transactions.map(transaction => {
+                          {retail.transactions.map(transaction => {
                             return (
                               <div key={transaction.id} className="flex justify-between items-center mb-2">
                                 <div>{transaction.notes ? displayDate(transaction.createDt) + ' | ' + transaction.notes : displayDate(transaction.createDt)}</div>
@@ -288,15 +288,15 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                           })}
                           <div className="flex justify-between items-center mb-2">
                             <div>Total Payment</div>
-                            <div>{displayMoney(purchaseorder.totalPayment)}</div>
+                            <div>{displayMoney(retail.totalPayment)}</div>
                           </div>
                           <hr className='border-1 border-gray-100 my-2' />
                         </>
                       )}
-                      {purchaseorder.outstanding > 0 && (
+                      {retail.outstanding > 0 && (
                         <div className="flex justify-between items-center mb-2">
                           <div>Outstanding</div>
-                          <div>{displayMoney(purchaseorder.outstanding)}</div>
+                          <div>{displayMoney(retail.outstanding)}</div>
                         </div>
                       )}
                     </div>
@@ -356,4 +356,4 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
   )
 }
 
-export default ModalPurchaseorderTransaction;
+export default ModalRetailTransaction;

@@ -1,6 +1,6 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { UpdateStockmovementvehiclePurcahseorder } from "@/types/stockmovementvehicle";
+import { UpdateStockmovementvehiclePurchaseorder } from "@/types/stockmovementvehicle";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -24,7 +24,7 @@ const schema = Yup.object().shape({
 
 });
 
-const defaultInitFormikValue: UpdateStockmovementvehiclePurcahseorder = {
+const defaultInitFormikValue: UpdateStockmovementvehiclePurchaseorder = {
   sentGrossQuantity: '',
   sentTareQuantity: '',
   sentNetQuantity: '',
@@ -34,7 +34,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
 
-  const [initFormikValue, setInitFormikValue] = useState<UpdateStockmovementvehiclePurcahseorder>(defaultInitFormikValue)
+  const [initFormikValue, setInitFormikValue] = useState<UpdateStockmovementvehiclePurchaseorder>(defaultInitFormikValue)
 
   const preloads = ''
   const { data, isLoading } = useQuery({
@@ -71,7 +71,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     }
   }, [show, id])
 
-  const handleSubmit = async (values: UpdateStockmovementvehiclePurcahseorder, formikHelpers: FormikHelpers<UpdateStockmovementvehiclePurcahseorder>) => {
+  const handleSubmit = async (values: UpdateStockmovementvehiclePurchaseorder, formikHelpers: FormikHelpers<UpdateStockmovementvehiclePurchaseorder>) => {
     values.sentGrossQuantity = parseFloat(values.sentGrossQuantity as string) || 0
     values.sentTareQuantity = parseFloat(values.sentTareQuantity as string) || 0
     values.sentNetQuantity = values.sentGrossQuantity - values.sentTareQuantity

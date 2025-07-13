@@ -10,7 +10,7 @@ import { removeEmptyValues } from "@/utils/helper";
 import notif from "@/utils/notif";
 import { isEmptyObject } from "@/utils/validate";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CellContext, ColumnDef } from "@tanstack/react-table";
+import { CellContext, ColumnDef, Row } from "@tanstack/react-table";
 import Head from "next/head";
 import Link from "next/link";
 import { NextPage } from "next/types"
@@ -21,18 +21,23 @@ import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import ModalFilter from "@/components/modal/modal-filter-purchaseorder";
 import MainAdmin from "@/components/layout/main-admin";
 import ModalPurchaseorderTransaction from "@/components/modal/modal-purchaseorder-transaction";
+import ModalConfirm from "@/components/modal/modal-confirm";
+import { Tooltip } from "react-tooltip";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 type Props = object
 
 type PropsDropdownMore = {
   toggleModalDelete: (id: string, name: string) => void
   toggleModalTransaction: (id: string, refresh?: boolean) => void
+  toggleModalStatus: (id: string, status: string) => void
 }
 
 const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDropdownMore> = ({
   row,
   toggleModalDelete,
   toggleModalTransaction,
+  toggleModalStatus,
 }) => {
   const refMore = useRef<HTMLDivElement>(null);
   const [moreBar, setMoreBar] = useState(false);
@@ -54,6 +59,11 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
     };
   }, [moreBar]);
 
+  const { mutate: mutateInvoice, isPending: isPendingInvoice } = useMutation({
+    mutationKey: ['purchaseorder', row.original.id, 'generate-invoice'],
+    mutationFn: () => Api.getpdf('/purchaseorder/' + row.original.id + "/generate-invoice"),
+  })
+
   const handleClickDelete = (id, name) => {
     setMoreBar(false);
     toggleModalDelete(id, name)
@@ -64,6 +74,37 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
     toggleModalTransaction(id)
   }
 
+  const generateInvoice = async () => {
+    mutateInvoice(null, {
+      onError: () => {
+        notif.error('Please cek you connection');
+      }
+    })
+  }
+
+  const handleClickStatus = (id, status) => {
+    setMoreBar(false);
+    toggleModalStatus(id, status)
+  }
+
+  const renderStatusButton = () => {
+    const { id, status } = row.original;
+    if (status === "CLOSE") {
+      return (
+        <button onClick={() => handleClickStatus(id, status)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+          {'Set Open'}
+        </button>
+      );
+    } else if (status === "OPEN") {
+      return (
+        <button onClick={() => handleClickStatus(id, status)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+          {'Set Close'}
+        </button>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="relative inline-block py-2 text-right" ref={refMore}>
       <button className="flex justify-center items-center text-primary-500" type="button" onClick={() => setMoreBar(!moreBar)} >
@@ -72,8 +113,17 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
+          {renderStatusButton()}
           <button onClick={() => handleClickTransaction(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Transaction'}
+          </button>
+          <button onClick={() => generateInvoice()} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+            <div className="flex">
+              <div className="mr-2">
+                {'Invoice'}
+              </div>
+              {isPendingInvoice && <AiOutlineLoading3Quarters className={'animate-spin text-primary-500'} size={'1rem'} />}
+            </div>
           </button>
           <hr className="border-b border-gray-200" />
           <Link href={{ pathname: '/admin/purchaseorder/[id]', query: { id: row.original.id } }}>
@@ -96,9 +146,12 @@ const Index: NextPage<Props> = () => {
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [showModalTransaction, setShowModalTransaction] = useState<boolean>(false);
+  const [showModalStatus, setShowModalStatus] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string>('');
+  const [confirmId, setConfirmId] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
 
   const [filter, setFilter] = useState<PagePurchaseorder>({
     customerId: '',
@@ -126,6 +179,49 @@ const Index: NextPage<Props> = () => {
     preloads: "Customer",
   });
 
+  const RenderStatus: NextPage<{ value: string, row: Row<PurchaseorderView> }> = ({ value, row }) => {
+    switch (value) {
+      case "OPEN":
+        return (
+          <div className='w-full'>
+            <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+            <Tooltip id={`tootltip-status-${row.original.id}`}>
+              <div className="font-bold">{"Status"}</div>
+              <hr className='border-gray-500 border-1 my-2' />
+              <div className="flex">
+                <div className="w-12 font-bold">OPEN</div>
+                <div>Operator available to create new delivery</div>
+              </div>
+              <div className="flex">
+                <div className="w-12 font-bold">CLOSE</div>
+                <div>Operator unavailable to create new delivery</div>
+              </div>
+            </Tooltip>
+          </div>
+        )
+      case "CLOSE":
+        return (
+          <div className='w-full'>
+            <span className={"px-2 py-1 rounded-full text-gray-50 bg-rose-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+            <Tooltip id={`tootltip-status-${row.original.id}`}>
+              <div className="font-bold">{"Status"}</div>
+              <hr className='border-gray-500 border-1 my-2' />
+              <div className="flex">
+                <div className="w-12 font-bold">OPEN</div>
+                <div>Operator available to create new delivery</div>
+              </div>
+              <div className="flex">
+                <div className="w-12 font-bold">CLOSE</div>
+                <div>Operator unavailable to create new delivery</div>
+              </div>
+            </Tooltip>
+          </div>
+        )
+      default:
+        return null
+    }
+  }
+
   const column: ColumnDef<PurchaseorderView>[] = [
     {
       id: 'number',
@@ -133,33 +229,19 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Purchaseorder Number"}
+            {"Number"}
           </div>
         );
       },
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-name-${row.original.id}`}>{getValue() as string}</span>
+            <span data-tooltip-id={`tootltip-notes-${row.original.id}`}>{getValue() as string}</span>
+            <Tooltip id={`tootltip-notes-${row.original.id}`}>
+              <div className="font-bold">{"Notes"}</div>
+              <div className="">{row.original.notes ? row.original.notes : '-'}</div>
+            </Tooltip>
           </div>
-        )
-      },
-    },
-    {
-      id: 'notes',
-      accessorKey: 'notes',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Notes"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-            <div className='w-full'>
-              <span>{getValue() as string}</span>
-            </div>
         )
       },
     },
@@ -176,9 +258,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full'>
-              <span>{getValue() as string}</span>
-            </div>
+          <div className='w-full'>
+            <span>{getValue() as string}</span>
+          </div>
         )
       },
     },
@@ -192,11 +274,9 @@ const Index: NextPage<Props> = () => {
           </div>
         );
       },
-      cell: ({ getValue }) => {
+      cell: ({ getValue, row }) => {
         return (
-            <div className='w-full'>
-              <span>{getValue() as string}</span>
-            </div>
+          <RenderStatus value={getValue() as string} row={row} />
         )
       },
     },
@@ -212,9 +292,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full capitalize text-right'>
-              <span>{displayMoney(getValue() as number)}</span>
-            </div>
+          <div className='w-full capitalize text-right'>
+            <span>{displayMoney(getValue() as number)}</span>
+          </div>
         )
       },
     },
@@ -230,9 +310,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full capitalize text-right'>
-              <span>{displayMoney(getValue() as number)}</span>
-            </div>
+          <div className='w-full capitalize text-right'>
+            <span>{displayMoney(getValue() as number)}</span>
+          </div>
         )
       },
     },
@@ -248,9 +328,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full capitalize text-right'>
-              <span>{displayMoney(getValue() as number)}</span>
-            </div>
+          <div className='w-full capitalize text-right'>
+            <span>{displayMoney(getValue() as number)}</span>
+          </div>
         )
       },
     },
@@ -266,9 +346,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full capitalize'>
-              {displayDateTime(getValue() as string)}
-            </div>
+          <div className='w-full capitalize'>
+            {displayDateTime(getValue() as string)}
+          </div>
         )
       },
     },
@@ -284,6 +364,7 @@ const Index: NextPage<Props> = () => {
           <DropdownMore
             toggleModalDelete={toggleModalDelete}
             toggleModalTransaction={toggleModalTransaction}
+            toggleModalStatus={toggleModalStatus}
             {...props}
           />
         );
@@ -299,6 +380,16 @@ const Index: NextPage<Props> = () => {
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
     mutationKey: ['purchaseorder', 'delete', deleteId],
     mutationFn: (id: string) => Api.delete('/purchaseorder/' + id)
+  });
+
+  const { mutate: mutateSetOpen, isPending: isPendingSetOpen } = useMutation({
+    mutationKey: ['purchaseorder', confirmId, 'set-status-open'],
+    mutationFn: (id: string) => Api.get('/purchaseorder/' + id + '/set-status-open')
+  });
+
+  const { mutate: mutateSetClose, isPending: isPendingSetClose } = useMutation({
+    mutationKey: ['purchaseorder', confirmId, 'set-status-close'],
+    mutationFn: (id: string) => Api.get('/purchaseorder/' + id + '/set-status-close')
   });
 
   const toggleModalFilter = () => {
@@ -319,6 +410,12 @@ const Index: NextPage<Props> = () => {
     }
   };
 
+  const toggleModalStatus = (id = '', status = '') => {
+    setConfirmId(id);
+    setStatus(status);
+    setShowModalStatus(!showModalStatus);
+  };
+
   const handleDelete = () => {
     mutateDelete(deleteId, {
       onSuccess: ({ status, message }) => {
@@ -336,6 +433,49 @@ const Index: NextPage<Props> = () => {
       },
     });
   };
+
+  const handleSetStatus = () => {
+    switch (status) {
+      case "OPEN":
+        mutateSetClose(confirmId, {
+          onSuccess: ({ status, message }) => {
+            if (status) {
+              notif.success(message);
+              refetch();
+            } else {
+              notif.error(message);
+            }
+            toggleModalStatus();
+          },
+          onError: () => {
+            notif.error('Please cek you connection');
+            toggleModalStatus();
+          },
+        });
+        break;
+      case "CLOSE":
+        mutateSetOpen(confirmId, {
+          onSuccess: ({ status, message }) => {
+            if (status) {
+              notif.success(message);
+              refetch();
+            } else {
+              notif.error(message);
+            }
+            toggleModalStatus();
+          },
+          onError: () => {
+            notif.error('Please cek you connection');
+            toggleModalStatus();
+          },
+        });
+        break;
+      default:
+        notif.error('Unknown Status');
+        toggleModalStatus();
+        break;
+    }
+  }
 
   useEffect(() => {
     if (data?.status) {
@@ -386,6 +526,17 @@ const Index: NextPage<Props> = () => {
         onClickOverlay={toggleModalTransaction}
         id={selectedId}
       />
+      <ModalConfirm
+        show={showModalStatus}
+        onClickOverlay={toggleModalStatus}
+        onConfirm={handleSetStatus}
+        isLoading={isPendingSetClose || isPendingSetOpen}
+      >
+        <div>
+          <div className='mb-4'>Are you sure ?</div>
+          <div className='text-sm mb-4 text-gray-700'>Are you sure to change the status</div>
+        </div>
+      </ModalConfirm>
       <div className='p-4'>
         <Breadcrumb
           links={[

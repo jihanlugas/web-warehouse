@@ -319,14 +319,14 @@ const Index: NextPage<Props> = () => {
                     {isEmptyObject(removeEmptyValues(filter)) ? <TbFilter className='text-primary-500' size={'1.2rem'} /> : <TbFilterFilled className='text-primary-500' size={'1.2rem'} />}
                   </button>
                 </div>
-                <div className='ml-4'>
+                {/* <div className='ml-4'>
                   <Link href={{ pathname: '/admin/transaction/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
                       <div>New Transaction</div>
                     </div>
                   </Link>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className=''>

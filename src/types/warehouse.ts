@@ -14,6 +14,8 @@ export declare interface WarehouseView {
     isPurchaseorder: boolean;
     photoId: string;
     photoUrl: string;
+    totalRunningOutbound: number;
+    totalRunningInbound: number;
     createBy: string;
     createDt: string;
     updateBy: string;

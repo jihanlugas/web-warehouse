@@ -10,7 +10,7 @@ export declare interface TransactionView {
     relatedType: string;
     type: string;
     amount: number;
-    botes: string;
+    notes: string;
     createBy: string;
     createDt: string;
     updateBy: string;

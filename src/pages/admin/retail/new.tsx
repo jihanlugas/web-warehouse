@@ -84,12 +84,6 @@ const New: NextPage<Props> = () => {
   const [customers, setCustomers] = useState<CustomerView[]>([]);
   const [products, setProducts] = useState<ProductView[]>([]);
 
-
-  const { data: loginUser } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
-
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['retail', 'create'],
     mutationFn: (val: FormikValues) => Api.post('/retail', val),
@@ -123,8 +117,8 @@ const New: NextPage<Props> = () => {
   const handleChangeCustomerType = (setFieldValue, val: boolean) => {
     setFieldValue('isNewCustomer', val);
     setFieldValue('customerId', '');
-    setFieldValue('newCustomer', '');
-    setFieldValue('newCustomerPhone', '');
+    setFieldValue('customerName', '');
+    setFieldValue('customerPhoneNumber', '');
   }
 
   const handleSubmit = async (values: CreateRetail, formikHelpers: FormikHelpers<CreateRetail>) => {
@@ -279,12 +273,12 @@ const New: NextPage<Props> = () => {
                         loading={isPending}
                       />
                     </div>
-                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                       {JSON.stringify(values, null, 4)}
-                    </div>
-                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                    </div> */}
+                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                       {JSON.stringify(errors, null, 4)}
-                    </div>
+                    </div> */}
                   </Form>
                 )
               }}

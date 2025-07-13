@@ -148,7 +148,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Stockmovementvehicle'}</title>
+        <title>{process.env.APP_NAME + ' - Purchase Order'}</title>
       </Head>
       <ModalDeleteVerify
         show={showModalDelete}
@@ -165,7 +165,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
       <ModalConfirm
         show={showModalConfirm}
         onClickOverlay={toggleModalConfirm}
-        onDelete={handleSent}
+        onConfirm={handleSent}
         isLoading={isPendingSent}
       >
         <div>

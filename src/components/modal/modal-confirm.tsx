@@ -6,12 +6,12 @@ import { MdClose } from 'react-icons/md';
 type Props = {
   show: boolean;
   onClickOverlay: () => void;
-  onDelete: () => void;
+  onConfirm: () => void;
   isLoading?: boolean;
   children: React.ReactNode;
 }
 
-const ModalConfirm: NextPage<Props> = ({ show, onClickOverlay, onDelete, isLoading = false, children }) => {
+const ModalConfirm: NextPage<Props> = ({ show, onClickOverlay, onConfirm, isLoading = false, children }) => {
 
   return (
     <Modal show={show} onClickOverlay={onClickOverlay} layout={'sm:max-w-lg'}>
@@ -26,7 +26,7 @@ const ModalConfirm: NextPage<Props> = ({ show, onClickOverlay, onDelete, isLoadi
           {children}
         </div>
         <div className={'flex justify-end'}>
-          <button className='px-4 py-2 w-36 flex justify-center items-center bg-primary-600 hover:bg-primary-700 disabled:bg-primary-300 disabled:cursor-not-allowed duration-300 rounded-md text-gray-50 font-semibold' onClick={() => onDelete()} disabled={isLoading}>
+          <button className='px-4 py-2 w-36 flex justify-center items-center bg-primary-600 hover:bg-primary-700 disabled:bg-primary-300 disabled:cursor-not-allowed duration-300 rounded-md text-gray-50 font-semibold' onClick={() => onConfirm()} disabled={isLoading}>
             {isLoading ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : 'Confirm'}
           </button>
         </div>

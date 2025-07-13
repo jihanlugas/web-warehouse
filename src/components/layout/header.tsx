@@ -1,26 +1,25 @@
 import { Api } from '@/lib/api';
 import React, { useState, useEffect, useRef } from 'react';
 import { BsList } from 'react-icons/bs';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { getInitialWord } from '@/utils/helper';
 import Image from 'next/image';
 import Notif from '@/utils/notif';
 import Link from 'next/link';
-import { UserView } from '@/types/user';
+import { LoginUser } from '@/types/auth';
 
 interface Props {
   sidebar: boolean,
   setSidebar: (sidebar: boolean) => void,
+  loginUser: LoginUser
 }
 
-const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
+const Header: React.FC<Props> = ({ sidebar, setSidebar, loginUser }) => {
 
   const refProfile = useRef<HTMLDivElement>(null);
   const [profileBar, setProfileBar] = useState(false);
-  // const { login, setLogin } = useContext(LoginContext);
-  const [user, setUser] = useState<UserView>();
-
+  const { user, warehouse } = loginUser
 
 
   const router = useRouter();
@@ -31,10 +30,6 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
     mutationFn: () => Api.get('/auth/sign-out')
   });
 
-  const { data: loginUser } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
 
   const handleLogout = () => {
     mutate(null, {
@@ -66,10 +61,6 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
     };
   }, [profileBar]);
 
-  useEffect(() => {
-    setUser(loginUser.payload.user)
-  }, [loginUser])
-
   return (
     <header>
       <div className="fixed h-16 w-full flex justify-between items-center shadow bg-primary-500 z-40">
@@ -78,7 +69,7 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar }) => {
             <BsList className="" size={'1.2rem'} />
           </button>
           <div className="text-2xl px-2">
-            <span className=''>{process.env.APP_NAME}</span>
+            <span className=''>{warehouse?.name ? warehouse.name : process.env.APP_NAME}</span>
           </div>
         </div>
         {user && (

@@ -1,6 +1,8 @@
 import { CustomerView } from "./customer";
 import { Paging } from "./pagination";
+import { Retailproduct, RetailproductView } from "./retailproduct";
 import { StockmovementView } from "./stockmovement";
+import { StockmovementvehicleView } from "./stockmovementvehicle";
 import { TransactionView } from "./transaction";
 
 export declare interface RetailView {
@@ -21,6 +23,8 @@ export declare interface RetailView {
     customer?: CustomerView;
     transactions?: TransactionView[];
     stockmovements?: StockmovementView[];
+    stockmovementvehicles?: StockmovementvehicleView[];
+    retailproducts?: RetailproductView[];
 }
 
 export declare interface CreateRetail {
@@ -28,14 +32,9 @@ export declare interface CreateRetail {
     customerId: string;
     customerName: string;
     customerPhoneNumber: string;
-    totalAmount: string |number;
+    totalAmount: string | number;
     notes: string;
-    products: RetailProduct[];
-}
-
-export declare interface RetailProduct {
-    productId: string;
-    unitPrice: string | number;
+    products: Retailproduct[];
 }
 
 export declare interface UpdateRetail {

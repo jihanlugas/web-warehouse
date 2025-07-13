@@ -2,7 +2,7 @@ import Breadcrumb from "@/components/component/breadcrumb";
 import { Api } from "@/lib/api";
 import PageWithLayoutType from "@/types/layout";
 import { PurchaseorderView } from "@/types/purchaseorder";
-import { displayDateTime, displayMoney, displayNumber, displayTon } from "@/utils/formater";
+import { displayDateTime, displayMoney, displayPhoneNumber, displayTon } from "@/utils/formater";
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { GetServerSideProps, NextPage } from "next/types";
@@ -14,11 +14,12 @@ import MainAdmin from "@/components/layout/main-admin";
 import { PageInfo } from "@/types/pagination";
 import { PageStockmovementvehicle, StockmovementvehicleView } from "@/types/stockmovementvehicle";
 import { StockmovementView } from "@/types/stockmovement";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import { ProductView } from "@/types/product";
 import { PageTransaction, TransactionView } from "@/types/transaction";
-import { CustomerView } from "@/types/customer";
+import { Tooltip } from "react-tooltip";
+import { VehicleView } from "@/types/vehicle";
 
 
 
@@ -48,8 +49,51 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
     limit: 10,
     page: 1,
     relatedId: id,
-    preloads: "Stockmovement,Stockmovement.FromWarehouse,Stockmovement.ToWarehouse,Product",
+    preloads: "Vehicle,Stockmovement,Stockmovement.FromWarehouse,Stockmovement.ToWarehouse,Product",
   });
+
+  const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView> }> = ({ value, row }) => {
+    switch (value) {
+      case "COMPLETED":
+        return (
+          <div className='w-full'>
+            <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+            <Tooltip id={`tootltip-status-${row.original.id}`}>
+              <div className="font-bold">{"Status"}</div>
+              <hr className='border-gray-500 border-1 my-2' />
+              <div className="flex">
+                <div className="w-12 font-bold">OPEN</div>
+                <div>Operator available to create new delivery</div>
+              </div>
+              <div className="flex">
+                <div className="w-12 font-bold">CLOSE</div>
+                <div>Operator unavailable to create new delivery</div>
+              </div>
+            </Tooltip>
+          </div>
+        )
+      case "LOADING":
+        return (
+          <div className='w-full'>
+            <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+            <Tooltip id={`tootltip-status-${row.original.id}`}>
+              <div className="font-bold">{"Status"}</div>
+              <hr className='border-gray-500 border-1 my-2' />
+              <div className="flex">
+                <div className="w-12 font-bold">OPEN</div>
+                <div>Operator available to create new delivery</div>
+              </div>
+              <div className="flex">
+                <div className="w-12 font-bold">CLOSE</div>
+                <div>Operator unavailable to create new delivery</div>
+              </div>
+            </Tooltip>
+          </div>
+        )
+      default:
+        return null
+    }
+  }
 
   const column: ColumnDef<StockmovementvehicleView>[] = [
     {
@@ -59,25 +103,6 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
         return (
           <div className='whitespace-nowrap'>
             {"Delivery Number"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{getValue() as string}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'type',
-      accessorKey: 'type',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Type"}
           </div>
         );
       },
@@ -110,6 +135,31 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
       },
     },
     {
+      id: 'vehicle',
+      accessorKey: 'vehicle',
+      enableSorting: false,
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"Driver"}
+          </div>
+        );
+      },
+      cell: ({ getValue, row }) => {
+        const vehicle: VehicleView = getValue() as VehicleView
+        return (
+          <div className='w-full capitalize'>
+            <span data-tooltip-id={`tootltip-purhcaseorder-vehicle-${row.original.id}`}>{vehicle?.driverName as string}</span>
+            <Tooltip id={`tootltip-purhcaseorder-vehicle-${row.original.id}`}>
+              <div className="font-bold">{vehicle?.name}</div>
+              <div className="">{vehicle?.driverName}</div>
+              <div className="">{displayPhoneNumber(vehicle?.phoneNumber)}</div>
+            </Tooltip>
+          </div>
+        )
+      },
+    },
+    {
       id: 'product',
       accessorKey: 'product',
       enableSorting: false,
@@ -132,7 +182,6 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
     {
       id: 'status',
       accessorKey: 'status',
-      enableSorting: false,
       header: () => {
         return (
           <div className='whitespace-nowrap'>
@@ -142,9 +191,7 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
       },
       cell: ({ getValue, row }) => {
         return (
-          <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{getValue() as string}</span>
-          </div>
+          <RenderStatus value={getValue() as string} row={row} />
         )
       },
     },
@@ -166,42 +213,42 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
         )
       },
     },
-    {
-      id: 'recived_net_quantity',
-      accessorKey: 'recivedNetQuantity',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Recived Quantity"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.status === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'shrinkage',
-      accessorKey: 'shrinkage',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Shrinkage"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.status === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
-          </div>
-        )
-      },
-    },
+    // {
+    //   id: 'recived_net_quantity',
+    //   accessorKey: 'recivedNetQuantity',
+    //   header: () => {
+    //     return (
+    //       <div className='whitespace-nowrap'>
+    //         {"Recived Quantity"}
+    //       </div>
+    //     );
+    //   },
+    //   cell: ({ getValue, row }) => {
+    //     return (
+    //       <div className='w-full capitalize text-right'>
+    //         <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.status === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
+    //       </div>
+    //     )
+    //   },
+    // },
+    // {
+    //   id: 'shrinkage',
+    //   accessorKey: 'shrinkage',
+    //   header: () => {
+    //     return (
+    //       <div className='whitespace-nowrap'>
+    //         {"Shrinkage"}
+    //       </div>
+    //     );
+    //   },
+    //   cell: ({ getValue, row }) => {
+    //     return (
+    //       <div className='w-full capitalize text-right'>
+    //         <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.status === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
+    //       </div>
+    //     )
+    //   },
+    // },
     {
       id: 'create_dt',
       accessorKey: 'createDt',
@@ -270,28 +317,10 @@ const Transaction: NextPage<PropsTransaction> = ({ id }) => {
     limit: 10,
     page: 1,
     relatedId: id,
-    preloads: "Purchaseorder,Retail",
+    preloads: "Purchaseorder",
   });
 
   const column: ColumnDef<TransactionView>[] = [
-    {
-      id: 'amount',
-      accessorKey: 'amount',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Amount"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full text-right'>
-            <span>{displayMoney(getValue() as number)}</span>
-          </div>
-        )
-      },
-    },
     {
       id: 'notes',
       accessorKey: 'notes',
@@ -306,6 +335,24 @@ const Transaction: NextPage<PropsTransaction> = ({ id }) => {
         return (
           <div className='w-full'>
             <span>{getValue() as string}</span>
+          </div>
+        )
+      },
+    },
+    {
+      id: 'amount',
+      accessorKey: 'amount',
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"Amount"}
+          </div>
+        );
+      },
+      cell: ({ getValue }) => {
+        return (
+          <div className='w-full text-right'>
+            <span>{displayMoney(getValue() as number)}</span>
           </div>
         )
       },
@@ -452,7 +499,7 @@ const Index: NextPage<Props> = ({ id }) => {
                       <div className="col-span-1 sm:col-span-4">{displayMoney(purchaseorder?.totalPrice)}</div>
                       <div className="text-gray-600">{'Total Payment'}</div>
                       <div className="col-span-1 sm:col-span-4">{displayMoney(purchaseorder?.totalPayment)}</div>
-                      {purchaseorder?.outstanding && (
+                      {purchaseorder.outstanding > 0 && (
                         <>
                           <div className="text-gray-600">{'Outstanding'}</div>
                           <div className="col-span-1 sm:col-span-4 text-rose-500">{displayMoney(purchaseorder?.outstanding)}</div>
@@ -476,8 +523,6 @@ const Index: NextPage<Props> = ({ id }) => {
                   </div>
                 </div>
               )}
-
-
               {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                 {JSON.stringify(purchaseorder, null, 4)}
               </div> */}

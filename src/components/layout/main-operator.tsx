@@ -73,7 +73,7 @@ const MainOperator: React.FC<Props> = ({ children }) => {
       <main className={''}>
         {!isLoading && loginUser ? (
           <>
-            <Header sidebar={sidebar} setSidebar={setSidebar} />
+            <Header sidebar={sidebar} setSidebar={setSidebar} loginUser={loginUser} />
             <SidebarOperator
               sidebar={sidebar}
               onClickOverlay={onClickOverlay}

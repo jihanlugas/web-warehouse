@@ -14,9 +14,9 @@ type Props = {
 const Index: NextPage<Props> = ({ loginUser }) => {
   if (loginUser) {
     if (loginUser.user.role === USER_ROLE_ADMIN) {
-      return <AdminDashboard />;
+      return <AdminDashboard loginUser={loginUser} />;
     } else {
-      return <Dashboard />;
+      return <Dashboard loginUser={loginUser} />;
     }
   }
 };

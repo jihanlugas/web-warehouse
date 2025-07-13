@@ -2,14 +2,12 @@ import Breadcrumb from "@/components/component/breadcrumb";
 import { Api } from "@/lib/api";
 import { WarehouseView, PageWarehouse } from "@/types/warehouse";
 import PageWithLayoutType from "@/types/layout";
-import { displayTon } from "@/utils/formater";
+import { displayNumber, displayTon } from "@/utils/formater";
 import { useQuery } from "@tanstack/react-query";
-import { CellContext } from "@tanstack/react-table";
 import Head from "next/head";
 import Link from "next/link";
 import { NextPage } from "next/types"
-import { useEffect, useRef, useState } from "react";
-import { CgChevronDown } from "react-icons/cg";
+import { useEffect, useState } from "react";
 import MainAdmin from "@/components/layout/main-admin";
 import { AiOutlineLoading } from "react-icons/ai";
 
@@ -17,10 +15,10 @@ type Props = object
 
 const Index: NextPage<Props> = () => {
 
-  const [warehouse, setWarehouse] = useState<WarehouseView[]>([]);
+  const [warehouses, setWarehouses] = useState<WarehouseView[]>([]);
 
   const [pageRequest, setPageRequest] = useState<PageWarehouse>({
-    limit: 10,
+    limit: -1,
     page: 1,
     preloads: "Stocks,Stocks.Product,Stocklogs",
   });
@@ -32,7 +30,7 @@ const Index: NextPage<Props> = () => {
 
   useEffect(() => {
     if (data?.status) {
-      setWarehouse(data.payload.list);
+      setWarehouses(data.payload.list);
     }
   }, [data]);
 
@@ -53,20 +51,30 @@ const Index: NextPage<Props> = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            {warehouse.map((data) => {
+            {warehouses.map((data) => {
               return (
-                <div key={data.id} className='bg-white mb-20 p-4 rounded shadow'>
+                <div key={data.id} className='bg-white p-4 rounded shadow'>
                   <Link href={{ pathname: '/admin/warehouse/[id]', query: { id: data.id } }}>
                     <div className="text-xl font-bold duration-300 text-primary-500 hover:text-primary-400">{data.name}</div>
                   </Link>
                   <hr className="my-4 border-gray-200" />
-                  <div className="">List Stock Product</div>
+                  <div className="font-bold">List Stock Product</div>
                   {data.stocks.map((stock) => (
                     <div key={stock.id} className="ml-4 flex justify-between">
                       <div className="">{stock.product.name || stock.id}</div>
                       <div className="">{displayTon(stock.quantity)}</div>
                     </div>
                   ))}
+                  <hr className="my-4 border-gray-200" />
+                  <div className="font-bold">Runnig Delivery Transfer</div>
+                  <div className="ml-4 flex justify-between">
+                    <div className="">{"Outbound"}</div>
+                    <div className="">{displayNumber(data.totalRunningOutbound)}</div>
+                  </div>
+                  <div className="ml-4 flex justify-between">
+                    <div className="">{"Inbound"}</div>
+                    <div className="">{displayNumber(data.totalRunningInbound)}</div>
+                  </div>
                   <hr className="my-4 border-gray-200" />
                 </div>
               )

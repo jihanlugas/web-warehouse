@@ -1,7 +1,7 @@
 import Breadcrumb from "@/components/component/breadcrumb";
 import ModalDeleteVerify from "@/components/modal/modal-delete-verify";
 import { Api } from "@/lib/api";
-import { OutboundView, PageOutbound } from "@/types/outbound";
+import { StockmovementvehicleView, PageStockmovementvehicle } from "@/types/stockmovementvehicle";
 import PageWithLayoutType from "@/types/layout";
 import { displayDateTime } from "@/utils/formater";
 import notif from "@/utils/notif";
@@ -15,40 +15,35 @@ import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ModalConfirm from "@/components/modal/modal-confirm";
+import { STOCK_MOVEMENT_TYPE_RETAIL } from "@/utils/constant";
+import { LoginUser } from "@/types/auth";
 import { PiFolderOpenDuotone } from "react-icons/pi";
 
-type Props = object
-
-type PropsDeliveryState = {
-  outbound: OutboundView
+type Props = {
+  loginUser: LoginUser
 }
 
-const DeliveryState: NextPage<PropsDeliveryState> = ({ outbound }) => {
-  if (outbound.sentTime === null) {
+type PropsDeliveryState = {
+  stockmovementvehicle: StockmovementvehicleView
+}
+
+const DeliveryState: NextPage<PropsDeliveryState> = ({ stockmovementvehicle }) => {
+  if (stockmovementvehicle.sentTime === null) {
     return (
       <div className="bg-yellow-500 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'LOADING'}</div>
     )
-  } else if (outbound.sentTime !== null && outbound.recivedTime === null && outbound.recivedGrossQuantity === 0) {
+  } else if (stockmovementvehicle.sentTime !== null) {
     return (
-      <div className="bg-blue-600 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'IN TRANSIT'}</div>
-    )
-  } else if (outbound.sentTime !== null && outbound.recivedTime === null && outbound.recivedGrossQuantity !== 0) {
-    return (
-      <div className="bg-amber-600 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'UNLOADING'}</div>
-    )
-  } else if (outbound.sentTime !== null && outbound.recivedTime !== null) {
-    return (
-      <div className="bg-green-600 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'COMPLETED'}</div>
+      <div className="bg-green-600 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'SENT'}</div>
     )
   }
 
   return null
 }
 
-const Index: NextPage<Props> = () => {
+const Index: NextPage<Props> = ({ loginUser }) => {
 
-
-  const [outbound, setOutbound] = useState<OutboundView[]>([]);
+  const [stockmovementvehicle, setStockmovementvehicle] = useState<StockmovementvehicleView[]>([]);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
@@ -56,30 +51,32 @@ const Index: NextPage<Props> = () => {
   const [confirmId, setConfirmId] = useState<string>('');
 
 
-  const [pageRequest] = useState<PageOutbound>({
+  const [pageRequest] = useState<PageStockmovementvehicle>({
     limit: -1,
     startCreateDt: moment().subtract(2, 'days').toISOString(), // 2 days ago
-    preloads: "Stockmovement,Stockmovement.ToWarehouse,Vehicle",
+    preloads: "Stockmovement,Stockmovement.Retail.Customer,Vehicle",
+    type: STOCK_MOVEMENT_TYPE_RETAIL,
+    fromWarehouseId: loginUser.user.warehouseId,
   });
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['outbound', pageRequest],
-    queryFn: ({ queryKey }) => Api.get('/outbound', queryKey[1] as object),
+    queryKey: ['stockmovementvehicle', pageRequest],
+    queryFn: ({ queryKey }) => Api.get('/stockmovementvehicle', queryKey[1] as object),
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationKey: ['outbound', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/outbound/' + id)
+    mutationKey: ['stockmovementvehicle', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/stockmovementvehicle/' + id)
   });
 
   const { mutate: mutateSent, isPending: isPendingSent } = useMutation({
-    mutationKey: ['outbound', confirmId, 'set-sent'],
-    mutationFn: (id: string) => Api.get('/outbound/' + id + '/set-sent')
+    mutationKey: ['stockmovementvehicle', confirmId, 'set-sent'],
+    mutationFn: (id: string) => Api.get('/stockmovementvehicle/' + id + '/set-sent')
   });
 
   const { mutate: mutateDeliveryOrder, isPending: isPendingDeliveryOrder } = useMutation({
-    mutationKey: ['outbound', 'generate-delivery-order'],
-    mutationFn: (id: string) => Api.getpdf('/outbound/' + id + "/generate-delivery-order"),
+    mutationKey: ['stockmovementvehicle', 'generate-delivery-order'],
+    mutationFn: (id: string) => Api.getpdf('/stockmovementvehicle/' + id + "/generate-delivery-order"),
   })
 
   const toggleModalDelete = (id = '', verify = '') => {
@@ -96,7 +93,7 @@ const Index: NextPage<Props> = () => {
 
   useEffect(() => {
     if (data?.status) {
-      setOutbound(data.payload.list);
+      setStockmovementvehicle(data.payload.list);
     }
   }, [data]);
 
@@ -144,10 +141,14 @@ const Index: NextPage<Props> = () => {
     })
   }
 
+  // useEffect(() => {
+  //   setUser(loginUser.payload.user)
+  // }, [loginUser])
+
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Outbound'}</title>
+        <title>{process.env.APP_NAME + ' - Retail'}</title>
       </Head>
       <ModalDeleteVerify
         show={showModalDelete}
@@ -175,7 +176,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Outbound', path: '' },
+            { name: 'Retail', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -186,10 +187,10 @@ const Index: NextPage<Props> = () => {
               </div>
               <div className='flex'>
                 <div className='ml-4'>
-                  <Link href={{ pathname: '/outbound/new' }}>
+                  <Link href={{ pathname: '/retail/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Outbound</div>
+                      <div>New</div>
                     </div>
                   </Link>
                 </div>
@@ -200,18 +201,18 @@ const Index: NextPage<Props> = () => {
                 <div>Loading</div>
               ) : (
                 <div>
-                  {outbound.length > 0 ? (
+                  {stockmovementvehicle.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {outbound.map((data) => (
+                      {stockmovementvehicle.map((data) => (
                         <div key={data.id} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
                           <div className="flex justify-between items-center">
                             <div className="text-base">
                               <div className="font-bold">{data.number}</div>
                               <div className="">
-                                <div className="">{data?.stockmovement?.toWarehouse?.name}</div>
+                                <div className="">{data?.stockmovement?.retail?.customer?.name}</div>
                               </div>
                             </div>
-                            <div><DeliveryState outbound={data} /></div>
+                            <div><DeliveryState stockmovementvehicle={data} /></div>
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="mb-2">
@@ -247,7 +248,7 @@ const Index: NextPage<Props> = () => {
                                 {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Send</div>}
                               </button>
                             )}
-                            <Link key={data.id} href={{ pathname: '/outbound/[id]', query: { id: data.id } }}>
+                            <Link key={data.id} href={{ pathname: '/retail/[id]', query: { id: data.id } }}>
                               <div className="ml-4 px-2 py-1">
                                 Detail
                               </div>

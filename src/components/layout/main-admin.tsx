@@ -74,7 +74,7 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
       <main className={''}>
         {!isLoading && loginUser ? (
           <>
-            <Header sidebar={sidebar} setSidebar={setSidebar} />
+            <Header sidebar={sidebar} setSidebar={setSidebar} loginUser={loginUser} />
             <SidebarAdmin sidebar={sidebar} onClickOverlay={onClickOverlay} />
             <div className={`block duration-300 ease-in-out pt-16 min-h-svh overflow-y-auto`}>
               {React.isValidElement(children) ? React.cloneElement(children, { loginUser }) : children}
