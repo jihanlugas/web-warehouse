@@ -107,11 +107,11 @@ const Index: NextPage<Props> = ({ loginUser }) => {
                     <hr className="my-4 border-gray-200" />
                     <div className="font-bold">Runnig Delivery Transfer</div>
                     <div className="ml-4 flex justify-between">
-                      <div className="">{"Outbound"}</div>
+                      <div className="">{"Transfer Out"}</div>
                       <div className="">{displayNumber(data.totalRunningOutbound)}</div>
                     </div>
                     <div className="ml-4 flex justify-between">
-                      <div className="">{"Inbound"}</div>
+                      <div className="">{"Transfer In"}</div>
                       <div className="">{displayNumber(data.totalRunningInbound)}</div>
                     </div>
                     <hr className="my-4 border-gray-200" />
