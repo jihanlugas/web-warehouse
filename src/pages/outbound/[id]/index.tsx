@@ -54,7 +54,7 @@ const Index: NextPage<Props> = ({ id }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Outbound Detail'}</title>
+        <title>{process.env.APP_NAME + ' - Transfer Out Detail'}</title>
       </Head>
       <ModalEditOutbound
         show={showModalEditOutbound}
@@ -79,11 +79,11 @@ const Index: NextPage<Props> = ({ id }) => {
             <div>
               <div className="mb-4">
                 <div className="text-xl flex justify-between items-center mb-2">
-                  <div>Outbound</div>
+                  <div>Transfer Out</div>
                   <button
                     className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                     type="button"
-                    title='Edit Outbound'
+                    title='Edit Transfer Out'
                     onClick={() => toggleModalEditOutbound(outbound?.id)}
                   >
                     <RiPencilLine className='text-amber-500' size={'1.2rem'} />

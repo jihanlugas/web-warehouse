@@ -174,7 +174,7 @@ const New: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - New Outbound'}</title>
+        <title>{process.env.APP_NAME + ' - New Transfer Out'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
@@ -185,7 +185,7 @@ const New: NextPage<Props> = () => {
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>New Outbound</div>
+            <div className='text-xl'>New Transfer Out</div>
           </div>
           <div>
             <Formik

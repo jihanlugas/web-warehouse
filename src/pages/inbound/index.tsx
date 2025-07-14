@@ -125,7 +125,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Inbound'}</title>
+        <title>{process.env.APP_NAME + ' - Transfer In'}</title>
       </Head>
       <ModalEditInbound
         show={showModalEditInbound}

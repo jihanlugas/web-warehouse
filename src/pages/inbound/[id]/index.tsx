@@ -42,7 +42,7 @@ const Index: NextPage<Props> = ({ id }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Inbound Detail'}</title>
+        <title>{process.env.APP_NAME + ' - Transfer In Detail'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
@@ -62,7 +62,7 @@ const Index: NextPage<Props> = ({ id }) => {
             <div>
               <div className="mb-4">
                 <div className="text-xl flex justify-between items-center mb-2">
-                  <div>Inbound</div>
+                  <div>Transfer In</div>
                 </div>
                 <div className="mb-4">
                   <div className="text-lg mb-4">Vehicle</div>

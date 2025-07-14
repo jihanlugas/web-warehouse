@@ -96,7 +96,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Edit Outbound</div>
+          <div>Edit Transfer Out</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>

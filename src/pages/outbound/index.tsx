@@ -147,7 +147,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Outbound'}</title>
+        <title>{process.env.APP_NAME + ' - Transfer Out'}</title>
       </Head>
       <ModalDeleteVerify
         show={showModalDelete}
@@ -189,7 +189,7 @@ const Index: NextPage<Props> = () => {
                   <Link href={{ pathname: '/outbound/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Outbound</div>
+                      <div>New Transfer Out</div>
                     </div>
                   </Link>
                 </div>
