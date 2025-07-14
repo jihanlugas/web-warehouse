@@ -5,7 +5,7 @@ import { Api } from "@/lib/api";
 import { TransactionView, PageTransaction } from "@/types/transaction";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo } from "@/types/pagination";
-import { displayDateTime, displayMoney } from "@/utils/formater";
+import { displayDateTime, displayMoney, displayPhoneNumber } from "@/utils/formater";
 import { removeEmptyValues } from "@/utils/helper";
 import notif from "@/utils/notif";
 import { isEmptyObject } from "@/utils/validate";
@@ -21,6 +21,7 @@ import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import ModalFilter from "@/components/modal/modal-filter-transaction";
 import MainAdmin from "@/components/layout/main-admin";
 import { CustomerView } from "@/types/customer";
+import { Tooltip } from "react-tooltip";
 
 type Props = object
 
@@ -106,7 +107,7 @@ const Index: NextPage<Props> = () => {
   const [pageRequest, setPageRequest] = useState<PageTransaction>({
     limit: 10,
     page: 1,
-    preloads: "Customer,Purchaseorder,Retail",
+    preloads: "Purchaseorder,Purchaseorder.Customer,Retail,Retail.Customer",
   });
 
   const column: ColumnDef<TransactionView>[] = [
@@ -131,6 +132,7 @@ const Index: NextPage<Props> = () => {
     {
       id: 'customer',
       accessorKey: 'customer',
+      enableSorting: false,
       header: () => {
         return (
           <div className='whitespace-nowrap'>
@@ -138,13 +140,32 @@ const Index: NextPage<Props> = () => {
           </div>
         );
       },
-      cell: ({ getValue, row }) => {
-        const customer = getValue() as CustomerView
-        return (
-          <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-name-${row.original.id}`}>{customer?.name}</span>
-          </div>
-        )
+      cell: ({ row }) => {
+        switch (row.original.relatedType) {
+          case "PURCHASE_ORDER":
+            const customerPurchaseorder = row.original.purchaseorder?.customer as CustomerView
+            return (
+              <div className='w-full capitalize'>
+                <span data-tooltip-id={`tootltip-customer-${row.original.id}`}>{customerPurchaseorder?.name}</span>
+                <Tooltip id={`tootltip-customer-${row.original.id}`}>
+                  <div className="font-bold">{customerPurchaseorder?.name}</div>
+                  <div className="">{displayPhoneNumber(customerPurchaseorder?.phoneNumber)}</div>
+                </Tooltip>
+              </div>
+            )
+          case "RETAIL":
+            const customerRetail = row.original.retail?.customer as CustomerView
+            return (
+              <div className='w-full capitalize'>
+                <span data-tooltip-id={`tootltip-customer-${row.original.id}`}>{customerRetail?.name}</span>
+                <Tooltip id={`tootltip-customer-${row.original.id}`}>
+                  <div className="font-bold">{customerRetail?.name}</div>
+                  <div className="">{displayPhoneNumber(customerRetail?.phoneNumber)}</div>
+                </Tooltip>
+              </div>
+            )
+          default:
+        }
       },
     },
     {
@@ -159,9 +180,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full'>
-              <span>{getValue() as string}</span>
-            </div>
+          <div className='w-full'>
+            <span>{getValue() as string || '-'}</span>
+          </div>
         )
       },
     },
@@ -177,9 +198,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full text-right'>
-              <span>{displayMoney(getValue() as number)}</span>
-            </div>
+          <div className='w-full text-right'>
+            <span>{displayMoney(getValue() as number)}</span>
+          </div>
         )
       },
     },
@@ -195,9 +216,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full capitalize'>
-              {displayDateTime(getValue() as string)}
-            </div>
+          <div className='w-full capitalize'>
+            {displayDateTime(getValue() as string)}
+          </div>
         )
       },
     },

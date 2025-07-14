@@ -186,7 +186,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                       </tr>
                     </thead>
                     <tbody>
-                      {retail.stockmovementvehicles.length > 0 ? (
+                      {retail.stockmovementvehicles && retail.stockmovementvehicles.length > 0 ? (
                         <>
                           {retail.stockmovementvehicles.map((stockmovementvehicle) => {
                             return (
@@ -271,7 +271,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                   <div className="mb-4 grid grid-cols-3 gap-4">
                     <div className="text-lg">Transaction</div>
                     <div className="col-span-2">
-                      <div className="flex justify-between items-center mb-2">
+                      <div className="flex justify-between items-center mb-2 font-bold">
                         <div>Total Price</div>
                         <div>{displayMoney(retail.totalPrice)}</div>
                       </div>
@@ -286,7 +286,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                               </div>
                             )
                           })}
-                          <div className="flex justify-between items-center mb-2">
+                          <div className="flex justify-between items-center mb-2 font-bold text-green-500">
                             <div>Total Payment</div>
                             <div>{displayMoney(retail.totalPayment)}</div>
                           </div>
@@ -294,7 +294,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                         </>
                       )}
                       {retail.outstanding > 0 && (
-                        <div className="flex justify-between items-center mb-2">
+                        <div className="flex justify-between items-center mb-2 font-bold text-rose-500">
                           <div>Outstanding</div>
                           <div>{displayMoney(retail.outstanding)}</div>
                         </div>

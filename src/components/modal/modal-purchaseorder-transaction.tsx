@@ -186,7 +186,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                       </tr>
                     </thead>
                     <tbody>
-                      {purchaseorder.stockmovementvehicles.length > 0 ? (
+                      {purchaseorder.stockmovementvehicles && purchaseorder.stockmovementvehicles.length > 0 ? (
                         <>
                           {purchaseorder.stockmovementvehicles.map((stockmovementvehicle) => {
                             return (
@@ -271,7 +271,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                   <div className="mb-4 grid grid-cols-3 gap-4">
                     <div className="text-lg">Transaction</div>
                     <div className="col-span-2">
-                      <div className="flex justify-between items-center mb-2">
+                      <div className="flex justify-between items-center mb-2 font-bold">
                         <div>Total Price</div>
                         <div>{displayMoney(purchaseorder.totalPrice)}</div>
                       </div>
@@ -286,7 +286,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                               </div>
                             )
                           })}
-                          <div className="flex justify-between items-center mb-2">
+                          <div className="flex justify-between items-center mb-2 font-bold text-green-500">
                             <div>Total Payment</div>
                             <div>{displayMoney(purchaseorder.totalPayment)}</div>
                           </div>
@@ -294,7 +294,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                         </>
                       )}
                       {purchaseorder.outstanding > 0 && (
-                        <div className="flex justify-between items-center mb-2">
+                        <div className="flex justify-between items-center mb-2 font-bold text-rose-500">
                           <div>Outstanding</div>
                           <div>{displayMoney(purchaseorder.outstanding)}</div>
                         </div>
