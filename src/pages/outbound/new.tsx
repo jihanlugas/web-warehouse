@@ -179,7 +179,7 @@ const New: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Outbound', path: '/outbound' },
+            { name: 'Transfer Out', path: '/outbound' },
             { name: 'New', path: '' },
           ]}
         />

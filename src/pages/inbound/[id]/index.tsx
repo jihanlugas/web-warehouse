@@ -47,7 +47,7 @@ const Index: NextPage<Props> = ({ id }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Inbound', path: '/inbound' },
+            { name: 'Transfer In', path: '/inbound' },
             { name: inbound?.number || id, path: '' },
           ]}
         />

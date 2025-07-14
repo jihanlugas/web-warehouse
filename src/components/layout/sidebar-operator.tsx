@@ -32,12 +32,12 @@ const defaultMenu = [
     path: '/stockin',
   },
   {
-    name: 'Outbound',
+    name: 'Transfer Out',
     icon: 'AiOutlineProduct',
     path: '/outbound',
   },
   {
-    name: 'Inbound',
+    name: 'Transfer In',
     icon: 'AiOutlineProduct',
     path: '/inbound',
   },

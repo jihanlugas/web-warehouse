@@ -146,7 +146,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Inbound', path: '' },
+            { name: 'Transfer In', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
