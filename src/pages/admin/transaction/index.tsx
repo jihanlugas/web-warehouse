@@ -107,7 +107,7 @@ const Index: NextPage<Props> = () => {
   const [pageRequest, setPageRequest] = useState<PageTransaction>({
     limit: 10,
     page: 1,
-    preloads: "Purchaseorder,Purchaseorder.Customer,Retail,Retail.Customer",
+    preloads: "Customer,Purchaseorder,Retail",
   });
 
   const column: ColumnDef<TransactionView>[] = [
@@ -140,32 +140,17 @@ const Index: NextPage<Props> = () => {
           </div>
         );
       },
-      cell: ({ row }) => {
-        switch (row.original.relatedType) {
-          case "PURCHASE_ORDER":
-            const customerPurchaseorder = row.original.purchaseorder?.customer as CustomerView
-            return (
-              <div className='w-full capitalize'>
-                <span data-tooltip-id={`tootltip-customer-${row.original.id}`}>{customerPurchaseorder?.name}</span>
-                <Tooltip id={`tootltip-customer-${row.original.id}`}>
-                  <div className="font-bold">{customerPurchaseorder?.name}</div>
-                  <div className="">{displayPhoneNumber(customerPurchaseorder?.phoneNumber)}</div>
-                </Tooltip>
-              </div>
-            )
-          case "RETAIL":
-            const customerRetail = row.original.retail?.customer as CustomerView
-            return (
-              <div className='w-full capitalize'>
-                <span data-tooltip-id={`tootltip-customer-${row.original.id}`}>{customerRetail?.name}</span>
-                <Tooltip id={`tootltip-customer-${row.original.id}`}>
-                  <div className="font-bold">{customerRetail?.name}</div>
-                  <div className="">{displayPhoneNumber(customerRetail?.phoneNumber)}</div>
-                </Tooltip>
-              </div>
-            )
-          default:
-        }
+      cell: ({ getValue, row }) => {
+        const customer = getValue() as CustomerView
+        return (
+          <div className='w-full capitalize'>
+            <span data-tooltip-id={`tootltip-customer-${row.original.id}`}>{customer?.name}</span>
+            <Tooltip id={`tootltip-customer-${row.original.id}`}>
+              <div className="font-bold">{customer?.name}</div>
+              <div className="">{displayPhoneNumber(customer?.phoneNumber)}</div>
+            </Tooltip>
+          </div>
+        )
       },
     },
     {
