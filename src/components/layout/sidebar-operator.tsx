@@ -64,10 +64,10 @@ const mapingMenu = (defaultMenu, userprivilege: UserprivilegeView) => {
       case 'Stockin':
           if (userprivilege.stockIn) mapmenu.push(menu)
         break;
-      case 'Outbound':
+      case 'Transfer Out':
           if (userprivilege.transferOut) mapmenu.push(menu)
         break;
-      case 'Inbound':
+      case 'Transfer In':
           if (userprivilege.transferIn) mapmenu.push(menu)
         break;
       case 'Purchase Order':

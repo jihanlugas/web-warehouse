@@ -17,10 +17,13 @@ import TextFieldNumber from '@/components/formik/text-field-number';
 import { PageVehicle, VehicleView } from '@/types/vehicle';
 import { PagePurchaseorder, PurchaseorderView } from '@/types/purchaseorder';
 import { CreateStockmovementvehiclePurchaseorder } from '@/types/stockmovementvehicle';
-import { displayMoney, displayNumber, displayPhoneNumber } from '@/utils/formater';
+import { displayNumber, displayPhoneNumber } from '@/utils/formater';
+import { LoginUser } from '@/types/auth';
 
 
-type Props = object
+type Props = {
+  loginUser: LoginUser
+}
 
 const schema = Yup.object().shape({
   isNewVehiclerdriver: Yup.boolean(),
@@ -81,19 +84,13 @@ const pageRequestVehicle: PageVehicle = {
   limit: -1,
 }
 
-const New: NextPage<Props> = () => {
+const New: NextPage<Props> = ({ loginUser }) => {
 
   const router = useRouter();
   const [purchaseorder, setPurchaseorder] = useState<PurchaseorderView>(null);
   const [products, setProducts] = useState<unknown[]>([]);
   const [purchaseorders, setPurchaseorders] = useState<(PurchaseorderView & {label: string})[]>([]);
-  const [vehicles, setVehicles] = useState<VehicleView[]>([]);
-
-
-  const { data: loginUser } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
+  const [vehicles, setVehicles] = useState<(VehicleView & {label: string})[]>([]);
 
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['stockmovementvehicle', 'purchaseorder', 'create'],
@@ -122,13 +119,19 @@ const New: NextPage<Props> = () => {
         })
       })
       setPurchaseorders(newList);
-      // setPurchaseorders(dataPurchaseorder.payload.list);
     }
   }, [dataPurchaseorder]);
 
   useEffect(() => {
     if (dataVehicle?.status) {
-      setVehicles(dataVehicle.payload.list);
+      const newList = []
+      dataVehicle.payload.list.map(data => {
+        newList.push({
+          ...data,
+          label: data.plateNumber + ' | ' + data.driverName
+        })
+      })
+      setVehicles(newList);
     }
   }, [dataVehicle]);
 
@@ -142,7 +145,7 @@ const New: NextPage<Props> = () => {
   }
 
   const handleSubmit = async (values: CreateStockmovementvehiclePurchaseorder, formikHelpers: FormikHelpers<CreateStockmovementvehiclePurchaseorder>) => {
-    values.fromWarehouseId = loginUser.payload.user.warehouseId
+    values.fromWarehouseId = loginUser.user.warehouseId
     values.sentGrossQuantity = parseFloat(values.sentGrossQuantity as string) || 0
     values.sentTareQuantity = parseFloat(values.sentTareQuantity as string) || 0
     values.sentNetQuantity = values.sentGrossQuantity - values.sentTareQuantity
@@ -205,13 +208,13 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-2 max-w-xl">
                       <DropdownField
-                        label={"Purchaseorder"}
+                        label={"Purchase Order"}
                         name={"purchaseorderId"}
                         items={purchaseorders}
                         keyValue={"id"}
                         keyLabel={"label"}
                         isLoading={isLoadingPurchaseorder}
-                        placeholder="Select Purchaseorder"
+                        placeholder="Select Purchase Order"
                         placeholderValue={""}
                         field={true}
                         onChange={(e) => handleChangePurchaseorder(e, setFieldValue)}
@@ -304,7 +307,7 @@ const New: NextPage<Props> = () => {
                             name={"vehicleId"}
                             items={vehicles}
                             keyValue={"id"}
-                            keyLabel={"plateNumber"}
+                            keyLabel={"label"}
                             isLoading={isLoadingVehicle}
                             placeholder="Select Vehicle"
                             placeholderValue={""}

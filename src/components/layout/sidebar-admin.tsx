@@ -62,7 +62,7 @@ const defaultMenu = [
     path: '/admin/customer',
   },
   {
-    name: 'Stock Movement Vehicle',
+    name: 'Transfer',
     icon: 'BiAbacus',
     path: '/admin/stockmovementvehicle',
   },

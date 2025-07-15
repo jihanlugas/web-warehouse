@@ -145,7 +145,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
               <>
                 <div className="mb-4">
                   <div className='mb-2'>
-                    <div className='text-xl'>Purchaseorder</div>
+                    <div className='text-xl'>Purchase Order</div>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4">
                     <div className="text-gray-600">{'Number'}</div>

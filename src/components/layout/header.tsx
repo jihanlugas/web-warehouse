@@ -63,7 +63,7 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar, loginUser }) => {
 
   return (
     <header>
-      <div className="fixed h-16 w-full flex justify-between items-center shadow bg-primary-500 z-40">
+      <div className="fixed h-16 w-full flex justify-between items-center shadow bg-primary-500 z-20">
         <div className="p-2 flex text-white items-center">
           <button className="p-2 rounded-full duration-300 hover:bg-primary-600" onClick={() => setSidebar(!sidebar)}>
             <BsList className="" size={'1.2rem'} />

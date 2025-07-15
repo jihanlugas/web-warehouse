@@ -10,7 +10,7 @@ import { removeEmptyValues } from "@/utils/helper";
 import notif from "@/utils/notif";
 import { isEmptyObject } from "@/utils/validate";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CellContext, ColumnDef } from "@tanstack/react-table";
+import { CellContext, ColumnDef, Row } from "@tanstack/react-table";
 import Head from "next/head";
 import Link from "next/link";
 import { NextPage } from "next/types"
@@ -20,6 +20,7 @@ import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import ModalFilter from "@/components/modal/modal-filter-stockmovementvehicle";
 import MainAdmin from "@/components/layout/main-admin";
 import { StockmovementView } from "@/types/stockmovement";
+import { Tooltip } from "react-tooltip";
 
 type Props = object
 
@@ -77,6 +78,145 @@ const DropdownMore: NextPage<CellContext<StockmovementvehicleView, unknown> & Pr
     </div>
   )
 }
+
+
+
+const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView> }> = ({ value, row }) => {
+
+  const TooltipTransfer = ({ id }) => {
+    return (
+      <Tooltip id={id}>
+        <div className="font-bold">{"Status Transfer"}</div>
+        <hr className='border-gray-500 border-1 my-2' />
+        <div className="flex my-1">
+          <div className="w-20 font-bold">LOADING</div>
+          <div>Barang sedang di muat untuk dikirim</div>
+        </div>
+        <div className="flex my-1">
+          <div className="w-20 font-bold">IN TRANSIT</div>
+          <div>Barang dalam perjalanan ke lokasi tujuan</div>
+        </div>
+        <div className="flex my-1">
+          <div className="w-20 font-bold">UNLOADING</div>
+          <div>Barang sedang di bongkar di lokasi tujuan</div>
+        </div>
+        <div className="flex my-1">
+          <div className="w-20 font-bold">COMPLETED</div>
+          <div>Barang sudah dikirim</div>
+        </div>
+      </Tooltip>
+    )
+  }
+  const TooltipRetail = ({ id }) => {
+    return (
+      <Tooltip id={id}>
+        <div className="font-bold">{"Status Retail"}</div>
+        <hr className='border-gray-500 border-1 my-2' />
+        <div className="flex my-1">
+          <div className="w-20 font-bold">LOADING</div>
+          <div>Barang sedang di muat untuk dikirim</div>
+        </div>
+        <div className="flex my-1">
+          <div className="w-20 font-bold">COMPLETED</div>
+          <div>Barang sudah dikirim</div>
+        </div>
+      </Tooltip>
+    )
+  }
+  const TooltipPurchaseorder = ({ id }) => {
+    return (
+      <Tooltip id={id}>
+        <div className="font-bold">{"Status Purchase Order"}</div>
+        <hr className='border-gray-500 border-1 my-2' />
+        <div className="flex my-1">
+          <div className="w-20 font-bold">LOADING</div>
+          <div>Barang sedang di muat untuk dikirim</div>
+        </div>
+        <div className="flex my-1">
+          <div className="w-20 font-bold">COMPLETED</div>
+          <div>Barang sudah dikirim</div>
+        </div>
+      </Tooltip>
+    )
+  }
+
+  switch (row.original.type) {
+    case "TRANSFER":
+      switch (value) {
+        case "LOADING":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        case "IN TRANSIT":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        case "UNLOADING":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-amber-600 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        case "COMPLETED":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        default:
+          return null
+      }
+    case "RETAIL":
+      switch (value) {
+        case "COMPLETED":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipRetail id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        case "LOADING":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipRetail id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        default:
+          return null
+      }
+    case "PURCHASE_ORDER":
+      switch (value) {
+        case "COMPLETED":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipPurchaseorder id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        case "LOADING":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipPurchaseorder id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        default:
+          return null
+      }
+    default:
+      return null
+  }
+}
+
 
 const Index: NextPage<Props> = () => {
 
@@ -198,7 +338,7 @@ const Index: NextPage<Props> = () => {
         const stockmovement: StockmovementView = getValue() as StockmovementView
         return (
           <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{stockmovement?.toWarehouse?.name as string}</span>
+            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{stockmovement?.toWarehouse?.name || '-'}</span>
           </div>
         )
       },
@@ -206,7 +346,6 @@ const Index: NextPage<Props> = () => {
     {
       id: 'status',
       accessorKey: 'status',
-      enableSorting: false,
       header: () => {
         return (
           <div className='whitespace-nowrap'>
@@ -216,9 +355,7 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue, row }) => {
         return (
-          <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{getValue() as string}</span>
-          </div>
+          <RenderStatus value={getValue() as string} row={row} />
         )
       },
     },
@@ -235,7 +372,23 @@ const Index: NextPage<Props> = () => {
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{displayTon(getValue() as number) || '-'}</span>
+            <span data-tooltip-id={`tootltip-sent-${row.original.id}`}>{displayTon(getValue() as number) || '-'}</span>
+            <Tooltip id={`tootltip-sent-${row.original.id}`} className="text-left">
+              <div className="font-bold">{"Sent Quantity"}</div>
+              <hr className='border-gray-500 border-1 my-2' />
+              <div className="flex justify-between">
+                <div className="w-20 font-bold">GROSS</div>
+                <div>{displayTon(row.original.sentGrossQuantity)}</div>
+              </div>
+              <div className="flex justify-between">
+                <div className="w-20 font-bold">TARE</div>
+                <div>{displayTon(row.original.sentTareQuantity)}</div>
+              </div>
+              <div className="flex justify-between">
+                <div className="w-20 font-bold">NET</div>
+                <div>{displayTon(row.original.sentNetQuantity)}</div>
+              </div>
+            </Tooltip>
           </div>
         )
       },
@@ -253,7 +406,23 @@ const Index: NextPage<Props> = () => {
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.status === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
+            <span data-tooltip-id={`tootltip-recived-${row.original.id}`}>{row.original.status === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
+            <Tooltip id={`tootltip-recived-${row.original.id}`} className="text-left">
+              <div className="font-bold">{"Recived Quantity"}</div>
+              <hr className='border-gray-500 border-1 my-2' />
+              <div className="flex justify-between">
+                <div className="w-20 font-bold">GROSS</div>
+                <div>{displayTon(row.original.recivedGrossQuantity)}</div>
+              </div>
+              <div className="flex justify-between">
+                <div className="w-20 font-bold">TARE</div>
+                <div>{displayTon(row.original.recivedTareQuantity)}</div>
+              </div>
+              <div className="flex justify-between">
+                <div className="w-20 font-bold">NET</div>
+                <div>{displayTon(row.original.recivedNetQuantity)}</div>
+              </div>
+            </Tooltip>
           </div>
         )
       },
@@ -288,9 +457,9 @@ const Index: NextPage<Props> = () => {
       },
       cell: ({ getValue }) => {
         return (
-            <div className='w-full capitalize'>
-              {displayDateTime(getValue() as string)}
-            </div>
+          <div className='w-full capitalize'>
+            {displayDateTime(getValue() as string)}
+          </div>
         )
       },
     },
@@ -374,7 +543,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Stock movement vehicle'}</title>
+        <title>{process.env.APP_NAME + ' - Transfer'}</title>
       </Head>
       <ModalFilter
         show={showModalFilter}
@@ -397,7 +566,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Stock movement vehicle', path: '' },
+            { name: 'Transfer', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>

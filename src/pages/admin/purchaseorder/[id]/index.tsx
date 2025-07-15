@@ -445,7 +445,7 @@ const Index: NextPage<Props> = ({ id }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Purchaseorder Detail'}</title>
+        <title>{process.env.APP_NAME + ' - Purchase Order Detail'}</title>
       </Head>
       <ModalEditPurchaseorder
         show={showModalEditPurchaseorder}
@@ -455,7 +455,7 @@ const Index: NextPage<Props> = ({ id }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Purchaseorder', path: '/admin/purchaseorder' },
+            { name: 'Purchase Order', path: '/admin/purchaseorder' },
             { name: purchaseorder?.number.toString() || id, path: '' },
           ]}
         />
@@ -472,11 +472,11 @@ const Index: NextPage<Props> = ({ id }) => {
                 <div className="">
                   <div className="mb-4">
                     <div className="text-xl flex justify-between items-center mb-2">
-                      <div>Purchaseorder</div>
+                      <div>Purchase Order</div>
                       <button
                         className='ml-2 h-8 w-8 flex justify-center items-center duration-300 rounded shadow hover:scale-110'
                         type="button"
-                        title='Edit Purchaseorder'
+                        title='Edit Purchase Order'
                         onClick={() => toggleModalEditPurchaseorder(purchaseorder?.id)}
                       >
                         <RiPencilLine className='text-amber-500' size={'1.2rem'} />

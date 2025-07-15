@@ -501,7 +501,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Purchaseorder'}</title>
+        <title>{process.env.APP_NAME + ' - Purchase Order'}</title>
       </Head>
       <ModalFilter
         show={showModalFilter}
@@ -540,7 +540,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Purchaseorder', path: '' },
+            { name: 'Purchase Order', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -559,7 +559,7 @@ const Index: NextPage<Props> = () => {
                   <Link href={{ pathname: '/admin/purchaseorder/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Purchaseorder</div>
+                      <div>New Purchase Order</div>
                     </div>
                   </Link>
                 </div>

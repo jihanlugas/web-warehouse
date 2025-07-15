@@ -10,6 +10,7 @@ export declare interface StockmovementvehicleView {
     stockmovementId: string;
     productId: string;
     vehicleId: string;
+    type: string;
     sentGrossQuantity: number;
     sentTareQuantity: number;
     sentNetQuantity: number;
