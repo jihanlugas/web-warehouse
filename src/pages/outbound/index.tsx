@@ -19,30 +19,35 @@ import { PiFolderOpenDuotone } from "react-icons/pi";
 
 type Props = object
 
-type PropsDeliveryState = {
-  outbound: OutboundView
-}
-
-const DeliveryState: NextPage<PropsDeliveryState> = ({ outbound }) => {
-  if (outbound.sentTime === null) {
-    return (
-      <div className="bg-yellow-500 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'LOADING'}</div>
-    )
-  } else if (outbound.sentTime !== null && outbound.recivedTime === null && outbound.recivedGrossQuantity === 0) {
-    return (
-      <div className="bg-blue-600 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'IN TRANSIT'}</div>
-    )
-  } else if (outbound.sentTime !== null && outbound.recivedTime === null && outbound.recivedGrossQuantity !== 0) {
-    return (
-      <div className="bg-amber-600 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'UNLOADING'}</div>
-    )
-  } else if (outbound.sentTime !== null && outbound.recivedTime !== null) {
-    return (
-      <div className="bg-green-600 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'COMPLETED'}</div>
-    )
+const RenderStatus = ({ status }) => {
+  switch (status) {
+    case "LOADING":
+      return (
+        <div className='w-full'>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
+        </div>
+      )
+    case "IN TRANSIT":
+      return (
+        <div className='w-full'>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
+        </div>
+      )
+    case "UNLOADING":
+      return (
+        <div className='w-full'>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-amber-600 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
+        </div>
+      )
+    case "COMPLETED":
+      return (
+        <div className='w-full'>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
+        </div>
+      )
+    default:
+      return null
   }
-
-  return null
 }
 
 const Index: NextPage<Props> = () => {
@@ -211,7 +216,7 @@ const Index: NextPage<Props> = () => {
                                 <div className="">{data?.stockmovement?.toWarehouse?.name}</div>
                               </div>
                             </div>
-                            <div><DeliveryState outbound={data} /></div>
+                            <div><RenderStatus status={data.status} /></div>
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="mb-2">

@@ -23,22 +23,23 @@ type Props = {
   loginUser: LoginUser
 }
 
-type PropsDeliveryState = {
-  stockmovementvehicle: StockmovementvehicleView
-}
-
-const DeliveryState: NextPage<PropsDeliveryState> = ({ stockmovementvehicle }) => {
-  if (stockmovementvehicle.sentTime === null) {
-    return (
-      <div className="bg-yellow-500 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'LOADING'}</div>
-    )
-  } else if (stockmovementvehicle.sentTime !== null) {
-    return (
-      <div className="bg-green-600 px-2 py-1 rounded-full font-bold text-gray-50 text-xs">{'SENT'}</div>
-    )
+const RenderStatus = ({ status }) => {
+  switch (status) {
+    case "LOADING":
+      return (
+        <div className="p-2 ">
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} >{status}</span>
+        </div>
+      )
+    case "COMPLETED":
+      return (
+        <div className="p-2 ">
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} >{status}</span>
+        </div>
+      )
+    default:
+      break;
   }
-
-  return null
 }
 
 const Index: NextPage<Props> = ({ loginUser }) => {
@@ -212,7 +213,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
                                 <div className="">{data?.stockmovement?.purchaseorder?.customer?.name}</div>
                               </div>
                             </div>
-                            <div><DeliveryState stockmovementvehicle={data} /></div>
+                            <div><RenderStatus status={data.status} /></div>
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="mb-2">

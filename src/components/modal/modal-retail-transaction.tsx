@@ -120,7 +120,6 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
       default:
         break;
     }
-
   }
 
   return (

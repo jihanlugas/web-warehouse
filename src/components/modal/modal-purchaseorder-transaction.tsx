@@ -120,7 +120,6 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
       default:
         break;
     }
-
   }
 
   return (
