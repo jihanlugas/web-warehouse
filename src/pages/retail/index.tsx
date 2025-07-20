@@ -18,6 +18,8 @@ import ModalConfirm from "@/components/modal/modal-confirm";
 import { STOCK_MOVEMENT_TYPE_RETAIL } from "@/utils/constant";
 import { LoginUser } from "@/types/auth";
 import { PiFolderOpenDuotone } from "react-icons/pi";
+import ModalEditStockmovementvehicle from "@/components/modal/modal-edit-stockmovementvehicle";
+import ModalPhoto from "@/components/modal/modal-photo";
 
 type Props = {
   loginUser: LoginUser
@@ -50,6 +52,10 @@ const Index: NextPage<Props> = ({ loginUser }) => {
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
   const [confirmId, setConfirmId] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<string>('')
+  const [showModalEditStockmovementvehicle, setShowModalEditStockmovementvehicle] = useState<boolean>(false);
+  const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
+  const [allowAdd, setAllowAdd] = useState<boolean>(false);
 
 
   const [pageRequest] = useState<PageStockmovementvehicle>({
@@ -142,15 +148,39 @@ const Index: NextPage<Props> = ({ loginUser }) => {
     })
   }
 
-  // useEffect(() => {
-  //   setUser(loginUser.payload.user)
-  // }, [loginUser])
+  const toggleModalEditStockmovementvehicle = (id = '', refresh = false) => {
+    if (refresh) {
+      refetch()
+    }
+    setSelectedId(id)
+    setShowModalEditStockmovementvehicle(!showModalEditStockmovementvehicle);
+  };
+
+  const toggleModalPhoto = (id = '', refresh = false, status = '') => {
+    if (refresh) {
+      refetch()
+    }
+    setAllowAdd(status === 'LOADING')
+    setSelectedId(id)
+    setShowModalPhoto(!showModalPhoto);
+  };
 
   return (
     <>
       <Head>
         <title>{process.env.APP_NAME + ' - Retail'}</title>
       </Head>
+      <ModalEditStockmovementvehicle
+        show={showModalEditStockmovementvehicle}
+        onClickOverlay={toggleModalEditStockmovementvehicle}
+        id={selectedId}
+      />
+      <ModalPhoto
+        show={showModalPhoto}
+        onClickOverlay={toggleModalPhoto}
+        id={selectedId}
+        allowAdd={allowAdd}
+      />
       <ModalDeleteVerify
         show={showModalDelete}
         onClickOverlay={toggleModalDelete}
@@ -241,14 +271,29 @@ const Index: NextPage<Props> = ({ loginUser }) => {
                                 {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
                               </button>
                             ) : (
-                              <button
-                                className="ml-4 px-2 py-1"
-                                onClick={() => toggleModalConfirm(data.id)}
-                                disabled={isPendingSent}
-                              >
-                                {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Send</div>}
-                              </button>
+                              <>
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalConfirm(data.id)}
+                                  disabled={isPendingSent}
+                                >
+                                  {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Send</div>}
+                                </button>
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalEditStockmovementvehicle(data.id)}
+                                  disabled={isPendingDeliveryOrder}
+                                >
+                                  <div>Loading</div>
+                                </button>
+                              </>
                             )}
+                            <button
+                              className="ml-4 px-2 py-1"
+                              onClick={() => toggleModalPhoto(data.id, false, data.status)}
+                            >
+                              <div>Photo</div>
+                            </button>
                             <Link key={data.id} href={{ pathname: '/retail/[id]', query: { id: data.id } }}>
                               <div className="ml-4 px-2 py-1">
                                 Detail

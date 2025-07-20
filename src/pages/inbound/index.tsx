@@ -15,6 +15,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ModalConfirm from "@/components/modal/modal-confirm";
 import ModalEditInbound from "@/components/modal/modal-edit-inbound";
 import { PiFolderOpenDuotone } from "react-icons/pi";
+import ModalPhoto from "@/components/modal/modal-photo";
 
 type Props = object
 
@@ -59,6 +60,8 @@ const Index: NextPage<Props> = () => {
   const [confirmId, setConfirmId] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string>('')
   const [showModalEditInbound, setShowModalEditInbound] = useState<boolean>(false);
+  const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
+  const [allowAdd, setAllowAdd] = useState<boolean>(false);
 
   const [pageRequest] = useState<PageInbound>({
     limit: -1,
@@ -119,6 +122,15 @@ const Index: NextPage<Props> = () => {
     setShowModalEditInbound(!showModalEditInbound);
   };
 
+  const toggleModalPhoto = (id = '', refresh = false, status = '') => {
+    if (refresh) {
+      refetch()
+    }
+    setAllowAdd(status === 'UNLOADING')
+    setSelectedId(id)
+    setShowModalPhoto(!showModalPhoto);
+  };
+
   const handleGenerateDeliveryRecipt = async (id: string) => {
     mutateDeliveryRecipt(id, {
       onError: () => {
@@ -136,6 +148,12 @@ const Index: NextPage<Props> = () => {
         show={showModalEditInbound}
         onClickOverlay={toggleModalEditInbound}
         id={selectedId}
+      />
+      <ModalPhoto
+        show={showModalPhoto}
+        onClickOverlay={toggleModalPhoto}
+        id={selectedId}
+        allowAdd={allowAdd}
       />
       <ModalConfirm
         show={showModalConfirm}
@@ -223,6 +241,12 @@ const Index: NextPage<Props> = () => {
                                 </button>
                               </>
                             )}
+                            <button
+                              className="ml-4 px-2 py-1"
+                              onClick={() => toggleModalPhoto(data.id, false, data.status)}
+                            >
+                              <div>Photo</div>
+                            </button>
                             <Link key={data.id} href={{ pathname: '/inbound/[id]', query: { id: data.id } }}>
                               <div className="ml-4 px-2 py-1">
                                 Detail

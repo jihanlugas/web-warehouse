@@ -3,6 +3,7 @@ import { ProductView } from "./product";
 import { PurchaseorderView } from "./purchaseorder";
 import { RetailView } from "./retail";
 import { StockmovementView } from "./stockmovement";
+import { StockmovementvehiclephotoView } from "./stockmovementvehiclephoto";
 import { VehicleView } from "./vehicle";
 
 export declare interface StockmovementvehicleView {
@@ -33,6 +34,7 @@ export declare interface StockmovementvehicleView {
     purchaseorder?: PurchaseorderView;
     retail?: RetailView;
     product?: ProductView;
+    stockmovementvehiclephotos?: StockmovementvehiclephotoView[];
 }
 
 export declare interface CreateStockmovementvehiclePurchaseorder {

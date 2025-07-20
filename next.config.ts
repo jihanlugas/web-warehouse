@@ -14,7 +14,17 @@ const nextConfig: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
-  }
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "1323",
+        pathname: "/storage/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

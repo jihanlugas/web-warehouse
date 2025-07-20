@@ -75,13 +75,13 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar, loginUser }) => {
         {user && (
           <div className="relative inline-block text-left p-2" ref={refProfile}>
             <div className="flex items-center">
-              <div className="hidden md:block mx-2 text-white">{user.fullname}</div>
+              <div className="hidden md:block mx-2 text-white capitalize">{user.fullname}</div>
               {user.photoUrl !== '' ? (
                 <button className="relative overflow-hidden mx-2 h-10 w-10 rounded-full" onClick={() => setProfileBar(!profileBar)}>
                   <Image src={user.photoUrl} alt={user.fullname} layout={'fill'} />
                 </button>
               ) : (
-                <button className="mx-2 h-10 w-10 bg-gray-700 rounded-full text-gray-100 flex justify-center items-center text-xl" onClick={() => setProfileBar(!profileBar)}>
+                <button className="mx-2 h-10 w-10 bg-gray-700 rounded-full text-gray-100 flex justify-center items-center text-xl uppercase" onClick={() => setProfileBar(!profileBar)}>
                   {getInitialWord(user.fullname)}
                 </button>
               )}

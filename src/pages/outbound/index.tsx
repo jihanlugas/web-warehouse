@@ -16,6 +16,8 @@ import moment from "moment";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ModalConfirm from "@/components/modal/modal-confirm";
 import { PiFolderOpenDuotone } from "react-icons/pi";
+import ModalEditOutbound from "@/components/modal/modal-edit-outbound";
+import ModalPhoto from "@/components/modal/modal-photo";
 
 type Props = object
 
@@ -59,6 +61,10 @@ const Index: NextPage<Props> = () => {
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
   const [confirmId, setConfirmId] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<string>('')
+  const [showModalEditOutbound, setShowModalEditOutbound] = useState<boolean>(false);
+  const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
+  const [allowAdd, setAllowAdd] = useState<boolean>(false);
 
 
   const [pageRequest] = useState<PageOutbound>({
@@ -149,11 +155,39 @@ const Index: NextPage<Props> = () => {
     })
   }
 
+  const toggleModalEditOutbound = (id = '', refresh = false) => {
+    if (refresh) {
+      refetch()
+    }
+    setSelectedId(id)
+    setShowModalEditOutbound(!showModalEditOutbound);
+  };
+
+  const toggleModalPhoto = (id = '', refresh = false, status = '') => {
+    if (refresh) {
+      refetch()
+    }
+    setAllowAdd(status === 'LOADING')
+    setSelectedId(id)
+    setShowModalPhoto(!showModalPhoto);
+  };
+
   return (
     <>
       <Head>
         <title>{process.env.APP_NAME + ' - Transfer Out'}</title>
       </Head>
+      <ModalEditOutbound
+        show={showModalEditOutbound}
+        onClickOverlay={toggleModalEditOutbound}
+        id={selectedId}
+      />
+      <ModalPhoto
+        show={showModalPhoto}
+        onClickOverlay={toggleModalPhoto}
+        id={selectedId}
+        allowAdd={allowAdd}
+      />
       <ModalDeleteVerify
         show={showModalDelete}
         onClickOverlay={toggleModalDelete}
@@ -244,14 +278,29 @@ const Index: NextPage<Props> = () => {
                                 {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
                               </button>
                             ) : (
-                              <button
-                                className="ml-4 px-2 py-1"
-                                onClick={() => toggleModalConfirm(data.id)}
-                                disabled={isPendingSent}
-                              >
-                                {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Send</div>}
-                              </button>
+                              <>
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalConfirm(data.id)}
+                                  disabled={isPendingSent}
+                                >
+                                  {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Send</div>}
+                                </button>
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalEditOutbound(data.id)}
+                                  disabled={isPendingSent}
+                                >
+                                  <div>Loading</div>
+                                </button>
+                              </>
                             )}
+                            <button
+                              className="ml-4 px-2 py-1"
+                              onClick={() => toggleModalPhoto(data.id, false, data.status)}
+                            >
+                              <div>Photo</div>
+                            </button>
                             <Link key={data.id} href={{ pathname: '/outbound/[id]', query: { id: data.id } }}>
                               <div className="ml-4 px-2 py-1">
                                 Detail
