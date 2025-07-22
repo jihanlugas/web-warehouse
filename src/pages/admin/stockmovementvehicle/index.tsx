@@ -21,6 +21,8 @@ import ModalFilter from "@/components/modal/modal-filter-stockmovementvehicle";
 import MainAdmin from "@/components/layout/main-admin";
 import { StockmovementView } from "@/types/stockmovement";
 import { Tooltip } from "react-tooltip";
+import { StockmovementvehiclephotoView } from "@/types/stockmovementvehiclephoto";
+import ModalPhoto from "@/components/modal/modal-photo";
 
 type Props = object
 
@@ -225,6 +227,9 @@ const Index: NextPage<Props> = () => {
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
+  const [selectedId, setSelectedId] = useState<string>('')
+  const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
+  const [allowAdd, setAllowAdd] = useState<boolean>(false);
 
   const [filter, setFilter] = useState<PageStockmovementvehicle>({
     fromWarehouseId: '',
@@ -262,8 +267,16 @@ const Index: NextPage<Props> = () => {
   const [pageRequest, setPageRequest] = useState<PageStockmovementvehicle>({
     limit: 10,
     page: 1,
-    preloads: "Stockmovement,Stockmovement.FromWarehouse,Stockmovement.ToWarehouse",
+    preloads: "Stockmovement,Stockmovement.FromWarehouse,Stockmovement.ToWarehouse,Stockmovementvehiclephotos",
   });
+
+  const toggleModalPhoto = (id = '', refresh = false, status = '') => {
+    if (refresh) {
+      refetch()
+    }
+    setSelectedId(id)
+    setShowModalPhoto(!showModalPhoto);
+  };
 
   const column: ColumnDef<StockmovementvehicleView>[] = [
     {
@@ -298,7 +311,7 @@ const Index: NextPage<Props> = () => {
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{getValue() as string}</span>
+            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{(getValue() as string).replace('_', ' ')}</span>
           </div>
         )
       },
@@ -360,6 +373,28 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
+      id: 'stockmovementvehiclephotos',
+      accessorKey: 'stockmovementvehiclephotos',
+      enableSorting: false,
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"Photo"}
+          </div>
+        );
+      },
+      cell: ({ getValue, row }) => {
+        const data = getValue() as StockmovementvehiclephotoView[]
+        return (
+          <div className="text-left">
+            <button className='w-full capitalize text-left cursor-pointer' onClick={() => toggleModalPhoto(row.original.id)} >
+              <span className="text-primary-500 " data-tooltip-id={`tootltip-number-${row.original.id}`}>{data ? data?.length + ' Photos' : '0 Photos'}</span>
+            </button>
+          </div>
+        )
+      },
+    },
+    {
       id: 'sent_net_quantity',
       accessorKey: 'sentNetQuantity',
       header: () => {
@@ -376,6 +411,10 @@ const Index: NextPage<Props> = () => {
             <Tooltip id={`tootltip-sent-${row.original.id}`} className="text-left">
               <div className="font-bold">{"Sent Quantity"}</div>
               <hr className='border-gray-500 border-1 my-2' />
+              <div className="flex justify-between">
+                <div className="w-20 font-bold">Sent Time</div>
+                <div>{row.original.sentTime ? displayDateTime(row.original.sentTime) : ' - '}</div>
+              </div>
               <div className="flex justify-between">
                 <div className="w-20 font-bold">GROSS</div>
                 <div>{displayTon(row.original.sentGrossQuantity)}</div>
@@ -410,6 +449,10 @@ const Index: NextPage<Props> = () => {
             <Tooltip id={`tootltip-recived-${row.original.id}`} className="text-left">
               <div className="font-bold">{"Recived Quantity"}</div>
               <hr className='border-gray-500 border-1 my-2' />
+              <div className="flex justify-between">
+                <div className="w-20 font-bold">Recived Time</div>
+                <div>{row.original.recivedTime ? displayDateTime(row.original.recivedTime) : ' - '}</div>
+              </div>
               <div className="flex justify-between">
                 <div className="w-20 font-bold">GROSS</div>
                 <div>{displayTon(row.original.recivedGrossQuantity)}</div>
@@ -550,6 +593,12 @@ const Index: NextPage<Props> = () => {
         onClickOverlay={toggleModalFilter}
         filter={filter}
         setFilter={setFilter}
+      />
+      <ModalPhoto
+        show={showModalPhoto}
+        onClickOverlay={toggleModalPhoto}
+        id={selectedId}
+        allowAdd={allowAdd}
       />
       <ModalDeleteVerify
         show={showModalDelete}
