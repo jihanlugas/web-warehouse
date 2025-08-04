@@ -1,5 +1,6 @@
 import { Paging } from "./pagination";
 import { StockmovementView } from "./stockmovement";
+import { StockmovementvehicleView } from "./stockmovementvehicle";
 import { VehicleView } from "./vehicle";
 import { WarehouseView } from "./warehouse";
 
@@ -9,6 +10,7 @@ export declare interface InboundView {
     stockmovementId: string;
     productId: string;
     vehicleId: string;
+    stockmovementvehicleId: string;
     type: string;
     remark: string;
     sentGrossQuantity: number;
@@ -30,6 +32,8 @@ export declare interface InboundView {
     warehouse?: WarehouseView;
     vehicle?: VehicleView;
     stockmovement?: StockmovementView;
+    stockmovementvehicle?: StockmovementvehicleView;
+    stockmovementvehicles?: StockmovementvehicleView[];
 }
 
 export declare interface CreateInbound {
@@ -63,6 +67,7 @@ export declare interface PageInbound extends Paging {
     vehicleId?: string;
     type?: string;
     remark?: string;
+    status?: string;
     startSentGrossQuantity?: number;
     startSentTareQuantity?: number;
     startSentNetQuantity?: number;

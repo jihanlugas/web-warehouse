@@ -1,5 +1,6 @@
 import { Paging } from "./pagination";
 import { StockmovementView } from "./stockmovement";
+import { StockmovementvehicleView } from "./stockmovementvehicle";
 import { VehicleView } from "./vehicle";
 import { WarehouseView } from "./warehouse";
 
@@ -30,9 +31,12 @@ export declare interface OutboundView {
     warehouse?: WarehouseView;
     vehicle?: VehicleView;
     stockmovement?: StockmovementView;
+    stockmovementvehicle?: StockmovementvehicleView;
+    stockmovementvehicles?: StockmovementvehicleView[];
 }
 
 export declare interface CreateOutbound {
+    isDirect: boolean;
     isNewVehiclerdriver: boolean;
     plateNumber: string;
     vehicleName: string;
@@ -44,6 +48,7 @@ export declare interface CreateOutbound {
     remark: string;
     productId: string;
     vehicleId: string;
+    stockmovementvehicleId: string;
     sentGrossQuantity: string | number;
     sentTareQuantity: string | number;
     sentNetQuantity: string | number;
@@ -63,6 +68,7 @@ export declare interface PageOutbound extends Paging {
     vehicleId?: string;
     type?: string;
     remark?: string;
+    status?: string;
     startSentGrossQuantity?: number;
     startSentTareQuantity?: number;
     startSentNetQuantity?: number;

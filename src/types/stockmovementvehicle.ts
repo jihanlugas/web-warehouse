@@ -11,6 +11,7 @@ export declare interface StockmovementvehicleView {
     stockmovementId: string;
     productId: string;
     vehicleId: string;
+    stockmovementvehicleId: string;
     type: string;
     sentGrossQuantity: number;
     sentTareQuantity: number;
@@ -31,6 +32,7 @@ export declare interface StockmovementvehicleView {
     vehicle?: VehicleView;
     stockmovement?: StockmovementView;
     stockmovementvehicle?: StockmovementvehicleView;
+    stockmovementvehicles?: StockmovementvehicleView[];
     purchaseorder?: PurchaseorderView;
     retail?: RetailView;
     product?: ProductView;
@@ -38,6 +40,7 @@ export declare interface StockmovementvehicleView {
 }
 
 export declare interface CreateStockmovementvehiclePurchaseorder {
+    isDirect: boolean;
     fromWarehouseId: string;
     purchaseorderId: string;
     productId: string;
@@ -45,6 +48,7 @@ export declare interface CreateStockmovementvehiclePurchaseorder {
     plateNumber: string;
     vehicleId: string;
     vehicleName: string;
+    stockmovementvehicleId: string;
     nik: string;
     driverName: string;
     phoneNumber: string;
@@ -60,6 +64,7 @@ export declare interface UpdateStockmovementvehiclePurchaseorder {
 }
 
 export declare interface CreateStockmovementvehicleRetail {
+    isDirect: boolean;
     fromWarehouseId: string;
     retailId: string;
     productId: string;
@@ -67,6 +72,7 @@ export declare interface CreateStockmovementvehicleRetail {
     plateNumber: string;
     vehicleId: string;
     vehicleName: string;
+    stockmovementvehicleId: string;
     nik: string;
     driverName: string;
     phoneNumber: string;
@@ -88,6 +94,7 @@ export declare interface PageStockmovementvehicle extends Paging {
     productId?: string;
     vehicleId?: string;
     relatedId?: string;
+    status?: string;
     startSentGrossQuantity?: string | number;
     startSentTareQuantity?: string | number;
     startSentNetQuantity?: string | number;

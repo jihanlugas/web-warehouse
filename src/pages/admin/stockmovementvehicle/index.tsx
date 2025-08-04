@@ -267,7 +267,7 @@ const Index: NextPage<Props> = () => {
   const [pageRequest, setPageRequest] = useState<PageStockmovementvehicle>({
     limit: 10,
     page: 1,
-    preloads: "Stockmovement,Stockmovement.FromWarehouse,Stockmovement.ToWarehouse,Stockmovementvehiclephotos",
+    preloads: "Stockmovement,Stockmovement.FromWarehouse,Stockmovement.ToWarehouse,Stockmovementvehiclephotos,Stockmovementvehicles",
   });
 
   const toggleModalPhoto = (id = '', refresh = false, status = '') => {
@@ -471,6 +471,47 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
+      id: 'stockmovementvehicles',
+      accessorKey: 'stockmovementvehicles',
+      enableSorting: false,
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"Direct"}
+          </div>
+        );
+      },
+      cell: ({ getValue, row }) => {
+
+        const stockmovementvehicles = getValue() as StockmovementvehicleView[]
+        const getTotal = stockmovementvehicles?.reduce((total, item) => {
+          return total + item.sentNetQuantity
+        }, 0)
+
+
+        return (
+          <div className='w-full capitalize text-right'>
+            <span data-tooltip-id={`tootltip-direct-${row.original.id}`}>{stockmovementvehicles ? displayTon(getTotal) : '-'}</span>
+            {stockmovementvehicles && stockmovementvehicles.length > 0 && (
+              <Tooltip id={`tootltip-direct-${row.original.id}`} className="text-left">
+                <div className="font-bold">{"Direct"}</div>
+                <hr className='border-gray-500 border-1 my-2' />
+                {stockmovementvehicles.map((stockmovementvehicle, key) => {
+                  return (
+                    <div key={key} className="flex justify-between items-center">
+                      <div className="w-48 font-bold">{stockmovementvehicle.number}</div>
+                      <div className="text-right">{displayTon(stockmovementvehicle.sentNetQuantity)}</div>
+                    </div>
+                  )
+                })}
+              </Tooltip>
+            )}
+
+          </div>
+        )
+      },
+    },
+    {
       id: 'shrinkage',
       accessorKey: 'shrinkage',
       header: () => {
@@ -660,3 +701,6 @@ const Index: NextPage<Props> = () => {
 (Index as PageWithLayoutType).layout = MainAdmin;
 
 export default Index;
+
+
+

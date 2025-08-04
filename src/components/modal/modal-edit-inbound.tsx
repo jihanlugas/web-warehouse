@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 import ButtonSubmit from "@/components/formik/button-submit";
 import notif from "@/utils/notif";
 import TextFieldNumber from "../formik/text-field-number";
-import { displayDateTime, displayNumber } from "@/utils/formater";
+import { displayDateTime, displayNumber, displayTon } from "@/utils/formater";
 
 
 type Props = {
@@ -37,7 +37,7 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [initFormikValue, setInitFormikValue] = useState<UpdateInbound>(defaultInitFormikValue)
 
-  const preloads = 'Stockmovement,Stockmovement.FromWarehouse'
+  const preloads = 'Stockmovement,Stockmovement.FromWarehouse,Stockmovementvehicles,Stockmovementvehicles.Vehicle'
   const { data, isLoading } = useQuery({
     queryKey: ['inbound', selectedId, preloads],
     queryFn: ({ queryKey }) => {
@@ -95,6 +95,10 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     });
   }
 
+  const totalDirect = inbound?.stockmovementvehicles?.reduce((total, item) => {
+    return total + item.sentNetQuantity
+  }, 0) || 0
+
   return (
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
@@ -137,6 +141,24 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                   </div>
                 </div>
                 <hr className="border-gray-300 my-2" />
+                {inbound.stockmovementvehicles?.length > 0 && (
+                  <>
+                    <div>
+                      <div className="text-lg mb-2">
+                        <div>{"Direct"}</div>
+                      </div>
+                      {inbound.stockmovementvehicles.map((stockmovementvehicle, key) => {
+                        return (
+                          <div key={key} className="flex justify-between items-center mb-2">
+                            <div>{stockmovementvehicle.number + ' | ' + stockmovementvehicle.vehicle?.plateNumber}</div>
+                            <div>{displayTon(stockmovementvehicle.sentNetQuantity)}</div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                    <hr className="border-gray-300 my-2" />
+                  </>
+                )}
                 <Formik
                   initialValues={initFormikValue}
                   validationSchema={schema}
@@ -151,6 +173,7 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                             label={'Tare Quantity'}
                             name={`recivedTareQuantity`}
                             placeholder={'Tare Quantity'}
+                            className="text-right"
                           />
                         </div>
                         <div className="mb-4">
@@ -158,12 +181,27 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                             label={'Gross Quantity'}
                             name={`recivedGrossQuantity`}
                             placeholder={'Gross Quantity'}
+                            className="text-right"
                           />
                         </div>
-                        <div className="mb-4">
-                          <div>Net Quantity</div>
-                          <div>{displayNumber((parseFloat(values.recivedGrossQuantity as string || "0") - parseFloat(values.recivedTareQuantity as string || "0")))}</div>
+                        <div className="mb-2 flex justify-between items-center">
+                          <div>Tare Quantity</div>
+                          <div>{displayTon(parseFloat(values.recivedTareQuantity as string || "0"))}</div>
                         </div>
+                        <div className="mb-2 flex justify-between items-center">
+                          <div>Gross Quantity</div>
+                          <div>{displayTon(parseFloat(values.recivedGrossQuantity as string || "0"))}</div>
+                        </div>
+                        <div className="mb-2 flex justify-between items-center">
+                          <div>Net Quantity</div>
+                          <div>{displayTon((parseFloat(values.recivedGrossQuantity as string || "0") - parseFloat(values.recivedTareQuantity as string || "0")))}</div>
+                        </div>
+                        {totalDirect !== 0 && (
+                          <div className="mb-2 flex justify-between items-center">
+                            <div>Direct</div>
+                            <div>{displayTon(totalDirect)}</div>
+                          </div>
+                        )}
                         <div className="mb-4">
                           <ButtonSubmit
                             label={'Save'}

@@ -56,7 +56,8 @@ const Index: NextPage<Props> = () => {
 
 
   const [inbound, setInbound] = useState<InboundView[]>([]);
-  const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
+  const [showModalConfirmSetUnloading, setShowModalConfirmSetUnloading] = useState<boolean>(false);
+  const [showModalConfirmSetComplete, setShowModalConfirmSetComplete] = useState<boolean>(false);
   const [confirmId, setConfirmId] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string>('')
   const [showModalEditInbound, setShowModalEditInbound] = useState<boolean>(false);
@@ -74,9 +75,14 @@ const Index: NextPage<Props> = () => {
     queryFn: ({ queryKey }) => Api.get('/inbound', queryKey[1] as object),
   });
 
-  const { mutate: mutateRecived, isPending: isPendingRecived } = useMutation({
-    mutationKey: ['inbound', confirmId, 'set-recived'],
-    mutationFn: (id: string) => Api.get('/inbound/' + id + '/set-recived')
+  const { mutate: mutateSetUnloading, isPending: isPendingSetUnloading } = useMutation({
+    mutationKey: ['inbound', confirmId, 'set-unloading'],
+    mutationFn: (id: string) => Api.get('/inbound/' + id + '/set-unloading')
+  });
+
+  const { mutate: mutateSetComplete, isPending: isPendingSetComplete } = useMutation({
+    mutationKey: ['inbound', confirmId, 'set-complete'],
+    mutationFn: (id: string) => Api.get('/inbound/' + id + '/set-complete')
   });
 
   const { mutate: mutateDeliveryRecipt, isPending: isPendingDeliveryRecipt } = useMutation({
@@ -84,9 +90,14 @@ const Index: NextPage<Props> = () => {
     mutationFn: (id: string) => Api.getpdf('/inbound/' + id + "/generate-delivery-recipt"),
   })
 
-  const toggleModalConfirm = (id = '') => {
+  const toggleModalConfirmSetUnloading = (id = '') => {
     setConfirmId(id);
-    setShowModalConfirm(!showModalConfirm);
+    setShowModalConfirmSetUnloading(!showModalConfirmSetUnloading);
+  };
+
+  const toggleModalConfirmSetComplete = (id = '') => {
+    setConfirmId(id);
+    setShowModalConfirmSetComplete(!showModalConfirmSetComplete);
   };
 
 
@@ -96,8 +107,8 @@ const Index: NextPage<Props> = () => {
     }
   }, [data]);
 
-  const handleRecived = () => {
-    mutateRecived(confirmId, {
+  const handleSetUnloading = () => {
+    mutateSetUnloading(confirmId, {
       onSuccess: ({ status, message }) => {
         if (status) {
           notif.success(message);
@@ -105,11 +116,29 @@ const Index: NextPage<Props> = () => {
         } else {
           notif.error(message);
         }
-        toggleModalConfirm();
+        toggleModalConfirmSetUnloading();
       },
       onError: () => {
         notif.error('Please cek you connection');
-        toggleModalConfirm();
+        toggleModalConfirmSetUnloading();
+      },
+    });
+  }
+
+  const handleSetComplete = () => {
+    mutateSetComplete(confirmId, {
+      onSuccess: ({ status, message }) => {
+        if (status) {
+          notif.success(message);
+          refetch();
+        } else {
+          notif.error(message);
+        }
+        toggleModalConfirmSetComplete();
+      },
+      onError: () => {
+        notif.error('Please cek you connection');
+        toggleModalConfirmSetComplete();
       },
     });
   }
@@ -156,10 +185,21 @@ const Index: NextPage<Props> = () => {
         allowAdd={allowAdd}
       />
       <ModalConfirm
-        show={showModalConfirm}
-        onClickOverlay={toggleModalConfirm}
-        onConfirm={handleRecived}
-        isLoading={isPendingRecived}
+        show={showModalConfirmSetUnloading}
+        onClickOverlay={toggleModalConfirmSetUnloading}
+        onConfirm={handleSetUnloading}
+        isLoading={isPendingSetUnloading}
+      >
+        <div>
+          <div className='mb-4'>Are you sure ?</div>
+          <div className='text-sm mb-4 text-gray-700'>Are you sure the preparation is done</div>
+        </div>
+      </ModalConfirm>
+      <ModalConfirm
+        show={showModalConfirmSetComplete}
+        onClickOverlay={toggleModalConfirmSetComplete}
+        onConfirm={handleSetComplete}
+        isLoading={isPendingSetComplete}
       >
         <div>
           <div className='mb-4'>Are you sure ?</div>
@@ -213,7 +253,7 @@ const Index: NextPage<Props> = () => {
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="text-primary-400 flex justify-end">
-                            {data.recivedTime ? (
+                            {data.status === 'COMPLETED' && (
                               <button
                                 className="ml-4 px-2 py-1"
                                 onClick={() => handleGenerateDeliveryRecipt(data.id)}
@@ -221,25 +261,32 @@ const Index: NextPage<Props> = () => {
                               >
                                 {isPendingDeliveryRecipt ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Recipt</div>}
                               </button>
-                            ) : (
+                            )}
+                            {data.status === 'UNLOADING' && (
                               <>
-                                {data.recivedGrossQuantity !== 0 && (
-                                  <button
-                                    className="ml-4 px-2 py-1"
-                                    onClick={() => toggleModalConfirm(data.id)}
-                                    disabled={isPendingRecived}
-                                  >
-                                    {isPendingRecived ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Recived</div>}
-                                  </button>
-                                )}
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalConfirmSetComplete(data.id)}
+                                  disabled={isPendingSetComplete}
+                                >
+                                  {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+                                </button>
                                 <button
                                   className="ml-4 px-2 py-1"
                                   onClick={() => toggleModalEditInbound(data.id)}
-                                  disabled={isPendingRecived}
                                 >
-                                  {isPendingRecived ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Unloading</div>}
+                                  <div>Unloading</div>
                                 </button>
                               </>
+                            )}
+                            {data.status === 'IN TRANSIT' && (
+                              <button
+                                className="ml-4 px-2 py-1"
+                                onClick={() => toggleModalConfirmSetUnloading(data.id)}
+                                disabled={isPendingSetUnloading}
+                              >
+                                {isPendingSetUnloading ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Unloading</div>}
+                              </button>
                             )}
                             <button
                               className="ml-4 px-2 py-1"

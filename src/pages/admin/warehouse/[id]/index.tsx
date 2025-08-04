@@ -233,8 +233,10 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
   return (
     <div>
       <div className="my-4">
-        <div className="text-lg text-gray-600">{stock.product?.name || stock.id}</div>
-        <div className="">{"Current Stock " + displayTon(stock.quantity)}</div>
+        <div className="text-lg text-gray-600 flex">
+          <div className="mr-4">{stock.product?.name || stock.id}</div>
+          <div className="font-bold mr-4">{displayTon(stock.quantity)}</div>
+          </div>
       </div>
       <div className=''>
         <Table

@@ -26,29 +26,30 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
+  isDirect: Yup.boolean(),
   isNewVehiclerdriver: Yup.boolean(),
   purchaseorderId: Yup.string().required('Required Field'),
   vehicleId: Yup.string().when('isNewVehiclerdriver', {
     is: false,
-    then: schema => schema.required('Customer is required'),
+    then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  plateNumber: Yup.string().when('isNewCustomer', {
+  plateNumber: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  vehicleName: Yup.string().when('isNewCustomer', {
+  vehicleName: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  driverName: Yup.string().when('isNewCustomer', {
+  driverName: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  phoneNumber: Yup.string().when('isNewCustomer', {
+  phoneNumber: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
@@ -56,9 +57,15 @@ const schema = Yup.object().shape({
   sentGrossQuantity: Yup.number(),
   sentTareQuantity: Yup.number(),
   sentNetQuantity: Yup.number(),
+  stockmovementvehicleId: Yup.string().when('isDirect', {
+    is: true,
+    then: schema => schema.required('Required Field'),
+    otherwise: schema => schema.notRequired(),
+  }),
 });
 
 const initFormikValue: CreateStockmovementvehiclePurchaseorder = {
+  isDirect: false,
   isNewVehiclerdriver: false,
   fromWarehouseId: '',
   purchaseorderId: '',
@@ -72,6 +79,7 @@ const initFormikValue: CreateStockmovementvehiclePurchaseorder = {
   sentGrossQuantity: '',
   sentTareQuantity: '',
   sentNetQuantity: '',
+  stockmovementvehicleId: '',
 }
 
 const pageRequestPurchaseorder: PagePurchaseorder = {
@@ -89,15 +97,15 @@ const New: NextPage<Props> = ({ loginUser }) => {
   const router = useRouter();
   const [purchaseorder, setPurchaseorder] = useState<PurchaseorderView>(null);
   const [products, setProducts] = useState<unknown[]>([]);
-  const [purchaseorders, setPurchaseorders] = useState<(PurchaseorderView & {label: string})[]>([]);
-  const [vehicles, setVehicles] = useState<(VehicleView & {label: string})[]>([]);
+  const [purchaseorders, setPurchaseorders] = useState<(PurchaseorderView & { label: string })[]>([]);
+  const [vehicles, setVehicles] = useState<(VehicleView & { label: string })[]>([]);
 
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['stockmovementvehicle', 'purchaseorder', 'create'],
     mutationFn: (val: FormikValues) => Api.post('/stockmovementvehicle/purchaseorder', val),
   });
 
-  
+
   const { isLoading: isLoadingPurchaseorder, data: dataPurchaseorder } = useQuery({
     queryKey: ['purchaseorder', pageRequestPurchaseorder],
     queryFn: ({ queryKey }) => Api.get('/purchaseorder', queryKey[1] as object),
@@ -174,7 +182,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
     setFieldValue('purchaseorderId', e.target.value)
 
     data.purchaseorderproducts.map(purchaseorderproduct => {
-      newProduct.push({id: purchaseorderproduct.product?.id, name: purchaseorderproduct.product?.name})
+      newProduct.push({ id: purchaseorderproduct.product?.id, name: purchaseorderproduct.product?.name })
     })
     setProducts(newProduct)
     setPurchaseorder(data)

@@ -6,6 +6,9 @@ import { BsList } from 'react-icons/bs';
 import { AiOutlineProduct } from 'react-icons/ai';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import { UserprivilegeView } from '@/types/userprivilage';
+import { FiDownload, FiLogIn, FiLogOut } from 'react-icons/fi';
+import { LuClipboardList } from 'react-icons/lu';
+import { RiShoppingBag4Line } from 'react-icons/ri';
 
 
 interface Props {
@@ -18,6 +21,11 @@ const icons = {
   BiAbacus,
   AiOutlineProduct,
   FaRegCalendarAlt,
+  FiDownload,
+  FiLogIn,
+  FiLogOut,
+  LuClipboardList,
+  RiShoppingBag4Line,
 };
 
 const defaultMenu = [
@@ -28,27 +36,27 @@ const defaultMenu = [
   },
   {
     name: 'Stockin',
-    icon: 'FaRegCalendarAlt',
+    icon: 'FiDownload',
     path: '/stockin',
   },
   {
     name: 'Transfer Out',
-    icon: 'AiOutlineProduct',
+    icon: 'FiLogOut',
     path: '/outbound',
   },
   {
     name: 'Transfer In',
-    icon: 'AiOutlineProduct',
+    icon: 'FiLogIn',
     path: '/inbound',
   },
   {
     name: 'Purchase Order',
-    icon: 'AiOutlineProduct',
+    icon: 'LuClipboardList',
     path: '/purchaseorder',
   },
   {
     name: 'Retail',
-    icon: 'AiOutlineProduct',
+    icon: 'RiShoppingBag4Line',
     path: '/retail',
   },
 ];

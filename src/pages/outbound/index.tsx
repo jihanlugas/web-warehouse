@@ -284,7 +284,7 @@ const Index: NextPage<Props> = () => {
                                   onClick={() => toggleModalConfirm(data.id)}
                                   disabled={isPendingSent}
                                 >
-                                  {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Send</div>}
+                                  {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set In Transit</div>}
                                 </button>
                                 <button
                                   className="ml-4 px-2 py-1"

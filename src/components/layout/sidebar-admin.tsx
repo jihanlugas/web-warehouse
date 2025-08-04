@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { BiAbacus, BiAlarm, BiUser, BiLayer } from 'react-icons/bi';
+import { BiAbacus } from 'react-icons/bi';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { BsList } from 'react-icons/bs';
-import { FiEdit, FiUsers } from 'react-icons/fi';
-import { MdHowToVote } from 'react-icons/md';
-import { IoFileTrayStackedOutline } from 'react-icons/io5';
-import { VscOpenPreview } from 'react-icons/vsc';
+import { FiHome } from 'react-icons/fi';
+import { FaUsers } from 'react-icons/fa6';
+import { LuUserCog, LuClipboardList, LuReceiptText } from 'react-icons/lu';
+import { RiShoppingBag4Line, RiArrowLeftRightLine } from 'react-icons/ri';
+import { TbPackage } from 'react-icons/tb';
 
 interface Props {
   sidebar: boolean,
@@ -15,14 +16,14 @@ interface Props {
 
 const icons = {
   BiAbacus,
-  BiAlarm,
-  BiUser,
-  FiEdit,
-  BiLayer,
-  MdHowToVote,
-  IoFileTrayStackedOutline,
-  FiUsers,
-  VscOpenPreview,
+  FiHome,
+  FaUsers,
+  TbPackage,
+  LuUserCog,
+  LuClipboardList,
+  RiShoppingBag4Line,
+  RiArrowLeftRightLine,
+  LuReceiptText,
 };
 
 const defaultMenu = [
@@ -33,42 +34,42 @@ const defaultMenu = [
   },
   {
     name: 'Warehouse',
-    icon: 'BiAbacus',
+    icon: 'FiHome',
     path: '/admin/warehouse',
   },
   {
     name: 'Operator',
-    icon: 'BiAbacus',
+    icon: 'LuUserCog',
     path: '/admin/operator',
   },
   {
     name: 'Product',
-    icon: 'BiAbacus',
+    icon: 'TbPackage',
     path: '/admin/product',
   },
   {
     name: 'Purchase Order',
-    icon: 'BiAbacus',
+    icon: 'LuClipboardList',
     path: '/admin/purchaseorder',
   },
   {
     name: 'Retail',
-    icon: 'BiAbacus',
+    icon: 'RiShoppingBag4Line',
     path: '/admin/retail',
   },
   {
     name: 'Customer',
-    icon: 'BiAbacus',
+    icon: 'FaUsers',
     path: '/admin/customer',
   },
   {
     name: 'Transfer',
-    icon: 'BiAbacus',
+    icon: 'RiArrowLeftRightLine',
     path: '/admin/stockmovementvehicle',
   },
   {
     name: 'Transaction',
-    icon: 'BiAbacus',
+    icon: 'LuReceiptText',
     path: '/admin/transaction',
   },
 ];

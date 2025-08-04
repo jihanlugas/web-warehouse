@@ -134,7 +134,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                           placeholder={'Gross Quantity'}
                         />
                       </div>
-                      <div className="mb-4">
+                      <div className="mb-4 flex justify-between items-center">
                         <div>Net Quantity</div>
                       <div>{displayNumber((parseFloat(values.sentGrossQuantity as string || "0") - parseFloat(values.sentTareQuantity as string || "0")))}</div>
                       </div>

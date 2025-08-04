@@ -26,29 +26,30 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
+  isDirect: Yup.boolean(),
   isNewVehiclerdriver: Yup.boolean(),
   retailId: Yup.string().required('Required Field'),
   vehicleId: Yup.string().when('isNewVehiclerdriver', {
     is: false,
-    then: schema => schema.required('Customer is required'),
+    then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  plateNumber: Yup.string().when('isNewCustomer', {
+  plateNumber: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  vehicleName: Yup.string().when('isNewCustomer', {
+  vehicleName: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  driverName: Yup.string().when('isNewCustomer', {
+  driverName: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  phoneNumber: Yup.string().when('isNewCustomer', {
+  phoneNumber: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
@@ -56,9 +57,15 @@ const schema = Yup.object().shape({
   sentGrossQuantity: Yup.number(),
   sentTareQuantity: Yup.number(),
   sentNetQuantity: Yup.number(),
+  stockmovementvehicleId: Yup.string().when('isDirect', {
+    is: true,
+    then: schema => schema.required('Required Field'),
+    otherwise: schema => schema.notRequired(),
+  }),
 });
 
 const initFormikValue: CreateStockmovementvehicleRetail = {
+  isDirect: false,
   isNewVehiclerdriver: false,
   fromWarehouseId: '',
   retailId: '',
@@ -72,6 +79,7 @@ const initFormikValue: CreateStockmovementvehicleRetail = {
   sentGrossQuantity: '',
   sentTareQuantity: '',
   sentNetQuantity: '',
+  stockmovementvehicleId: '',
 }
 
 const pageRequestRetail: PageRetail = {
@@ -89,8 +97,8 @@ const New: NextPage<Props> = ({ loginUser }) => {
   const router = useRouter();
   const [retail, setRetail] = useState<RetailView>(null);
   const [products, setProducts] = useState<unknown[]>([]);
-  const [retails, setRetails] = useState<(RetailView & {label: string})[]>([]);
-  const [vehicles, setVehicles] = useState<(VehicleView & {label: string})[]>([]);
+  const [retails, setRetails] = useState<(RetailView & { label: string })[]>([]);
+  const [vehicles, setVehicles] = useState<(VehicleView & { label: string })[]>([]);
 
 
   const { mutate: mutateSubmit, isPending } = useMutation({
@@ -175,7 +183,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
     setFieldValue('retailId', e.target.value)
 
     data.retailproducts.map(retailproduct => {
-      newProduct.push({id: retailproduct.product?.id, name: retailproduct.product?.name})
+      newProduct.push({ id: retailproduct.product?.id, name: retailproduct.product?.name })
     })
     setProducts(newProduct)
     setRetail(data)
@@ -227,7 +235,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
                         <div className='text-lg font-bold'>{retail.number}</div>
                         <div className='mb-2'>{retail.customer?.name}</div>
                         <div className='mb-2'>{displayPhoneNumber(retail.customer?.phoneNumber)}</div>
-                        
+
                       </div>
                     )}
                   </div>

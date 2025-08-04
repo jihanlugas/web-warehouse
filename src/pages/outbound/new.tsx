@@ -21,6 +21,7 @@ import { PageWarehouse, WarehouseView } from '@/types/warehouse';
 import { PageVehicle, VehicleView } from '@/types/vehicle';
 import { displayNumber } from '@/utils/formater';
 import { LoginUser } from '@/types/auth';
+import { InboundView, PageInbound } from '@/types/inbound';
 
 
 type Props = {
@@ -28,30 +29,31 @@ type Props = {
 }
 
 const schema = Yup.object().shape({
+  isDirect: Yup.boolean(),
   isNewVehiclerdriver: Yup.boolean(),
   toWarehouseId: Yup.string().required("Required Field"),
   productId: Yup.string().required("Required Field"),
   vehicleId: Yup.string().when('isNewVehiclerdriver', {
     is: false,
-    then: schema => schema.required('Customer is required'),
+    then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  plateNumber: Yup.string().when('isNewCustomer', {
+  plateNumber: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  vehicleName: Yup.string().when('isNewCustomer', {
+  vehicleName: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  driverName: Yup.string().when('isNewCustomer', {
+  driverName: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
   }),
-  phoneNumber: Yup.string().when('isNewCustomer', {
+  phoneNumber: Yup.string().when('isNewVehiclerdriver', {
     is: true,
     then: schema => schema.required('Required Field'),
     otherwise: schema => schema.notRequired(),
@@ -59,9 +61,15 @@ const schema = Yup.object().shape({
   sentGrossQuantity: Yup.number(),
   sentTareQuantity: Yup.number(),
   sentNetQuantity: Yup.number(),
+  stockmovementvehicleId: Yup.string().when('isDirect', {
+    is: true,
+    then: schema => schema.required('Required Field'),
+    otherwise: schema => schema.notRequired(),
+  }),
 });
 
 const initFormikValue: CreateOutbound = {
+  isDirect: false,
   isNewVehiclerdriver: false,
   plateNumber: '',
   vehicleName: '',
@@ -76,6 +84,7 @@ const initFormikValue: CreateOutbound = {
   sentGrossQuantity: '',
   sentTareQuantity: '',
   sentNetQuantity: '',
+  stockmovementvehicleId: '',
 }
 
 const pageRequestProduct: PageProduct = {
@@ -90,12 +99,19 @@ const pageRequestVehicle: PageVehicle = {
   limit: -1,
 }
 
+const pageRequestInbound: PageInbound = {
+  status: "UNLOADING",
+  limit: -1,
+  preloads: "Vehicle"
+}
+
 const New: NextPage<Props> = ({ loginUser }) => {
 
   const router = useRouter();
   const [products, setProducts] = useState<ProductView[]>([]);
   const [warehouses, setWarehouses] = useState<WarehouseView[]>([]);
-  const [vehicles, setVehicles] = useState<(VehicleView & {label: string})[]>([]);
+  const [vehicles, setVehicles] = useState<(VehicleView & { label: string })[]>([]);
+  const [inbounds, setInbounds] = useState<InboundView[]>([]);
 
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['outbound', 'create'],
@@ -115,6 +131,11 @@ const New: NextPage<Props> = ({ loginUser }) => {
   const { isLoading: isLoadingVehicle, data: dataVehicle } = useQuery({
     queryKey: ['vehicle', pageRequestVehicle],
     queryFn: ({ queryKey }) => Api.get('/vehicle', queryKey[1] as object),
+  });
+
+  const { isLoading: isLoadingInbound, data: dataInbound } = useQuery({
+    queryKey: ['inbound', pageRequestInbound],
+    queryFn: ({ queryKey }) => Api.get('/inbound', queryKey[1] as object),
   });
 
 
@@ -143,6 +164,25 @@ const New: NextPage<Props> = ({ loginUser }) => {
     }
   }, [dataVehicle]);
 
+  useEffect(() => {
+    if (dataInbound?.status) {
+      const newList = []
+      dataInbound.payload.list.map(data => {
+        newList.push({
+          ...data,
+          label: data.number + ' | ' + data.vehicle?.plateNumber
+        })
+      })
+      setInbounds(newList);
+    }
+  }, [dataInbound]);
+
+  const handleChangeSource = (setFieldValue, val: boolean) => {
+    setFieldValue('isDirect', val);
+    setFieldValue('stockmovementvehicleId', '');
+    setFieldValue('productId', '');
+  }
+
   const handleChangeVehicleType = (setFieldValue, val: boolean) => {
     setFieldValue('isNewVehiclerdriver', val);
     setFieldValue('vehicleId', '');
@@ -150,6 +190,14 @@ const New: NextPage<Props> = ({ loginUser }) => {
     setFieldValue('vehicleName', '');
     setFieldValue('driverName', '');
     setFieldValue('phoneNumber', '');
+  }
+
+  const handleChangeSourceStock = (setFieldValue, val) => {
+    const stockmovementvehicleId = val.target.value
+    setFieldValue('stockmovementvehicleId', stockmovementvehicleId);
+    const inbound = inbounds.find(inbound => inbound.id === stockmovementvehicleId)
+    setFieldValue('productId', inbound.productId);
+
   }
 
   const handleSubmit = async (values: CreateOutbound, formikHelpers: FormikHelpers<CreateOutbound>) => {
@@ -202,13 +250,59 @@ const New: NextPage<Props> = ({ loginUser }) => {
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4 max-w-xl ">
+                      <div>Source</div>
                       <div className="flex items-center">
                         <label className="flex items-center mr-4">
-                          <input type="radio" className="h-4 w-4 mr-2 accent-current" name="custamerType" value={"old"} onChange={() => handleChangeVehicleType(setFieldValue, false)} checked={!values.isNewVehiclerdriver} />
+                          <input type="radio" className="h-4 w-4 mr-2 accent-current" onChange={() => handleChangeSource(setFieldValue, false)} checked={!values.isDirect} />
+                          <span>Stock</span>
+                        </label>
+                        <label className="flex items-center mr-4">
+                          <input type="radio" className="h-4 w-4 mr-2 accent-current" onChange={() => handleChangeSource(setFieldValue, true)} checked={values.isDirect} />
+                          <span>Transfer In</span>
+                        </label>
+                      </div>
+                    </div>
+                    {values.isDirect ? (
+                      <div className="mb-4 max-w-xl">
+                        <DropdownField
+                          label={"Source"}
+                          name={"stockmovementvehicleId"}
+                          items={inbounds}
+                          keyValue={"id"}
+                          keyLabel={"label"}
+                          isLoading={isLoadingInbound}
+                          placeholder="Select Source"
+                          placeholderValue={""}
+                          onChange={(e) => handleChangeSourceStock(setFieldValue, e)}
+                          field={true}
+                          required
+                        />
+                      </div>
+                    ) : (
+                      <div className="mb-4 max-w-xl">
+                        <DropdownField
+                          label={"Product"}
+                          name={"productId"}
+                          items={products}
+                          keyValue={"id"}
+                          keyLabel={"name"}
+                          isLoading={isLoadingProduct}
+                          placeholder="Select Product"
+                          placeholderValue={""}
+                          field={true}
+                          required
+                        />
+                      </div>
+                    )}
+                    <div className="mb-4 max-w-xl ">
+                      <div>Vehicle</div>
+                      <div className="flex items-center">
+                        <label className="flex items-center mr-4">
+                          <input type="radio" className="h-4 w-4 mr-2 accent-current" onChange={() => handleChangeVehicleType(setFieldValue, false)} checked={!values.isNewVehiclerdriver} />
                           <span>Saved Vehicle</span>
                         </label>
                         <label className="flex items-center mr-4">
-                          <input type="radio" className="h-4 w-4 mr-2 accent-current" name="custamerType" value={"new"} onChange={() => handleChangeVehicleType(setFieldValue, true)} checked={values.isNewVehiclerdriver} />
+                          <input type="radio" className="h-4 w-4 mr-2 accent-current" onChange={() => handleChangeVehicleType(setFieldValue, true)} checked={values.isNewVehiclerdriver} />
                           <span>New Vehicle</span>
                         </label>
                       </div>
@@ -284,20 +378,6 @@ const New: NextPage<Props> = ({ loginUser }) => {
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
-                      <DropdownField
-                        label={"Product"}
-                        name={"productId"}
-                        items={products}
-                        keyValue={"id"}
-                        keyLabel={"name"}
-                        isLoading={isLoadingProduct}
-                        placeholder="Select Product"
-                        placeholderValue={""}
-                        field={true}
-                        required
-                      />
-                    </div>
-                    <div className="mb-4 max-w-xl">
                       <TextAreaField
                         label={'Remark'}
                         name={'remark'}
@@ -329,9 +409,9 @@ const New: NextPage<Props> = ({ loginUser }) => {
                         loading={isPending}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                       {JSON.stringify(values, null, 4)}
-                    </div> */}
+                    </div>
                     {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
                       {JSON.stringify(errors, null, 4)}
                     </div> */}
@@ -341,7 +421,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
             </Formik>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 }
