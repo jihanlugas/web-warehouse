@@ -1,26 +1,24 @@
 import Breadcrumb from "@/components/component/breadcrumb";
 import ModalDeleteVerify from "@/components/modal/modal-delete-verify";
 import { Api } from "@/lib/api";
-import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
-import { PageStockmovementvehicleRetail } from "@/types/stockmovementvehicleretail";
 import PageWithLayoutType from "@/types/layout";
 import { displayDateTime, displayTon } from "@/utils/formater";
 import notif from "@/utils/notif";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Head from "next/head";
-import Link from "next/link";
 import { NextPage } from "next/types"
 import { useEffect, useState } from "react";
-import { BiPlus } from "react-icons/bi";
 import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ModalConfirm from "@/components/modal/modal-confirm";
-import { LoginUser } from "@/types/auth";
 import { PiFolderOpenDuotone } from "react-icons/pi";
-import ModalEditStockmovementvehicleRetail from "@/components/modal/modal-edit-stockmovementvehicle-retail";
+import ModalEditTransferIn from "@/components/modal/modal-edit-transfer-in";
 import ModalPhoto from "@/components/modal/modal-photo";
+import { LoginUser } from "@/types/auth";
+import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
+import { PageTransferin } from "@/types/transferin";
 import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 type Props = {
   loginUser: LoginUser
@@ -30,62 +28,82 @@ const RenderStatus = ({ status }) => {
   switch (status) {
     case "LOADING":
       return (
-        <div className="p-2 ">
-          <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} >{status}</span>
+        <div className='w-full'>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
+        </div>
+      )
+    case "IN_TRANSIT":
+      return (
+        <div className='w-full'>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status.replace('_', ' ')}</span>
+        </div>
+      )
+    case "UNLOADING":
+      return (
+        <div className='w-full'>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-amber-600 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
         </div>
       )
     case "COMPLETED":
       return (
-        <div className="p-2 ">
-          <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} >{status}</span>
+        <div className='w-full'>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
         </div>
       )
     default:
-      break;
+      return null
   }
 }
 
-const Index: NextPage<Props> = ({ }) => {
+const Index: NextPage<Props> = () => {
 
-  const [stockmovementvehicles, setStockmovementvehicles] = useState<StockmovementvehicleView[]>([]);
+
+  const [transferins, setTransferIns] = useState<StockmovementvehicleView[]>([]);
   const [showModalDetail, setShowModalDetail] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [showModalSetComplete, setShowModalSetComplete] = useState<boolean>(false);
+  const [showModalSetUnloading, setShowModalSetUnloading] = useState<boolean>(false);
   const [detailId, setDetailId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
   const [completeId, setCompleteId] = useState<string>('');
   const [completeData, setCompleteData] = useState<StockmovementvehicleView>(null);
+  const [unloadingId, setUnloadingId] = useState<string>('');
+  const [unloadingData, setUnloadingData] = useState<StockmovementvehicleView>(null);
   const [selectedId, setSelectedId] = useState<string>('')
-  const [showModalEditStockmovementvehicleRetail, setShowModalEditStockmovementvehicleRetail] = useState<boolean>(false);
+  const [showModalEditTransferIn, setShowModalEditTransferIn] = useState<boolean>(false);
   const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
   const [allowAdd, setAllowAdd] = useState<boolean>(false);
 
-
-  const [pageRequest] = useState<PageStockmovementvehicleRetail>({
+  const [pageRequest] = useState<PageTransferin>({
     limit: -1,
     startCreateDt: moment().subtract(2, 'days').toISOString(), // 2 days ago
-    preloads: "Product,Retail,Retail.Customer,Vehicle",
+    preloads: "FromWarehouse,Vehicle,Product",
   });
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['stockmovementvehicle', 'retail', pageRequest],
-    queryFn: ({ queryKey }) => Api.get('/stockmovementvehicle/retail', queryKey[2] as object),
+    queryKey: ['stockmovementvehicle', 'transfer-in', pageRequest],
+    queryFn: ({ queryKey }) => Api.get('/stockmovementvehicle/transfer-in', queryKey[2] as object),
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationKey: ['stockmovementvehicle', 'retail', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/stockmovementvehicle/retail/' + id)
+    mutationKey: ['stockmovementvehicle', 'transfer-in', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/stockmovementvehicle/transfer-in/' + id)
+  });
+
+  const { mutate: mutateSetUnloading, isPending: isPendingSetUnloading } = useMutation({
+    mutationKey: ['stockmovementvehicle', 'transfer-in', unloadingId, 'set-unloading'],
+    mutationFn: (id: string) => Api.put('/stockmovementvehicle/transfer-in/' + id + '/set-unloading')
   });
 
   const { mutate: mutateSetComplete, isPending: isPendingSetComplete } = useMutation({
-    mutationKey: ['stockmovementvehicle', 'retail', completeId, 'set-complete'],
-    mutationFn: (id: string) => Api.put('/stockmovementvehicle/retail/' + id + '/set-complete')
+    mutationKey: ['stockmovementvehicle', 'transfer-in', completeId, 'set-complete'],
+    mutationFn: (id: string) => Api.put('/stockmovementvehicle/transfer-in/' + id + '/set-complete')
   });
 
-  const { mutate: mutateDeliveryOrder, isPending: isPendingDeliveryOrder } = useMutation({
-    mutationKey: ['stockmovementvehicle', 'retail', 'generate-delivery-order'],
-    mutationFn: (id: string) => Api.getpdf('/stockmovementvehicle/retail/' + id + "/generate-delivery-order"),
+  const { mutate: mutateDeliveryRecipt, isPending: isPendingDeliveryRecipt } = useMutation({
+    mutationKey: ['stockmovementvehicle', 'transfer-in', 'generate-delivery-recipt'],
+    mutationFn: (id: string) => Api.getpdf('/stockmovementvehicle/transfer-in/' + id + "/generate-delivery-recipt"),
   })
 
   const toggleModalDetail = (id = '') => {
@@ -99,18 +117,17 @@ const Index: NextPage<Props> = ({ }) => {
     setShowModalDelete(!showModalDelete);
   };
 
-  const toggleModalSetComplete = (id = '') => {
-    setCompleteId(id);
-    setCompleteData(stockmovementvehicles.find(data => data.id === id));
-    setShowModalSetComplete(!showModalSetComplete);
+  const toggleModalSetUnloading = (id = '') => {
+    setUnloadingId(id);
+    setUnloadingData(transferins.find(data => data.id === id));
+    setShowModalSetUnloading(!showModalSetUnloading);
   };
 
-
-  useEffect(() => {
-    if (data?.status) {
-      setStockmovementvehicles(data.payload.list);
-    }
-  }, [data]);
+  const toggleModalSetComplete = (id = '') => {
+    setCompleteId(id);
+    setCompleteData(transferins.find(data => data.id === id));
+    setShowModalSetComplete(!showModalSetComplete);
+  };
 
   const handleDelete = () => {
     mutateDelete(deleteId, {
@@ -130,6 +147,24 @@ const Index: NextPage<Props> = ({ }) => {
     });
   };
 
+  const handleSetUnloading = () => {
+    mutateSetUnloading(unloadingId, {
+      onSuccess: ({ status, message }) => {
+        if (status) {
+          notif.success(message);
+          refetch();
+        } else {
+          notif.error(message);
+        }
+        toggleModalSetUnloading();
+      },
+      onError: () => {
+        notif.error('Please cek you connection');
+        toggleModalSetUnloading();
+      },
+    });
+  }
+
   const handleSetComplete = () => {
     mutateSetComplete(completeId, {
       onSuccess: ({ status, message }) => {
@@ -148,39 +183,45 @@ const Index: NextPage<Props> = ({ }) => {
     });
   }
 
-  const handleGenerateDeliveryOrder = async (id: string) => {
-    mutateDeliveryOrder(id, {
+  const handleGenerateDeliveryRecipt = async (id: string) => {
+    mutateDeliveryRecipt(id, {
       onError: () => {
         notif.error('Please cek you connection');
       }
     })
   }
 
-  const toggleModalEditStockmovementvehicleRetail = (id = '', refresh = false) => {
+  const toggleModalEditTransferIn = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
     }
     setSelectedId(id)
-    setShowModalEditStockmovementvehicleRetail(!showModalEditStockmovementvehicleRetail);
+    setShowModalEditTransferIn(!showModalEditTransferIn);
   };
 
   const toggleModalPhoto = (id = '', refresh = false, status = '') => {
     if (refresh) {
       refetch()
     }
-    setAllowAdd(status === 'LOADING')
+    setAllowAdd(status === 'UNLOADING')
     setSelectedId(id)
     setShowModalPhoto(!showModalPhoto);
   };
 
+  useEffect(() => {
+    if (data?.status) {
+      setTransferIns(data.payload.list);
+    }
+  }, [data]);
+
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Retail'}</title>
+        <title>{process.env.APP_NAME + ' - Transfer In'}</title>
       </Head>
-      <ModalEditStockmovementvehicleRetail
-        show={showModalEditStockmovementvehicleRetail}
-        onClickOverlay={toggleModalEditStockmovementvehicleRetail}
+      <ModalEditTransferIn
+        show={showModalEditTransferIn}
+        onClickOverlay={toggleModalEditTransferIn}
         id={selectedId}
       />
       <ModalPhoto
@@ -216,11 +257,31 @@ const Index: NextPage<Props> = ({ }) => {
           <div className='mb-4'>Are you sure ?</div>
           {completeData && (
             <div className='text-sm mb-4 text-gray-700'>
-              <div>Retail : {completeData.retail?.customer?.name}</div>
+              <div>Source : {completeData.fromWarehouse?.name}</div>
               <div>Product : {completeData.product.name}</div>
-              <div>Berat Kotor : {displayTon(completeData.sentGrossQuantity)}</div>
-              <div>Berat Kosong : {displayTon(completeData.sentTareQuantity)}</div>
-              <div>Berat Bersih : {displayTon(completeData.sentNetQuantity)}</div>
+              <div>Berat Kotor : {displayTon(completeData.receivedGrossQuantity)}</div>
+              <div>Berat Kosong : {displayTon(completeData.receivedTareQuantity)}</div>
+              <div>Berat Bersih : {displayTon(completeData.receivedNetQuantity)}</div>
+            </div>
+          )}
+        </div>
+      </ModalConfirm>
+      <ModalConfirm
+        show={showModalSetUnloading}
+        onClickOverlay={toggleModalSetUnloading}
+        onConfirm={handleSetUnloading}
+        isLoading={isPendingSetUnloading}
+      >
+        <div>
+          <div className='mb-4'>Are you sure ?</div>
+          {unloadingData && (
+            <div className='text-sm mb-4 text-gray-700'>
+              <div>Number : {unloadingData.number}</div>
+              <div>Source : {unloadingData.fromWarehouse?.name}</div>
+              <div>Product : {unloadingData.product.name}</div>
+              <div>Vehicle Name : {unloadingData.vehicle?.name}</div>
+              <div>Plate Number : {unloadingData.vehicle?.plateNumber}</div>
+              <div>Product : {unloadingData.product.name}</div>
             </div>
           )}
         </div>
@@ -228,40 +289,25 @@ const Index: NextPage<Props> = ({ }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Retail', path: '' },
+            { name: 'Transfer In', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
           <div className='w-full rounded-sm'>
-            <div className='flex justify-between items-center px-2 mb-4'>
-              <div>
-                <div className='text-xl'>{ }</div>
-              </div>
-              <div className='flex'>
-                <div className='ml-4'>
-                  <Link href={{ pathname: '/retail/new' }}>
-                    <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
-                      <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New</div>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </div>
             <div>
               {isLoading ? (
                 <div>Loading</div>
               ) : (
                 <div>
-                  {stockmovementvehicles.length > 0 ? (
+                  {transferins.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {stockmovementvehicles.map((data) => (
+                      {transferins.map((data) => (
                         <div key={data.id} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
                           <div className="flex justify-between items-center">
                             <div className="text-base">
                               <div className="font-bold">{data.number}</div>
                               <div className="">
-                                <div className="">{data?.retail?.customer?.name}</div>
+                                <div className="">{data?.fromWarehouse?.name}</div>
                               </div>
                             </div>
                             <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
@@ -276,6 +322,10 @@ const Index: NextPage<Props> = ({ }) => {
                               <div className="">{'Sent time : '}</div>
                               <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
                             </div>
+                            <div className="text-sm flex">
+                              <div className="">{'Received time : '}</div>
+                              <div className="ml-4">{data.receivedTime ? displayDateTime(data.receivedTime) : '-'}</div>
+                            </div>
                           </div>
                           <div className="text-right text-xs mb-2">
                             <div className="">{data.createName}</div>
@@ -283,7 +333,16 @@ const Index: NextPage<Props> = ({ }) => {
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="text-primary-400 flex justify-end">
-                            {data.stockmovementvehicleStatus === 'LOADING' && (
+                            {data.stockmovementvehicleStatus === 'IN_TRANSIT' && (
+                              <button
+                                className="ml-4 px-2 py-1"
+                                onClick={() => toggleModalSetUnloading(data.id)}
+                                disabled={isPendingSetUnloading}
+                              >
+                                {isPendingSetUnloading ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Unloading</div>}
+                              </button>
+                            )}
+                            {data.stockmovementvehicleStatus === 'UNLOADING' && (
                               <>
                                 <button
                                   className="ml-4 px-2 py-1"
@@ -293,57 +352,22 @@ const Index: NextPage<Props> = ({ }) => {
                                   {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
                                 </button>
                                 <button
-                                  className="ml-4 px-2 py-1 cursor-pointer"
-                                  onClick={() => toggleModalDelete(data.id, data.number)}
-                                  disabled={isPendingDelete}
-                                >
-                                  {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
-                                </button>
-                                <button
                                   className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalEditStockmovementvehicleRetail(data.id)}
-                                  disabled={isPendingDeliveryOrder}
+                                  onClick={() => toggleModalEditTransferIn(data.id)}
                                 >
-                                  <div>Loading</div>
+                                  <div>Unloading</div>
                                 </button>
                               </>
                             )}
                             {data.stockmovementvehicleStatus === 'COMPLETED' && (
                               <button
                                 className="ml-4 px-2 py-1"
-                                onClick={() => handleGenerateDeliveryOrder(data.id)}
-                                disabled={isPendingDeliveryOrder}
+                                onClick={() => handleGenerateDeliveryRecipt(data.id)}
+                                disabled={isPendingDeliveryRecipt}
                               >
-                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
+                                {isPendingDeliveryRecipt ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Recipt</div>}
                               </button>
                             )}
-
-                            {/* {data.sentTime ? (
-                              <button
-                                className="ml-4 px-2 py-1"
-                                onClick={() => handleGenerateDeliveryOrder(data.id)}
-                                disabled={isPendingDeliveryOrder}
-                              >
-                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
-                              </button>
-                            ) : (
-                              <>
-                                <button
-                                  className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalSetComplete(data.id)}
-                                  disabled={isPendingSetComplete}
-                                >
-                                  {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
-                                </button>
-                                <button
-                                  className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalEditStockmovementvehicleRetail(data.id)}
-                                  disabled={isPendingDeliveryOrder}
-                                >
-                                  <div>Loading</div>
-                                </button>
-                              </>
-                            )} */}
                             <button
                               className="ml-4 px-2 py-1"
                               onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}

@@ -16,9 +16,9 @@ import { useState, useEffect } from 'react';
 import TextFieldNumber from '@/components/formik/text-field-number';
 import { PageVehicle, VehicleView } from '@/types/vehicle';
 import { PagePurchaseorder, PurchaseorderView } from '@/types/purchaseorder';
-import { CreateStockmovementvehiclePurchaseorder } from '@/types/stockmovementvehicle';
 import { displayNumber, displayPhoneNumber } from '@/utils/formater';
 import { LoginUser } from '@/types/auth';
+import { CreateStockmovementvehiclePurchaseorder } from '@/types/stockmovementvehiclepurchaseorder';
 
 
 type Props = {
@@ -65,34 +65,32 @@ const schema = Yup.object().shape({
 });
 
 const initFormikValue: CreateStockmovementvehiclePurchaseorder = {
-  isDirect: false,
   isNewVehiclerdriver: false,
-  fromWarehouseId: '',
-  purchaseorderId: '',
-  productId: '',
   plateNumber: '',
-  vehicleId: '',
   vehicleName: '',
   nik: '',
   driverName: '',
   phoneNumber: '',
+  purchaseorderId: '',
+  notes: '',
+  productId: '',
+  vehicleId: '',
   sentGrossQuantity: '',
   sentTareQuantity: '',
   sentNetQuantity: '',
-  stockmovementvehicleId: '',
 }
 
 const pageRequestPurchaseorder: PagePurchaseorder = {
   limit: -1,
-  preloads: "Customer,Stockmovements,Stockmovements.Product,Purchaseorderproducts,Purchaseorderproducts.Product",
-  status: "OPEN",
+  preloads: "Customer,Purchaseorderproducts,Purchaseorderproducts.Product",
+  purchaseorderStatus: "OPEN",
 }
 
 const pageRequestVehicle: PageVehicle = {
   limit: -1,
 }
 
-const New: NextPage<Props> = ({ loginUser }) => {
+const New: NextPage<Props> = ({  }) => {
 
   const router = useRouter();
   const [purchaseorder, setPurchaseorder] = useState<PurchaseorderView>(null);
@@ -102,13 +100,13 @@ const New: NextPage<Props> = ({ loginUser }) => {
 
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['stockmovementvehicle', 'purchaseorder', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/stockmovementvehicle/purchaseorder', val),
+    mutationFn: (val: FormikValues) => Api.post('/stockmovementvehicle/purchase-order', val),
   });
 
 
   const { isLoading: isLoadingPurchaseorder, data: dataPurchaseorder } = useQuery({
     queryKey: ['purchaseorder', pageRequestPurchaseorder],
-    queryFn: ({ queryKey }) => Api.get('/purchaseorder', queryKey[1] as object),
+    queryFn: ({ queryKey }) => Api.get('/purchase-order', queryKey[1] as object),
   });
 
   const { isLoading: isLoadingVehicle, data: dataVehicle } = useQuery({
@@ -153,7 +151,6 @@ const New: NextPage<Props> = ({ loginUser }) => {
   }
 
   const handleSubmit = async (values: CreateStockmovementvehiclePurchaseorder, formikHelpers: FormikHelpers<CreateStockmovementvehiclePurchaseorder>) => {
-    values.fromWarehouseId = loginUser.user.warehouseId
     values.sentGrossQuantity = parseFloat(values.sentGrossQuantity as string) || 0
     values.sentTareQuantity = parseFloat(values.sentTareQuantity as string) || 0
     values.sentNetQuantity = values.sentGrossQuantity - values.sentTareQuantity

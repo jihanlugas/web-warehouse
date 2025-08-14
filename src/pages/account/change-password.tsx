@@ -44,7 +44,7 @@ const ChangePasswordPage: NextPage<Props> = ({ loginUser }) => {
       onSuccess: ({ status, message, payload }) => {
         if (status) {
           notif.success(message);
-          if (loginUser.user.role === 'ADMIN') {
+          if (loginUser.user.userRole === 'ADMIN') {
             router.push('/admin/dashboard')
           } else {
             router.push('/dashboard')
@@ -84,7 +84,7 @@ const ChangePasswordPage: NextPage<Props> = ({ loginUser }) => {
               enableReinitialize={true}
               onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
             >
-              {({ values }) => {
+              {({ values, errors }) => {
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4 max-w-xl">
@@ -118,12 +118,16 @@ const ChangePasswordPage: NextPage<Props> = ({ loginUser }) => {
                         loading={isPending}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(values, null, 4)}
-                    </div> */}
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(errors, null, 4)}
-                    </div> */}
+                    {process.env.DEBUG === 'true' && (
+                      <>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(values, null, 4)}
+                        </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(errors, null, 4)}
+                        </div>
+                      </>
+                    )}
                   </Form>
                 )
               }}

@@ -60,7 +60,7 @@ const MainOperator: React.FC<Props> = ({ children }) => {
   }, [dataLoginUser])
 
   useEffect(() => {
-    if (loginUser?.user && loginUser?.user.role !== USER_ROLE_OPERATOR) {
+    if (loginUser?.user && loginUser?.user.userRole !== USER_ROLE_OPERATOR) {
       router.replace('/404')
     }
   }, [loginUser])

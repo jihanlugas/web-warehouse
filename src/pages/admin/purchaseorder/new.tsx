@@ -85,8 +85,8 @@ const New: NextPage<Props> = () => {
   const [products, setProducts] = useState<ProductView[]>([]);
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['purchaseorder', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/purchaseorder', val),
+    mutationKey: ['purchase-order', 'create'],
+    mutationFn: (val: FormikValues) => Api.post('/purchase-order', val),
   });
 
   const { isLoading: isLoadingCustomer, data: dataCustomer } = useQuery({
@@ -273,12 +273,16 @@ const New: NextPage<Props> = () => {
                         loading={isPending}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(values, null, 4)}
-                    </div> */}
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(errors, null, 4)}
-                    </div> */}
+                    {process.env.DEBUG === 'true' && (
+                      <>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(values, null, 4)}
+                        </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(errors, null, 4)}
+                        </div>
+                      </>
+                    )}
                   </Form>
                 )
               }}

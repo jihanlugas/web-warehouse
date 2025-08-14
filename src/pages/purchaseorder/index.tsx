@@ -1,9 +1,10 @@
 import Breadcrumb from "@/components/component/breadcrumb";
 import ModalDeleteVerify from "@/components/modal/modal-delete-verify";
 import { Api } from "@/lib/api";
-import { StockmovementvehicleView, PageStockmovementvehicle } from "@/types/stockmovementvehicle";
+import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
+import { PageStockmovementvehiclePurchaseorder } from "@/types/stockmovementvehiclepurchaseorder";
 import PageWithLayoutType from "@/types/layout";
-import { displayDateTime } from "@/utils/formater";
+import { displayDateTime, displayTon } from "@/utils/formater";
 import notif from "@/utils/notif";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Head from "next/head";
@@ -15,11 +16,11 @@ import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ModalConfirm from "@/components/modal/modal-confirm";
-import { STOCK_MOVEMENT_TYPE_PURCHASE_ORDER } from "@/utils/constant";
 import { LoginUser } from "@/types/auth";
 import { PiFolderOpenDuotone } from "react-icons/pi";
-import ModalEditStockmovementvehicle from "@/components/modal/modal-edit-stockmovementvehicle";
+import ModalEditStockmovementvehiclePurchasorder from "@/components/modal/modal-edit-stockmovementvehicle-purchaseorder";
 import ModalPhoto from "@/components/modal/modal-photo";
+import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
 
 type Props = {
   loginUser: LoginUser
@@ -44,47 +45,53 @@ const RenderStatus = ({ status }) => {
   }
 }
 
-const Index: NextPage<Props> = ({ loginUser }) => {
+const Index: NextPage<Props> = ({ }) => {
 
-  const [stockmovementvehicle, setStockmovementvehicle] = useState<StockmovementvehicleView[]>([]);
+  const [stockmovementvehicles, setStockmovementvehicles] = useState<StockmovementvehicleView[]>([]);
+  const [showModalDetail, setShowModalDetail] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
-  const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
+  const [showModalSetComplete, setShowModalSetComplete] = useState<boolean>(false);
+  const [detailId, setDetailId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
-  const [confirmId, setConfirmId] = useState<string>('');
+  const [completeId, setCompleteId] = useState<string>('');
+  const [completeData, setCompleteData] = useState<StockmovementvehicleView>(null);
   const [selectedId, setSelectedId] = useState<string>('')
-  const [showModalEditStockmovementvehicle, setShowModalEditStockmovementvehicle] = useState<boolean>(false);
+  const [showModalEditStockmovementvehiclePurchasorder, setShowModalEditStockmovementvehiclePurchasorder] = useState<boolean>(false);
   const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
   const [allowAdd, setAllowAdd] = useState<boolean>(false);
 
 
-  const [pageRequest] = useState<PageStockmovementvehicle>({
+  const [pageRequest] = useState<PageStockmovementvehiclePurchaseorder>({
     limit: -1,
     startCreateDt: moment().subtract(2, 'days').toISOString(), // 2 days ago
-    preloads: "Stockmovement,Stockmovement.Purchaseorder.Customer,Vehicle",
-    type: STOCK_MOVEMENT_TYPE_PURCHASE_ORDER,
-    fromWarehouseId: loginUser.user.warehouseId,
+    preloads: "Product,Purchaseorder,Purchaseorder.Customer,Vehicle",
   });
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['stockmovementvehicle', pageRequest],
-    queryFn: ({ queryKey }) => Api.get('/stockmovementvehicle', queryKey[1] as object),
+    queryKey: ['stockmovementvehicle', 'purchase-order', pageRequest],
+    queryFn: ({ queryKey }) => Api.get('/stockmovementvehicle/purchase-order', queryKey[2] as object),
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationKey: ['stockmovementvehicle', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/stockmovementvehicle/' + id)
+    mutationKey: ['stockmovementvehicle', 'purchase-order', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/stockmovementvehicle/purchase-order/' + id)
   });
 
-  const { mutate: mutateSent, isPending: isPendingSent } = useMutation({
-    mutationKey: ['stockmovementvehicle', confirmId, 'set-sent'],
-    mutationFn: (id: string) => Api.get('/stockmovementvehicle/' + id + '/set-sent')
+  const { mutate: mutateSetComplete, isPending: isPendingSetComplete } = useMutation({
+    mutationKey: ['stockmovementvehicle', 'purchase-order', completeId, 'set-complete'],
+    mutationFn: (id: string) => Api.put('/stockmovementvehicle/purchase-order/' + id + '/set-complete')
   });
 
   const { mutate: mutateDeliveryOrder, isPending: isPendingDeliveryOrder } = useMutation({
-    mutationKey: ['stockmovementvehicle', 'generate-delivery-order'],
-    mutationFn: (id: string) => Api.getpdf('/stockmovementvehicle/' + id + "/generate-delivery-order"),
+    mutationKey: ['stockmovementvehicle', 'purchase-order', 'generate-delivery-order'],
+    mutationFn: (id: string) => Api.getpdf('/stockmovementvehicle/purchase-order/' + id + "/generate-delivery-order"),
   })
+
+  const toggleModalDetail = (id = '') => {
+    setDetailId(id);
+    setShowModalDetail(!showModalDetail);
+  };
 
   const toggleModalDelete = (id = '', verify = '') => {
     setDeleteId(id);
@@ -92,15 +99,16 @@ const Index: NextPage<Props> = ({ loginUser }) => {
     setShowModalDelete(!showModalDelete);
   };
 
-  const toggleModalConfirm = (id = '') => {
-    setConfirmId(id);
-    setShowModalConfirm(!showModalConfirm);
+  const toggleModalSetComplete = (id = '') => {
+    setCompleteId(id);
+    setCompleteData(stockmovementvehicles.find(data => data.id === id));
+    setShowModalSetComplete(!showModalSetComplete);
   };
 
 
   useEffect(() => {
     if (data?.status) {
-      setStockmovementvehicle(data.payload.list);
+      setStockmovementvehicles(data.payload.list);
     }
   }, [data]);
 
@@ -122,8 +130,8 @@ const Index: NextPage<Props> = ({ loginUser }) => {
     });
   };
 
-  const handleSent = () => {
-    mutateSent(confirmId, {
+  const handleSetComplete = () => {
+    mutateSetComplete(completeId, {
       onSuccess: ({ status, message }) => {
         if (status) {
           notif.success(message);
@@ -131,11 +139,11 @@ const Index: NextPage<Props> = ({ loginUser }) => {
         } else {
           notif.error(message);
         }
-        toggleModalConfirm();
+        toggleModalSetComplete();
       },
       onError: () => {
         notif.error('Please cek you connection');
-        toggleModalConfirm();
+        toggleModalSetComplete();
       },
     });
   }
@@ -148,12 +156,12 @@ const Index: NextPage<Props> = ({ loginUser }) => {
     })
   }
 
-  const toggleModalEditStockmovementvehicle = (id = '', refresh = false) => {
+  const toggleModalEditStockmovementvehiclePurchasorder = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
     }
     setSelectedId(id)
-    setShowModalEditStockmovementvehicle(!showModalEditStockmovementvehicle);
+    setShowModalEditStockmovementvehiclePurchasorder(!showModalEditStockmovementvehiclePurchasorder);
   };
 
   const toggleModalPhoto = (id = '', refresh = false, status = '') => {
@@ -170,9 +178,9 @@ const Index: NextPage<Props> = ({ loginUser }) => {
       <Head>
         <title>{process.env.APP_NAME + ' - Purchase Order'}</title>
       </Head>
-      <ModalEditStockmovementvehicle
-        show={showModalEditStockmovementvehicle}
-        onClickOverlay={toggleModalEditStockmovementvehicle}
+      <ModalEditStockmovementvehiclePurchasorder
+        show={showModalEditStockmovementvehiclePurchasorder}
+        onClickOverlay={toggleModalEditStockmovementvehiclePurchasorder}
         id={selectedId}
       />
       <ModalPhoto
@@ -180,6 +188,11 @@ const Index: NextPage<Props> = ({ loginUser }) => {
         onClickOverlay={toggleModalPhoto}
         id={selectedId}
         allowAdd={allowAdd}
+      />
+      <ModalDetailStockmovementvehicle
+        show={showModalDetail}
+        onClickOverlay={toggleModalDetail}
+        id={detailId}
       />
       <ModalDeleteVerify
         show={showModalDelete}
@@ -194,14 +207,22 @@ const Index: NextPage<Props> = ({ loginUser }) => {
         </div>
       </ModalDeleteVerify>
       <ModalConfirm
-        show={showModalConfirm}
-        onClickOverlay={toggleModalConfirm}
-        onConfirm={handleSent}
-        isLoading={isPendingSent}
+        show={showModalSetComplete}
+        onClickOverlay={toggleModalSetComplete}
+        onConfirm={handleSetComplete}
+        isLoading={isPendingSetComplete}
       >
         <div>
           <div className='mb-4'>Are you sure ?</div>
-          <div className='text-sm mb-4 text-gray-700'>Are you sure the preparation is done</div>
+          {completeData && (
+            <div className='text-sm mb-4 text-gray-700'>
+              <div>Purchase Order : {completeData.purchaseorder?.customer?.name}</div>
+              <div>Product : {completeData.product.name}</div>
+              <div>Berat Kotor : {displayTon(completeData.sentGrossQuantity)}</div>
+              <div>Berat Kosong : {displayTon(completeData.sentTareQuantity)}</div>
+              <div>Berat Bersih : {displayTon(completeData.sentNetQuantity)}</div>
+            </div>
+          )}
         </div>
       </ModalConfirm>
       <div className='p-4'>
@@ -232,18 +253,18 @@ const Index: NextPage<Props> = ({ loginUser }) => {
                 <div>Loading</div>
               ) : (
                 <div>
-                  {stockmovementvehicle.length > 0 ? (
+                  {stockmovementvehicles.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {stockmovementvehicle.map((data) => (
+                      {stockmovementvehicles.map((data) => (
                         <div key={data.id} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
                           <div className="flex justify-between items-center">
                             <div className="text-base">
                               <div className="font-bold">{data.number}</div>
                               <div className="">
-                                <div className="">{data?.stockmovement?.purchaseorder?.customer?.name}</div>
+                                <div className="">{data?.purchaseorder?.customer?.name}</div>
                               </div>
                             </div>
-                            <div><RenderStatus status={data.status} /></div>
+                            <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="mb-2">
@@ -262,7 +283,42 @@ const Index: NextPage<Props> = ({ loginUser }) => {
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="text-primary-400 flex justify-end">
-                            {data.sentTime ? (
+                            {data.stockmovementvehicleStatus === 'LOADING' && (
+                              <>
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalSetComplete(data.id)}
+                                  disabled={isPendingSetComplete}
+                                >
+                                  {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+                                </button>
+                                <button
+                                  className="ml-4 px-2 py-1 cursor-pointer"
+                                  onClick={() => toggleModalDelete(data.id, data.number)}
+                                  disabled={isPendingDelete}
+                                >
+                                  {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
+                                </button>
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalEditStockmovementvehiclePurchasorder(data.id)}
+                                  disabled={isPendingDeliveryOrder}
+                                >
+                                  <div>Loading</div>
+                                </button>
+                              </>
+                            )}
+                            {data.stockmovementvehicleStatus === 'COMPLETED' && (
+                              <button
+                                className="ml-4 px-2 py-1"
+                                onClick={() => handleGenerateDeliveryOrder(data.id)}
+                                disabled={isPendingDeliveryOrder}
+                              >
+                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
+                              </button>
+                            )}
+
+                            {/* {data.sentTime ? (
                               <button
                                 className="ml-4 px-2 py-1"
                                 onClick={() => handleGenerateDeliveryOrder(data.id)}
@@ -274,31 +330,32 @@ const Index: NextPage<Props> = ({ loginUser }) => {
                               <>
                                 <button
                                   className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalConfirm(data.id)}
-                                  disabled={isPendingSent}
+                                  onClick={() => toggleModalSetComplete(data.id)}
+                                  disabled={isPendingSetComplete}
                                 >
-                                  {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Send</div>}
+                                  {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
                                 </button>
                                 <button
                                   className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalEditStockmovementvehicle(data.id)}
+                                  onClick={() => toggleModalEditStockmovementvehiclePurchasorder(data.id)}
                                   disabled={isPendingDeliveryOrder}
                                 >
                                   <div>Loading</div>
                                 </button>
                               </>
-                            )}
+                            )} */}
                             <button
                               className="ml-4 px-2 py-1"
-                              onClick={() => toggleModalPhoto(data.id, false, data.status)}
+                              onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
                             >
                               <div>Photo</div>
                             </button>
-                            <Link key={data.id} href={{ pathname: '/purchaseorder/[id]', query: { id: data.id } }}>
-                              <div className="ml-4 px-2 py-1">
-                                Detail
-                              </div>
-                            </Link>
+                            <button
+                              className="ml-4 px-2 py-1 cursor-pointer"
+                              onClick={() => toggleModalDetail(data.id)}
+                            >
+                              <div>Detail</div>
+                            </button>
                           </div>
                         </div>
                       ))}

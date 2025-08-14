@@ -16,13 +16,16 @@ import DropdownField from '@/components/formik/dropdown-field';
 import { PageProduct, ProductView } from '@/types/product';
 import { useState, useEffect } from 'react';
 import TextFieldNumber from '@/components/formik/text-field-number';
+import { LoginUser } from '@/types/auth';
 
 
-type Props = object
+type Props = {
+  loginUser: LoginUser
+}
 
 const schema = Yup.object().shape({
   productId: Yup.string().required('Required field'),
-  remark: Yup.string(),
+  notes: Yup.string(),
   netQuantity: Yup.number()
     .typeError('Field be a number')
     .required('Required field')
@@ -30,9 +33,8 @@ const schema = Yup.object().shape({
 });
 
 const initFormikValue: CreateStockin = {
-  warehouseId: '',
   productId: '',
-  remark: '',
+  notes: '',
   netQuantity: '',
 }
 
@@ -46,14 +48,9 @@ const New: NextPage<Props> = () => {
   const [products, setProducts] = useState<ProductView[]>([]);
 
 
-  const { data: loginUser } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
-
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['stockin', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/stockin', val),
+    mutationFn: (val: FormikValues) => Api.post('/stockmovementvehicle/stock-in', val),
   });
 
   const { isLoading: isLoadingProduct, data: dataProduct } = useQuery({
@@ -70,13 +67,12 @@ const New: NextPage<Props> = () => {
   }, [dataProduct]);
 
   const handleSubmit = async (values: CreateStockin, formikHelpers: FormikHelpers<CreateStockin>) => {
-    values.warehouseId = loginUser.payload.user.warehouseId
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
         if (status) {
           notif.success(message);
           // formikHelpers.resetForm();
-          router.push('/stockin')
+          router.push('/stock-in')
         } else if (payload?.listError) {
           formikHelpers.setErrors(payload.listError);
         } else {
@@ -97,7 +93,7 @@ const New: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Stockin', path: '/stockin' },
+            { name: 'Stock In', path: '/stock-in' },
             { name: 'New', path: '' },
           ]}
         />
@@ -112,7 +108,7 @@ const New: NextPage<Props> = () => {
               enableReinitialize={true}
               onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
             >
-              {({ values }) => {
+              {({ values, errors }) => {
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4 max-w-xl">
@@ -139,9 +135,9 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextAreaField
-                        label={'Remark'}
-                        name={'remark'}
-                        placeholder={'Remark'}
+                        label={'Notes'}
+                        name={'notes'}
+                        placeholder={'Notes'}
                       />
                     </div>
                     <div className="mb-8 max-w-xl">
@@ -151,12 +147,16 @@ const New: NextPage<Props> = () => {
                         loading={isPending}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(values, null, 4)}
-                    </div> */}
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(errors, null, 4)}
-                    </div> */}
+                    {process.env.DEBUG === 'true' && (
+                      <>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(values, null, 4)}
+                        </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(errors, null, 4)}
+                        </div>
+                      </>
+                    )}
                   </Form>
                 )
               }}

@@ -88,7 +88,7 @@ const New: NextPage<Props> = () => {
               enableReinitialize={true}
               onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
             >
-              {({ values }) => {
+              {({ values, errors }) => {
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4 max-w-xl">
@@ -131,12 +131,16 @@ const New: NextPage<Props> = () => {
                         loading={isPending}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(values, null, 4)}
-                    </div> */}
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(errors, null, 4)}
-                    </div> */}
+                    {process.env.DEBUG === 'true' && (
+                      <>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(values, null, 4)}
+                        </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(errors, null, 4)}
+                        </div>
+                      </>
+                    )}
                   </Form>
                 )
               }}

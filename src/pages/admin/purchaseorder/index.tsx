@@ -60,8 +60,8 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
   }, [moreBar]);
 
   const { mutate: mutateInvoice, isPending: isPendingInvoice } = useMutation({
-    mutationKey: ['purchaseorder', row.original.id, 'generate-invoice'],
-    mutationFn: () => Api.getpdf('/purchaseorder/' + row.original.id + "/generate-invoice"),
+    mutationKey: ['purchase-order', row.original.id, 'generate-invoice'],
+    mutationFn: () => Api.getpdf('/purchase-order/' + row.original.id + "/generate-invoice"),
   })
 
   const handleClickDelete = (id, name) => {
@@ -265,8 +265,8 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'status',
-      accessorKey: 'status',
+      id: 'purchaseorder_status',
+      accessorKey: 'purchaseorderStatus',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
@@ -373,23 +373,23 @@ const Index: NextPage<Props> = () => {
   ]
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['purchaseorder', pageRequest],
-    queryFn: ({ queryKey }) => Api.get('/purchaseorder', queryKey[1] as object),
+    queryKey: ['purchase-order', pageRequest],
+    queryFn: ({ queryKey }) => Api.get('/purchase-order', queryKey[1] as object),
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationKey: ['purchaseorder', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/purchaseorder/' + id)
+    mutationKey: ['purchase-order', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/purchase-order/' + id)
   });
 
   const { mutate: mutateSetOpen, isPending: isPendingSetOpen } = useMutation({
-    mutationKey: ['purchaseorder', confirmId, 'set-status-open'],
-    mutationFn: (id: string) => Api.get('/purchaseorder/' + id + '/set-status-open')
+    mutationKey: ['purchase-order', confirmId, 'set-status-open'],
+    mutationFn: (id: string) => Api.get('/purchase-order/' + id + '/set-status-open')
   });
 
   const { mutate: mutateSetClose, isPending: isPendingSetClose } = useMutation({
-    mutationKey: ['purchaseorder', confirmId, 'set-status-close'],
-    mutationFn: (id: string) => Api.get('/purchaseorder/' + id + '/set-status-close')
+    mutationKey: ['purchase-order', confirmId, 'set-status-close'],
+    mutationFn: (id: string) => Api.get('/purchase-order/' + id + '/set-status-close')
   });
 
   const toggleModalFilter = () => {

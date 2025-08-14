@@ -66,7 +66,7 @@ export declare interface PageRetail extends Paging {
     customerId?: string;
     notes?: string;
     number?: string;
-    status?: string;
+    retailStatus?: string;
     startTotalPrice?: string | number;
     endTotalPrice?: string | number;
     startTotalPayment?: string | number;

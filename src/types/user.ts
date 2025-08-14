@@ -1,3 +1,4 @@
+import { LocationView } from "./location";
 import { Paging } from "./pagination";
 import { UserprivilegeView } from "./userprivilage";
 import { WarehouseView } from "./warehouse";
@@ -5,7 +6,7 @@ import { WarehouseView } from "./warehouse";
 export declare interface UserView {
     id: string;
     warehouseId: string;
-    role: string;
+    userRole: string;
     email: string;
     username: string;
     phoneNumber: string;
@@ -27,6 +28,7 @@ export declare interface UserView {
     updateName: string;
     userprivilege?: UserprivilegeView;
     warehouse?: WarehouseView;
+    location?: LocationView;
 }
 
 export declare interface ChangePassword {
@@ -48,7 +50,7 @@ export declare interface CreateUser {
     stockIn: boolean;
     transferOut: boolean;
     transferIn: boolean;
-    purchaseOrder: boolean;
+    purchaseorder: boolean;
     retail: boolean;
 }
 

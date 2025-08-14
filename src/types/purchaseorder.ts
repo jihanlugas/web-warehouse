@@ -66,7 +66,7 @@ export declare interface PagePurchaseorder extends Paging {
     customerId?: string;
     notes?: string;
     number?: string;
-    status?: string;
+    purchaseorderStatus?: string;
     startTotalPrice?: string | number;
     endTotalPrice?: string | number;
     startTotalPayment?: string | number;

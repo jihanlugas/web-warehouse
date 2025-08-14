@@ -29,7 +29,7 @@ const Index: NextPage<Props> = ({ id }) => {
   const [showModalEditUser, setShowModalEditUser] = useState<boolean>(false);
   const [showModalEditUserprivilege, setShowModalEditUserprivilege] = useState<boolean>(false);
 
-  const preloads = 'Warehouse,Userprivilege'
+  const preloads = 'Warehouse,Location,Userprivilege'
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['user', id, preloads],
     queryFn: ({ queryKey }) => {
@@ -139,7 +139,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     <div className="text-gray-600">{'Name'}</div>
                     <div className="col-span-1 sm:col-span-4">{user.warehouse?.name}</div>
                     <div className="text-gray-600">{'Location'}</div>
-                    <div className="col-span-1 sm:col-span-4">{user.warehouse?.location}</div>
+                    <div className="col-span-1 sm:col-span-4">{user.location?.name}</div>
                   </div>
                 </div>
               )}
@@ -164,7 +164,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     <div className="text-gray-600">{'Transfer Out'}</div>
                     <div className="col-span-1 sm:col-span-4">{displayBoolean(user.userprivilege.transferOut, "Yes", "No")}</div>
                     <div className="text-gray-600">{'Purchase Order'}</div>
-                    <div className="col-span-1 sm:col-span-4">{displayBoolean(user.userprivilege.purchaseOrder, "Yes", "No")}</div>
+                    <div className="col-span-1 sm:col-span-4">{displayBoolean(user.userprivilege.purchaseorder, "Yes", "No")}</div>
                     <div className="text-gray-600">{'Retail'}</div>
                     <div className="col-span-1 sm:col-span-4">{displayBoolean(user.userprivilege.retail, "Yes", "No")}</div>
                   </div>

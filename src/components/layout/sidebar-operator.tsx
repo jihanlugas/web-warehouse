@@ -35,19 +35,19 @@ const defaultMenu = [
     path: '/dashboard',
   },
   {
-    name: 'Stockin',
+    name: 'Stock In',
     icon: 'FiDownload',
-    path: '/stockin',
+    path: '/stock-in',
   },
   {
     name: 'Transfer Out',
     icon: 'FiLogOut',
-    path: '/outbound',
+    path: '/transfer-out',
   },
   {
     name: 'Transfer In',
     icon: 'FiLogIn',
-    path: '/inbound',
+    path: '/transfer-in',
   },
   {
     name: 'Purchase Order',
@@ -69,7 +69,7 @@ const mapingMenu = (defaultMenu, userprivilege: UserprivilegeView) => {
       case 'Dashboard':
           mapmenu.push(menu)
         break;
-      case 'Stockin':
+      case 'Stock In':
           if (userprivilege.stockIn) mapmenu.push(menu)
         break;
       case 'Transfer Out':
@@ -79,7 +79,7 @@ const mapingMenu = (defaultMenu, userprivilege: UserprivilegeView) => {
           if (userprivilege.transferIn) mapmenu.push(menu)
         break;
       case 'Purchase Order':
-          if (userprivilege.purchaseOrder) mapmenu.push(menu)
+          if (userprivilege.purchaseorder) mapmenu.push(menu)
         break;
       case 'Retail':
           if (userprivilege.retail) mapmenu.push(menu)

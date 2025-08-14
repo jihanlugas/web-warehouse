@@ -29,7 +29,7 @@ type Props = {
 
 const schema = Yup.object().shape({
   relatedId: Yup.string().required('Required field'),
-  relatedType: Yup.string().required('Required field'),
+  transactionRelated: Yup.string().required('Required field'),
   type: Yup.string().required('Required field'),
   notes: Yup.string().max(200, 'Must be 200 characters or less'),
   amount: Yup.number().nullable().required('Required field'),
@@ -37,7 +37,7 @@ const schema = Yup.object().shape({
 
 const defaultInitFormikValue: CreateTransaction = {
   relatedId: '',
-  relatedType: 'PURCHASE_ORDER',
+  transactionRelated: 'PURCHASE_ORDER',
   type: 'PAYMENT',
   amount: '',
   notes: '',
@@ -50,12 +50,12 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
   const [purchaseorder, setPurchaseorder] = useState<PurchaseorderView>(null)
 
 
-  const preloads = 'Customer,Stockmovementvehicles,Stockmovementvehicles.Vehicle,Stockmovementvehicles.Product,Stockmovementvehicles.Stockmovement,Transactions'
+  const preloads = 'Customer,Purchaseorderproducts,Stockmovementvehicles,Stockmovementvehicles.Vehicle,Stockmovementvehicles.Product,Transactions'
   const { data, isLoading } = useQuery({
-    queryKey: ['purchaseorder', selectedId, preloads],
+    queryKey: ['purchase-order', selectedId, preloads],
     queryFn: ({ queryKey }) => {
       const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/purchaseorder/' + selectedId, { preloads }) : null
+      return selectedId ? Api.get('/purchase-order/' + selectedId, { preloads }) : null
     },
   })
 
@@ -210,17 +210,17 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 ">
-                                  <RenderStatus status={stockmovementvehicle.status} />
+                                  <RenderStatus status={stockmovementvehicle.stockmovementvehicleStatus} />
                                 </td>
                                 <td className="border-2 border-gray-400 text-right">
                                   <div className="p-2">
-                                    {displayMoney(stockmovementvehicle.stockmovement?.unitPrice)}
+                                    {displayMoney(stockmovementvehicle.unitPrice)}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400">
                                   <div className="p-2 text-right">
                                     <div data-tooltip-id={`tootltip-purhcaseorder-net-${stockmovementvehicle.id}`}>
-                                      {stockmovementvehicle.sentTime ? displayTon(stockmovementvehicle.sentNetQuantity as number) : "-"}
+                                      {stockmovementvehicle.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(stockmovementvehicle.sentNetQuantity as number) : "-"}
                                     </div>
                                   </div>
                                   <Tooltip id={`tootltip-purhcaseorder-net-${stockmovementvehicle.id}`} className=''>
@@ -242,7 +242,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                                 </td>
                                 <td className="border-2 border-gray-400 text-right">
                                   <div className="p-2">
-                                    {stockmovementvehicle.sentTime ? displayMoney(stockmovementvehicle.sentNetQuantity * stockmovementvehicle.stockmovement?.unitPrice) : "-"}
+                                    {stockmovementvehicle.stockmovementvehicleStatus === 'COMPLETED' ? displayMoney(stockmovementvehicle.sentNetQuantity * stockmovementvehicle.unitPrice) : "-"}
                                   </div>
                                 </td>
                               </tr>

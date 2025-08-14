@@ -91,7 +91,7 @@ const Index: NextPage<Props> = () => {
   const [filter, setFilter] = useState<PageTransaction>({
     customerId: '',
     relatedId: '',
-    relatedType: '',
+    transactionRelated: '',
     createName: '',
     startAmount: '',
     endAmount: '',
@@ -112,8 +112,8 @@ const Index: NextPage<Props> = () => {
 
   const column: ColumnDef<TransactionView>[] = [
     {
-      id: 'related_type',
-      accessorKey: 'relatedType',
+      id: 'transaction_related',
+      accessorKey: 'transactionRelated',
       header: () => {
         return (
           <div className='whitespace-nowrap'>

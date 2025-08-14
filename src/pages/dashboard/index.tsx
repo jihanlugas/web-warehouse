@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { displayTon, displayNumber } from '@/utils/formater';
 import { data } from 'autoprefixer';
 import { AiOutlineLoading } from 'react-icons/ai';
+import { ImArrowDown, ImArrowUp } from 'react-icons/im';
 
 type Props = {
   loginUser: LoginUser
@@ -24,7 +25,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
   const preloads = "Stocks,Stocks.Product,Stocklogs"
   const { isLoading: isLoadingWarehouse, data: dataWarehouse } = useQuery({
     queryKey: ['warehouse', loginUser.user.warehouseId],
-    queryFn: () => Api.get('/warehouse/' + loginUser.user.warehouseId, {preloads}),
+    queryFn: () => Api.get('/warehouse/' + loginUser.user.warehouseId, { preloads }),
   });
 
   useEffect(() => {
@@ -52,26 +53,32 @@ const Index: NextPage<Props> = ({ loginUser }) => {
           <>{warehouse && (
             <div className="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className='bg-white p-4 rounded shadow'>
-                <div className="text-xl font-bold duration-300 text-primary-500 hover:text-primary-400">{warehouse.name}</div>
-                <hr className="my-4 border-gray-200" />
-                <div className="font-bold">List Stock Product</div>
-                {warehouse.stocks.map((stock) => (
-                  <div key={stock.id} className="ml-4 flex justify-between">
-                    <div className="">{stock.product.name || stock.id}</div>
-                    <div className="">{displayTon(stock.quantity)}</div>
+                <div className="">
+                  <div className="text-lg font-bold">{warehouse.name}</div>
+                  <hr className="my-4 border-gray-200" />
+                  <div className='ml-4 my-2'>
+                    <div className='font-bold'>Stock</div>
+                    {warehouse.stocks.map((stock) => (
+                      <div key={stock.id} className="flex justify-between">
+                        <div className="">{stock.product.name || stock.id}</div>
+                        <div className="font-bold">{displayTon(stock.quantity)}</div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                <hr className="my-4 border-gray-200" />
-                <div className="font-bold">Runnig Delivery Transfer</div>
-                <div className="ml-4 flex justify-between">
-                  <div className="">{"Transfer Out"}</div>
-                  <div className="">{displayNumber(warehouse.totalRunningOutbound)}</div>
+                  <div className='ml-4 my-2 flex justify-between'>
+                    <div className='font-bold'>Pengiriman Barang</div>
+                    <div className='grid grid-cols-2 gap-4'>
+                      <div className='flex items-center justify-start'>
+                        <ImArrowDown size={"1rem"} className="text-sky-500 mr-2" />
+                        <div className="">{displayNumber(warehouse.totalRunningTransferin)}</div>
+                      </div>
+                      <div className='flex items-center justify-start'>
+                        <ImArrowUp size={"1rem"} className="text-rose-500 mr-2" />
+                        <div className="">{displayNumber(warehouse.totalRunningTransferout)}</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="ml-4 flex justify-between">
-                  <div className="">{"Transfer In"}</div>
-                  <div className="">{displayNumber(warehouse.totalRunningInbound)}</div>
-                </div>
-                <hr className="my-4 border-gray-200" />
               </div>
             </div>
           )}</>

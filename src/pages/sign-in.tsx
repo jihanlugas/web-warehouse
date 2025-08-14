@@ -43,7 +43,7 @@ const SingIn: NextPage<Props> = () => {
             // if (router.query.redirect) {
             //   router.push(router.query.redirect as string);
             // } else {
-            if (res.payload.userLogin?.role === USER_ROLE_ADMIN) {
+            if (res.payload.userLogin?.userRole === USER_ROLE_ADMIN) {
               router.push('/admin/dashboard');
             } else {
               router.push('/dashboard');
@@ -68,14 +68,14 @@ const SingIn: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Login'}</title>
+        <title>{process.env.APP_NAME}</title>
         <meta name="theme-color" content={'#FAF5FF'} />
       </Head>
       <div className={'h-dvh w-screen flex justify-center items-center'}>
         <div className={'px-4 w-full max-w-md'}>
           <div className={'w-full bg-white rounded-lg shadow p-4 mb-2'}>
             <div className={'flex justify-center mb-4'}>
-              <span className={'text-xl'}>{'Login - ' + process.env.APP_NAME}</span>
+              <span className={'text-xl'}>{process.env.APP_NAME}</span>
             </div>
             <Formik
               initialValues={initFormikValue}

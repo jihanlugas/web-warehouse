@@ -1,3 +1,4 @@
+import { LocationView } from "./location";
 import { Paging } from "./pagination";
 import { StockView } from "./stock";
 import { StocklogView } from "./stocklog";
@@ -6,16 +7,15 @@ import { UserView } from "./user";
 export declare interface WarehouseView {
     id: string;
     name: string;
-    location: string;
     isStockin: boolean;
-    isInbound: boolean;
-    isOutbound: boolean;
+    isTransferIn: boolean;
+    isTransferOut: boolean;
     isRetail: boolean;
     isPurchaseorder: boolean;
     photoId: string;
     photoUrl: string;
-    totalRunningOutbound: number;
-    totalRunningInbound: number;
+    totalRunningTransferout: number;
+    totalRunningTransferin: number;
     createBy: string;
     createDt: string;
     updateBy: string;
@@ -25,6 +25,7 @@ export declare interface WarehouseView {
     users?: UserView[];
     stocks?: StockView[];
     stocklogs?: StocklogView[];
+    location?: LocationView;
 }
 
 export declare interface CreateWarehouse {

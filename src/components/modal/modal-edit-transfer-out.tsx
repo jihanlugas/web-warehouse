@@ -1,6 +1,5 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { UpdateStockmovementvehiclePurchaseorder } from "@/types/stockmovementvehicle";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -12,6 +11,7 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import notif from "@/utils/notif";
 import TextFieldNumber from "../formik/text-field-number";
 import { displayNumber } from "@/utils/formater";
+import { UpdateTransferout } from "@/types/transferout";
 
 
 type Props = {
@@ -24,30 +24,30 @@ const schema = Yup.object().shape({
 
 });
 
-const defaultInitFormikValue: UpdateStockmovementvehiclePurchaseorder = {
+const defaultInitFormikValue: UpdateTransferout = {
   sentGrossQuantity: '',
   sentTareQuantity: '',
   sentNetQuantity: '',
 }
 
-const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
+const ModalEditTransferout: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
 
-  const [initFormikValue, setInitFormikValue] = useState<UpdateStockmovementvehiclePurchaseorder>(defaultInitFormikValue)
+  const [initFormikValue, setInitFormikValue] = useState<UpdateTransferout>(defaultInitFormikValue)
 
   const preloads = ''
   const { data, isLoading } = useQuery({
-    queryKey: ['stockmovementvehicle', selectedId, preloads],
+    queryKey: ['stockmovementvehicle', 'transfer-out', selectedId, preloads],
     queryFn: ({ queryKey }) => {
-      const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/stockmovementvehicle/' + selectedId, { preloads }) : null
+      const [, ,selectedId] = queryKey;
+      return selectedId ? Api.get('/stockmovementvehicle/transfer-out/' + selectedId, { preloads }) : null
     },
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['stockmovementvehicle', 'purchaseorder', 'update', selectedId],
-    mutationFn: (val: FormikValues) => Api.put('/stockmovementvehicle/purchaseorder/' + selectedId, val),
+    mutationKey: ['stockmovementvehicle', 'transfer-out', selectedId, 'update'],
+    mutationFn: (val: FormikValues) => Api.put('/stockmovementvehicle/transfer-out/' + selectedId, val),
   });
 
 
@@ -71,7 +71,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     }
   }, [show, id])
 
-  const handleSubmit = async (values: UpdateStockmovementvehiclePurchaseorder, formikHelpers: FormikHelpers<UpdateStockmovementvehiclePurchaseorder>) => {
+  const handleSubmit = async (values: UpdateTransferout, formikHelpers: FormikHelpers<UpdateTransferout>) => {
     values.sentGrossQuantity = parseFloat(values.sentGrossQuantity as string) || 0
     values.sentTareQuantity = parseFloat(values.sentTareQuantity as string) || 0
     values.sentNetQuantity = values.sentGrossQuantity - values.sentTareQuantity
@@ -96,7 +96,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Edit Delivery</div>
+          <div>Loading</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -134,7 +134,7 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                           placeholder={'Gross Quantity'}
                         />
                       </div>
-                      <div className="mb-4">
+                      <div className="mb-4 flex justify-between items-center">
                         <div>Net Quantity</div>
                       <div>{displayNumber((parseFloat(values.sentGrossQuantity as string || "0") - parseFloat(values.sentTareQuantity as string || "0")))}</div>
                       </div>
@@ -157,4 +157,4 @@ const ModalEditOutbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   )
 }
 
-export default ModalEditOutbound;
+export default ModalEditTransferout;

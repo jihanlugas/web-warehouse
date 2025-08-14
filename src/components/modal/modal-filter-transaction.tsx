@@ -49,7 +49,7 @@ const ModalFilterTransaction: NextPage<Props> = ({ show, onClickOverlay, filter,
     setFilter({
       customerId: '',
       relatedId: '',
-      relatedType: '',
+      transactionRelated: '',
       createName: '',
       startAmount: '',
       endAmount: '',

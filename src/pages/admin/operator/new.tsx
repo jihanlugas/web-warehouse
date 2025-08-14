@@ -2,7 +2,6 @@ import Breadcrumb from '@/components/component/breadcrumb';
 import ButtonSubmit from '@/components/formik/button-submit';
 import TextAreaField from '@/components/formik/text-area-field';
 import TextField from '@/components/formik/text-field';
-import MainAuth from '@/components/layout/main-auth';
 import { Api } from '@/lib/api';
 import { CreateUser } from '@/types/user';
 import PageWithLayoutType from '@/types/layout';
@@ -50,7 +49,7 @@ const initFormikValue: CreateUser = {
   stockIn: false,
   transferOut: false,
   transferIn: false,
-  purchaseOrder: false,
+  purchaseorder: false,
   retail: false,
 }
 
@@ -62,12 +61,6 @@ const New: NextPage<Props> = () => {
   const router = useRouter();
 
   const [warehouses, setWarehouses] = useState<WarehouseView[]>([]);
-
-
-  const { data: loginUser } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['user', 'create'],
@@ -124,7 +117,7 @@ const New: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'operator', path: '/admin/operator' },
+            { name: 'Operator', path: '/admin/operator' },
             { name: 'Buat', path: '' },
           ]}
         />
@@ -139,7 +132,7 @@ const New: NextPage<Props> = () => {
               enableReinitialize={true}
               onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
             >
-              {({ values, setFieldValue }) => {
+              {({ values, errors, setFieldValue }) => {
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4 max-w-xl">
@@ -250,7 +243,7 @@ const New: NextPage<Props> = () => {
                         </div>
                         <div className="">
                           <CheckboxField
-                            name="purchaseOrder"
+                            name="purchaseorder"
                             label="Purchase Order"
                           />
                         </div>
@@ -269,12 +262,16 @@ const New: NextPage<Props> = () => {
                         loading={isPending}
                       />
                     </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(values, null, 4)}
-                    </div> */}
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(errors, null, 4)}
-                    </div> */}
+                    {process.env.DEBUG === 'true' && (
+                      <>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(values, null, 4)}
+                        </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(errors, null, 4)}
+                        </div>
+                      </>
+                    )}
                   </Form>
                 )
               }}

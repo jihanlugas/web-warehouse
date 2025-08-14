@@ -1,9 +1,8 @@
 import Breadcrumb from "@/components/component/breadcrumb";
 import ModalDeleteVerify from "@/components/modal/modal-delete-verify";
 import { Api } from "@/lib/api";
-import { OutboundView, PageOutbound } from "@/types/outbound";
 import PageWithLayoutType from "@/types/layout";
-import { displayDateTime } from "@/utils/formater";
+import { displayDateTime, displayTon } from "@/utils/formater";
 import notif from "@/utils/notif";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Head from "next/head";
@@ -13,13 +12,19 @@ import { useEffect, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ModalConfirm from "@/components/modal/modal-confirm";
 import { PiFolderOpenDuotone } from "react-icons/pi";
-import ModalEditOutbound from "@/components/modal/modal-edit-outbound";
+import ModalEditTransferout from "@/components/modal/modal-edit-transfer-out";
 import ModalPhoto from "@/components/modal/modal-photo";
+import { LoginUser } from "@/types/auth";
+import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
+import { PageTransferout } from "@/types/transferout";
+import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-type Props = object
+type Props = {
+  loginUser: LoginUser
+}
 
 const RenderStatus = ({ status }) => {
   switch (status) {
@@ -29,10 +34,10 @@ const RenderStatus = ({ status }) => {
           <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
         </div>
       )
-    case "IN TRANSIT":
+    case "IN_TRANSIT":
       return (
         <div className='w-full'>
-          <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status}</span>
+          <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${status}`}>{status.replace('_', ' ')}</span>
         </div>
       )
     case "UNLOADING":
@@ -55,43 +60,51 @@ const RenderStatus = ({ status }) => {
 const Index: NextPage<Props> = () => {
 
 
-  const [outbound, setOutbound] = useState<OutboundView[]>([]);
+  const [transferouts, setTransferouts] = useState<StockmovementvehicleView[]>([]);
+  const [showModalDetail, setShowModalDetail] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
-  const [showModalConfirm, setShowModalConfirm] = useState<boolean>(false);
+  const [showModalSetInTransit, setShowModalSetInTransit] = useState<boolean>(false);
+  const [detailId, setDetailId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
-  const [confirmId, setConfirmId] = useState<string>('');
+  const [inTransitId, setInTransitId] = useState<string>('');
+  const [inTransitData, setInTransitData] = useState<StockmovementvehicleView>(null);
   const [selectedId, setSelectedId] = useState<string>('')
-  const [showModalEditOutbound, setShowModalEditOutbound] = useState<boolean>(false);
+  const [showModalEditTransferout, setShowModalEditTransferout] = useState<boolean>(false);
   const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
   const [allowAdd, setAllowAdd] = useState<boolean>(false);
 
-
-  const [pageRequest] = useState<PageOutbound>({
+  const [pageRequest] = useState<PageTransferout>({
     limit: -1,
     startCreateDt: moment().subtract(2, 'days').toISOString(), // 2 days ago
-    preloads: "Stockmovement,Stockmovement.ToWarehouse,Vehicle",
+    preloads: "ToWarehouse,Vehicle,Product",
   });
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['outbound', pageRequest],
-    queryFn: ({ queryKey }) => Api.get('/outbound', queryKey[1] as object),
+    queryKey: ['stockmovementvehicle', 'transfer-out', pageRequest],
+    queryFn: ({ queryKey }) => Api.get('/stockmovementvehicle/transfer-out', queryKey[2] as object),
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationKey: ['outbound', 'delete', deleteId],
-    mutationFn: (id: string) => Api.delete('/outbound/' + id)
+    mutationKey: ['stockmovementvehicle', 'transfer-out', 'delete', deleteId],
+    mutationFn: (id: string) => Api.delete('/stockmovementvehicle/transfer-out/' + id)
   });
 
-  const { mutate: mutateSent, isPending: isPendingSent } = useMutation({
-    mutationKey: ['outbound', confirmId, 'set-sent'],
-    mutationFn: (id: string) => Api.get('/outbound/' + id + '/set-sent')
+
+  const { mutate: mutateSetInTransit, isPending: isPendingSetInTransit } = useMutation({
+    mutationKey: ['stockmovementvehicle', 'transfer-out', inTransitId, 'set-in-transit'],
+    mutationFn: (id: string) => Api.put('/stockmovementvehicle/transfer-out/' + id + '/set-in-transit')
   });
 
   const { mutate: mutateDeliveryOrder, isPending: isPendingDeliveryOrder } = useMutation({
-    mutationKey: ['outbound', 'generate-delivery-order'],
-    mutationFn: (id: string) => Api.getpdf('/outbound/' + id + "/generate-delivery-order"),
+    mutationKey: ['stockmovementvehicle', 'transfer-out', 'generate-delivery-order'],
+    mutationFn: (id: string) => Api.getpdf('/stockmovementvehicle/transfer-out/' + id + "/generate-delivery-order"),
   })
+
+  const toggleModalDetail = (id = '') => {
+    setDetailId(id);
+    setShowModalDetail(!showModalDetail);
+  };
 
   const toggleModalDelete = (id = '', verify = '') => {
     setDeleteId(id);
@@ -99,17 +112,11 @@ const Index: NextPage<Props> = () => {
     setShowModalDelete(!showModalDelete);
   };
 
-  const toggleModalConfirm = (id = '') => {
-    setConfirmId(id);
-    setShowModalConfirm(!showModalConfirm);
+  const toggleModalSetInTransit = (id = '') => {
+    setInTransitId(id);
+    setInTransitData(transferouts.find(data => data.id === id));
+    setShowModalSetInTransit(!showModalSetInTransit);
   };
-
-
-  useEffect(() => {
-    if (data?.status) {
-      setOutbound(data.payload.list);
-    }
-  }, [data]);
 
   const handleDelete = () => {
     mutateDelete(deleteId, {
@@ -129,8 +136,8 @@ const Index: NextPage<Props> = () => {
     });
   };
 
-  const handleSent = () => {
-    mutateSent(confirmId, {
+  const handleSetInTransit = () => {
+    mutateSetInTransit(inTransitId, {
       onSuccess: ({ status, message }) => {
         if (status) {
           notif.success(message);
@@ -138,11 +145,11 @@ const Index: NextPage<Props> = () => {
         } else {
           notif.error(message);
         }
-        toggleModalConfirm();
+        toggleModalSetInTransit();
       },
       onError: () => {
         notif.error('Please cek you connection');
-        toggleModalConfirm();
+        toggleModalSetInTransit();
       },
     });
   }
@@ -155,12 +162,12 @@ const Index: NextPage<Props> = () => {
     })
   }
 
-  const toggleModalEditOutbound = (id = '', refresh = false) => {
+  const toggleModalEditTransferout = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
     }
     setSelectedId(id)
-    setShowModalEditOutbound(!showModalEditOutbound);
+    setShowModalEditTransferout(!showModalEditTransferout);
   };
 
   const toggleModalPhoto = (id = '', refresh = false, status = '') => {
@@ -172,14 +179,20 @@ const Index: NextPage<Props> = () => {
     setShowModalPhoto(!showModalPhoto);
   };
 
+  useEffect(() => {
+    if (data?.status) {
+      setTransferouts(data.payload.list);
+    }
+  }, [data]);
+
   return (
     <>
       <Head>
         <title>{process.env.APP_NAME + ' - Transfer Out'}</title>
       </Head>
-      <ModalEditOutbound
-        show={showModalEditOutbound}
-        onClickOverlay={toggleModalEditOutbound}
+      <ModalEditTransferout
+        show={showModalEditTransferout}
+        onClickOverlay={toggleModalEditTransferout}
         id={selectedId}
       />
       <ModalPhoto
@@ -187,6 +200,11 @@ const Index: NextPage<Props> = () => {
         onClickOverlay={toggleModalPhoto}
         id={selectedId}
         allowAdd={allowAdd}
+      />
+      <ModalDetailStockmovementvehicle
+        show={showModalDetail}
+        onClickOverlay={toggleModalDetail}
+        id={detailId}
       />
       <ModalDeleteVerify
         show={showModalDelete}
@@ -201,14 +219,21 @@ const Index: NextPage<Props> = () => {
         </div>
       </ModalDeleteVerify>
       <ModalConfirm
-        show={showModalConfirm}
-        onClickOverlay={toggleModalConfirm}
-        onConfirm={handleSent}
-        isLoading={isPendingSent}
+        show={showModalSetInTransit}
+        onClickOverlay={toggleModalSetInTransit}
+        onConfirm={handleSetInTransit}
+        isLoading={isPendingSetInTransit}
       >
         <div>
           <div className='mb-4'>Are you sure ?</div>
-          <div className='text-sm mb-4 text-gray-700'>Are you sure the preparation is done</div>
+          {inTransitData && (
+            <div className='text-sm mb-4 text-gray-700'>
+              <div>Product : {inTransitData.product.name}</div>
+              <div>Berat Kotor : {displayTon(inTransitData.sentGrossQuantity)}</div>
+              <div>Berat Kosong : {displayTon(inTransitData.sentTareQuantity)}</div>
+              <div>Berat Bersih : {displayTon(inTransitData.sentNetQuantity)}</div>
+            </div>
+          )}
         </div>
       </ModalConfirm>
       <div className='p-4'>
@@ -225,7 +250,7 @@ const Index: NextPage<Props> = () => {
               </div>
               <div className='flex'>
                 <div className='ml-4'>
-                  <Link href={{ pathname: '/outbound/new' }}>
+                  <Link href={{ pathname: '/transfer-out/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
                       <div>New Transfer Out</div>
@@ -239,18 +264,18 @@ const Index: NextPage<Props> = () => {
                 <div>Loading</div>
               ) : (
                 <div>
-                  {outbound.length > 0 ? (
+                  {transferouts.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {outbound.map((data) => (
+                      {transferouts.map((data) => (
                         <div key={data.id} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
                           <div className="flex justify-between items-center">
                             <div className="text-base">
                               <div className="font-bold">{data.number}</div>
                               <div className="">
-                                <div className="">{data?.stockmovement?.toWarehouse?.name}</div>
+                                <div className="">{data?.toWarehouse?.name}</div>
                               </div>
                             </div>
-                            <div><RenderStatus status={data.status} /></div>
+                            <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="mb-2">
@@ -269,7 +294,30 @@ const Index: NextPage<Props> = () => {
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="text-primary-400 flex justify-end">
-                            {data.sentTime ? (
+                            {data.stockmovementvehicleStatus === 'LOADING' ? (
+                              <>
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalSetInTransit(data.id)}
+                                  disabled={isPendingSetInTransit}
+                                >
+                                  {isPendingSetInTransit ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set In Transit</div>}
+                                </button>
+                                <button
+                                  className="ml-4 px-2 py-1"
+                                  onClick={() => toggleModalEditTransferout(data.id)}
+                                >
+                                  <div>Loading</div>
+                                </button>
+                                <button
+                                  className="ml-4 px-2 py-1 cursor-pointer"
+                                  onClick={() => toggleModalDelete(data.id, data.number)}
+                                  disabled={isPendingDelete}
+                                >
+                                  {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
+                                </button>
+                              </>
+                            ) : (
                               <button
                                 className="ml-4 px-2 py-1"
                                 onClick={() => handleGenerateDeliveryOrder(data.id)}
@@ -277,35 +325,19 @@ const Index: NextPage<Props> = () => {
                               >
                                 {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
                               </button>
-                            ) : (
-                              <>
-                                <button
-                                  className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalConfirm(data.id)}
-                                  disabled={isPendingSent}
-                                >
-                                  {isPendingSent ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set In Transit</div>}
-                                </button>
-                                <button
-                                  className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalEditOutbound(data.id)}
-                                  disabled={isPendingSent}
-                                >
-                                  <div>Loading</div>
-                                </button>
-                              </>
                             )}
                             <button
                               className="ml-4 px-2 py-1"
-                              onClick={() => toggleModalPhoto(data.id, false, data.status)}
+                              onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
                             >
                               <div>Photo</div>
                             </button>
-                            <Link key={data.id} href={{ pathname: '/outbound/[id]', query: { id: data.id } }}>
-                              <div className="ml-4 px-2 py-1">
-                                Detail
-                              </div>
-                            </Link>
+                            <button
+                              className="ml-4 px-2 py-1 cursor-pointer"
+                              onClick={() => toggleModalDetail(data.id)}
+                            >
+                              <div>Detail</div>
+                            </button>
                           </div>
                         </div>
                       ))}

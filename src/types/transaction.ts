@@ -7,7 +7,7 @@ export declare interface TransactionView {
     id: string;
     customerId: string;
     eelatedId: string;
-    relatedType: string;
+    transactionRelated: string;
     type: string;
     amount: number;
     notes: string;
@@ -24,7 +24,7 @@ export declare interface TransactionView {
 
 export declare interface CreateTransaction {
     relatedId: string;
-    relatedType: string;
+    transactionRelated: string;
     type: string;
     amount: string | number;
     notes: string;
@@ -37,7 +37,7 @@ export declare interface UpdateTransaction {
 export declare interface PageTransaction extends Paging {
     customerId?: string;
     relatedId?: string;
-    relatedType?: string;
+    transactionRelated?: string;
     createName?: string;
     startAmount?: string | number;
     endAmount?: string | number;

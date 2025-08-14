@@ -1,6 +1,5 @@
 import Modal from "@/components/modal/modal";
 import { Api } from "@/lib/api";
-import { InboundView, UpdateInbound } from "@/types/inbound";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
@@ -11,7 +10,9 @@ import * as Yup from 'yup';
 import ButtonSubmit from "@/components/formik/button-submit";
 import notif from "@/utils/notif";
 import TextFieldNumber from "../formik/text-field-number";
-import { displayDateTime, displayNumber, displayTon } from "@/utils/formater";
+import { displayDateTime, displayNumber } from "@/utils/formater";
+import { UpdateTransferin } from "@/types/transferin";
+import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
 
 
 type Props = {
@@ -24,42 +25,41 @@ const schema = Yup.object().shape({
 
 });
 
-const defaultInitFormikValue: UpdateInbound = {
-  recivedGrossQuantity: '',
-  recivedTareQuantity: '',
-  recivedNetQuantity: '',
+const defaultInitFormikValue: UpdateTransferin = {
+  receivedGrossQuantity: '',
+  receivedTareQuantity: '',
+  receivedNetQuantity: '',
 }
 
-const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
+const ModalEditTransferin: NextPage<Props> = ({ show, onClickOverlay, id }) => {
 
   const [selectedId, setSelectedId] = useState<string>('')
-  const [inbound, setInbound] = useState<InboundView>(null)
+  const [stockmovementvehicle, setStockmovementvehicle] = useState<StockmovementvehicleView>(null)
+  const [initFormikValue, setInitFormikValue] = useState<UpdateTransferin>(defaultInitFormikValue)
 
-  const [initFormikValue, setInitFormikValue] = useState<UpdateInbound>(defaultInitFormikValue)
-
-  const preloads = 'Stockmovement,Stockmovement.FromWarehouse,Stockmovementvehicles,Stockmovementvehicles.Vehicle'
+  const preloads = 'FromWarehouse'
   const { data, isLoading } = useQuery({
-    queryKey: ['inbound', selectedId, preloads],
+    queryKey: ['stockmovementvehicle', 'transfer-in', selectedId, preloads],
     queryFn: ({ queryKey }) => {
-      const [, selectedId] = queryKey;
-      return selectedId ? Api.get('/inbound/' + selectedId, { preloads }) : null
+      const [, , selectedId] = queryKey;
+      return selectedId ? Api.get('/stockmovementvehicle/transfer-in/' + selectedId, { preloads }) : null
     },
   })
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['inbound', 'update', selectedId],
-    mutationFn: (val: FormikValues) => Api.put('/inbound/' + selectedId, val),
+    mutationKey: ['stockmovementvehicle', 'transfer-in', selectedId, 'update'],
+    mutationFn: (val: FormikValues) => Api.put('/stockmovementvehicle/transfer-in/' + selectedId, val),
   });
 
 
   useEffect(() => {
     if (data) {
       if (data?.status) {
-        setInbound(data.payload)
+        setStockmovementvehicle(data.payload)
         setInitFormikValue({
-          recivedGrossQuantity: data.payload.recivedGrossQuantity,
-          recivedTareQuantity: data.payload.recivedTareQuantity,
-          recivedNetQuantity: data.payload.recivedNetQuantity,
+          receivedGrossQuantity: data.payload.receivedGrossQuantity,
+          receivedTareQuantity: data.payload.receivedTareQuantity,
+          receivedNetQuantity: data.payload.receivedNetQuantity,
         })
       }
     }
@@ -69,15 +69,14 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     if (show) {
       setSelectedId(id)
     } else {
-      setInbound(null)
       setSelectedId('')
     }
   }, [show, id])
 
-  const handleSubmit = async (values: UpdateInbound, formikHelpers: FormikHelpers<UpdateInbound>) => {
-    values.recivedGrossQuantity = parseFloat(values.recivedGrossQuantity as string) || 0
-    values.recivedTareQuantity = parseFloat(values.recivedTareQuantity as string) || 0
-    values.recivedNetQuantity = values.recivedGrossQuantity - values.recivedTareQuantity
+  const handleSubmit = async (values: UpdateTransferin, formikHelpers: FormikHelpers<UpdateTransferin>) => {
+    values.receivedGrossQuantity = parseFloat(values.receivedGrossQuantity as string) || 0
+    values.receivedTareQuantity = parseFloat(values.receivedTareQuantity as string) || 0
+    values.receivedNetQuantity = values.receivedGrossQuantity - values.receivedTareQuantity
     mutateSubmit(values, {
       onSuccess: ({ status, message, payload }) => {
         if (status) {
@@ -95,15 +94,11 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
     });
   }
 
-  const totalDirect = inbound?.stockmovementvehicles?.reduce((total, item) => {
-    return total + item.sentNetQuantity
-  }, 0) || 0
-
   return (
     <Modal show={show} onClickOverlay={() => onClickOverlay('', true)} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>{inbound?.number}</div>
+          <div>Unloading</div>
           <button type="button" onClick={() => onClickOverlay('', true)} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -117,48 +112,30 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
           </div>
         ) : (
           <div>
-            {inbound && (
-              <div className="ml-auto">
+            {stockmovementvehicle && (
+              <div className="">
                 <div className="mb-4">
                   <div className="text-lg mb-2">
-                    <div>{inbound.stockmovement?.fromWarehouse?.name}</div>
+                    <div>{stockmovementvehicle?.fromWarehouse?.name}</div>
                   </div>
                   <div className="mb-2 grid grid-cols-2 gap-4">
                     <div className="">Tare Quantity</div>
-                    <div className="">{displayNumber(inbound.sentTareQuantity)}</div>
+                    <div className="">{displayNumber(stockmovementvehicle.sentTareQuantity)}</div>
                   </div>
                   <div className="mb-2 grid grid-cols-2 gap-4">
                     <div className="">Gross Quantity</div>
-                    <div className="">{displayNumber(inbound.sentGrossQuantity)}</div>
+                    <div className="">{displayNumber(stockmovementvehicle.sentGrossQuantity)}</div>
                   </div>
                   <div className="mb-2 grid grid-cols-2 gap-4">
                     <div className="">Net Quantity</div>
-                    <div className="">{displayNumber(inbound.sentNetQuantity)}</div>
+                    <div className="">{displayNumber(stockmovementvehicle.sentNetQuantity)}</div>
                   </div>
                   <div className="mb-2 grid grid-cols-2 gap-4">
                     <div className="">Sent Time</div>
-                    <div className="">{displayDateTime(inbound.sentTime)}</div>
+                    <div className="">{displayDateTime(stockmovementvehicle.sentTime)}</div>
                   </div>
                 </div>
                 <hr className="border-gray-300 my-2" />
-                {inbound.stockmovementvehicles?.length > 0 && (
-                  <>
-                    <div>
-                      <div className="text-lg mb-2">
-                        <div>{"Direct"}</div>
-                      </div>
-                      {inbound.stockmovementvehicles.map((stockmovementvehicle, key) => {
-                        return (
-                          <div key={key} className="flex justify-between items-center mb-2">
-                            <div>{stockmovementvehicle.number + ' | ' + stockmovementvehicle.vehicle?.plateNumber}</div>
-                            <div>{displayTon(stockmovementvehicle.sentNetQuantity)}</div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                    <hr className="border-gray-300 my-2" />
-                  </>
-                )}
                 <Formik
                   initialValues={initFormikValue}
                   validationSchema={schema}
@@ -171,37 +148,21 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                         <div className="mb-4">
                           <TextFieldNumber
                             label={'Tare Quantity'}
-                            name={`recivedTareQuantity`}
+                            name={`receivedTareQuantity`}
                             placeholder={'Tare Quantity'}
-                            className="text-right"
                           />
                         </div>
                         <div className="mb-4">
                           <TextFieldNumber
                             label={'Gross Quantity'}
-                            name={`recivedGrossQuantity`}
+                            name={`receivedGrossQuantity`}
                             placeholder={'Gross Quantity'}
-                            className="text-right"
                           />
                         </div>
-                        <div className="mb-2 flex justify-between items-center">
-                          <div>Tare Quantity</div>
-                          <div>{displayTon(parseFloat(values.recivedTareQuantity as string || "0"))}</div>
-                        </div>
-                        <div className="mb-2 flex justify-between items-center">
-                          <div>Gross Quantity</div>
-                          <div>{displayTon(parseFloat(values.recivedGrossQuantity as string || "0"))}</div>
-                        </div>
-                        <div className="mb-2 flex justify-between items-center">
+                        <div className="mb-4 flex justify-between items-center">
                           <div>Net Quantity</div>
-                          <div>{displayTon((parseFloat(values.recivedGrossQuantity as string || "0") - parseFloat(values.recivedTareQuantity as string || "0")))}</div>
+                          <div>{displayNumber((parseFloat(values.receivedGrossQuantity as string || "0") - parseFloat(values.receivedTareQuantity as string || "0")))}</div>
                         </div>
-                        {totalDirect !== 0 && (
-                          <div className="mb-2 flex justify-between items-center">
-                            <div>Direct</div>
-                            <div>{displayTon(totalDirect)}</div>
-                          </div>
-                        )}
                         <div className="mb-4">
                           <ButtonSubmit
                             label={'Save'}
@@ -222,4 +183,4 @@ const ModalEditInbound: NextPage<Props> = ({ show, onClickOverlay, id }) => {
   )
 }
 
-export default ModalEditInbound;
+export default ModalEditTransferin;

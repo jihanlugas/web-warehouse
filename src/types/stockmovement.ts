@@ -12,7 +12,7 @@ export declare interface StockmovementView {
     relatedId: string;
     type: string;
     unitPrice: number;
-    remark: string;
+    notes: string;
     createDt: string;
     updateBy: string;
     updateDt: string;
@@ -30,7 +30,7 @@ export declare interface CreateStockmovement {
     toWarehouseId: string;
     productId: string;
     type: string;
-    remark: string;
+    notes: string;
 }
 
 export declare interface UpdateStockmovement {
@@ -38,7 +38,7 @@ export declare interface UpdateStockmovement {
     toWarehouseId: string;
     productId: string;
     type: string;
-    remark: string;
+    notes: string;
 }
 
 export declare interface PageStockmovement extends Paging {
@@ -46,7 +46,7 @@ export declare interface PageStockmovement extends Paging {
     toWarehouseId: string;
     productId: string;
     type: string;
-    remark: string;
+    notes: string;
     createName?: string;
     startCreateDt?: string | DateConstructor;
     endCreateDt?: string | DateConstructor;

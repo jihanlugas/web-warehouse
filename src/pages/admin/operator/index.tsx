@@ -190,6 +190,25 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
+      id: 'location',
+      accessorKey: 'location.name',
+      enableSorting: false,
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"Location"}
+          </div>
+        );
+      },
+      cell: ({ getValue }) => {
+        return (
+          <div className='w-full capitalize'>
+            <span>{(getValue() as string)}</span>
+          </div>
+        )
+      },
+    },
+    {
       id: 'warehouse',
       accessorKey: 'warehouse.name',
       enableSorting: false,
@@ -267,7 +286,7 @@ const Index: NextPage<Props> = () => {
     },
     {
       id: 'purchase_order',
-      accessorKey: 'userprivilege.purchaseOrder',
+      accessorKey: 'userprivilege.purchaseorder',
       enableSorting: false,
       header: () => {
         return (

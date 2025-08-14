@@ -33,12 +33,8 @@ const ModalFilterStockin: NextPage<Props> = ({ show, onClickOverlay, filter, set
   const handleClear = () => {
     setFilter({
       productId: '',
-      remark: '',
-      startGrossQuantity: '',
-      startTareQuantity: '',
+      notes: '',
       startNetQuantity: '',
-      endGrossQuantity: '',
-      endTareQuantity: '',
       endNetQuantity: '',
       createName: '',
       startCreateDt: '',

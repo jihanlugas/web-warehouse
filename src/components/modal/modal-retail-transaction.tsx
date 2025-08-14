@@ -29,7 +29,7 @@ type Props = {
 
 const schema = Yup.object().shape({
   relatedId: Yup.string().required('Required field'),
-  relatedType: Yup.string().required('Required field'),
+  transactionRelated: Yup.string().required('Required field'),
   type: Yup.string().required('Required field'),
   notes: Yup.string().max(200, 'Must be 200 characters or less'),
   amount: Yup.number().nullable().required('Required field'),
@@ -37,7 +37,7 @@ const schema = Yup.object().shape({
 
 const defaultInitFormikValue: CreateTransaction = {
   relatedId: '',
-  relatedType: 'RETAIL',
+  transactionRelated: 'RETAIL',
   type: 'PAYMENT',
   amount: '',
   notes: '',
@@ -50,7 +50,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
   const [retail, setRetail] = useState<RetailView>(null)
 
 
-  const preloads = 'Customer,Stockmovementvehicles,Stockmovementvehicles.Vehicle,Stockmovementvehicles.Product,Stockmovementvehicles.Stockmovement,Transactions'
+  const preloads = 'Customer,Retailproducts,Stockmovementvehicles,Stockmovementvehicles.Vehicle,Stockmovementvehicles.Product,Transactions'
   const { data, isLoading } = useQuery({
     queryKey: ['retail', selectedId, preloads],
     queryFn: ({ queryKey }) => {
@@ -210,17 +210,17 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400 ">
-                                  <RenderStatus status={stockmovementvehicle.status} />
+                                  <RenderStatus status={stockmovementvehicle.stockmovementvehicleStatus} />
                                 </td>
                                 <td className="border-2 border-gray-400 text-right">
                                   <div className="p-2">
-                                    {displayMoney(stockmovementvehicle.stockmovement?.unitPrice)}
+                                    {displayMoney(stockmovementvehicle.unitPrice)}
                                   </div>
                                 </td>
                                 <td className="border-2 border-gray-400">
                                   <div className="p-2 text-right">
                                     <div data-tooltip-id={`tootltip-purhcaseorder-net-${stockmovementvehicle.id}`}>
-                                      {stockmovementvehicle.sentTime ? displayTon(stockmovementvehicle.sentNetQuantity as number) : "-"}
+                                      {stockmovementvehicle.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(stockmovementvehicle.sentNetQuantity as number) : "-"}
                                     </div>
                                   </div>
                                   <Tooltip id={`tootltip-purhcaseorder-net-${stockmovementvehicle.id}`} className=''>
@@ -242,7 +242,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                                 </td>
                                 <td className="border-2 border-gray-400 text-right">
                                   <div className="p-2">
-                                    {stockmovementvehicle.sentTime ? displayMoney(stockmovementvehicle.sentNetQuantity * stockmovementvehicle.stockmovement?.unitPrice) : "-"}
+                                    {stockmovementvehicle.stockmovementvehicleStatus === 'COMPLETED' ? displayMoney(stockmovementvehicle.sentNetQuantity * stockmovementvehicle.unitPrice) : "-"}
                                   </div>
                                 </td>
                               </tr>
@@ -313,7 +313,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                           enableReinitialize={true}
                           onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
                         >
-                          {({ setFieldValue }) => {
+                          {({ values, errors, setFieldValue }) => {
                             return (
                               <Form noValidate={true}>
                                 <div className="mb-4">
@@ -338,6 +338,16 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                                     loading={isPending}
                                   />
                                 </div>
+                                {process.env.DEBUG === 'true' && (
+                                  <>
+                                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                                      {JSON.stringify(values, null, 4)}
+                                    </div>
+                                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                                      {JSON.stringify(errors, null, 4)}
+                                    </div>
+                                  </>
+                                )}
                               </Form>
                             )
                           }}

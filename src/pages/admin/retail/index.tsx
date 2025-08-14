@@ -265,8 +265,8 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'status',
-      accessorKey: 'status',
+      id: 'retail_status',
+      accessorKey: 'retailStatus',
       header: () => {
         return (
           <div className='whitespace-nowrap'>

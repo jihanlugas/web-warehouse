@@ -15,11 +15,9 @@ type Props = {
 
 const Loading: React.FC = () => {
   return (
-    <>
-      <div className='h-dvh w-screen flex justify-center items-center'>
-        <AiOutlineLoading className={'absolute animate-spin '} size={'6em'} />
-      </div>
-    </>
+    <div className='h-dvh w-screen flex justify-center items-center'>
+      <AiOutlineLoading className={'absolute animate-spin '} size={'6em'} />
+    </div>
   )
 }
 
@@ -60,7 +58,7 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
   }, [dataLoginUser])
 
   useEffect(() => {
-    if (dataLoginUser?.user && dataLoginUser?.user?.role !== USER_ROLE_ADMIN) {
+    if (dataLoginUser?.user && dataLoginUser?.user?.userRole !== USER_ROLE_ADMIN) {
       router.replace('/404')
     }
   }, [dataLoginUser])

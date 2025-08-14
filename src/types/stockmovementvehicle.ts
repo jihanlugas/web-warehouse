@@ -1,90 +1,50 @@
+import { LocationView } from "./location";
 import { Paging } from "./pagination";
 import { ProductView } from "./product";
 import { PurchaseorderView } from "./purchaseorder";
 import { RetailView } from "./retail";
-import { StockmovementView } from "./stockmovement";
 import { StockmovementvehiclephotoView } from "./stockmovementvehiclephoto";
 import { VehicleView } from "./vehicle";
+import { WarehouseView } from "./warehouse";
 
 export declare interface StockmovementvehicleView {
     id: string;
-    stockmovementId: string;
+    fromLocationId: string;
+    toLocationId: string;
+    fromWarehouseId: string;
+    toWarehouseId: string;
     productId: string;
     vehicleId: string;
-    stockmovementvehicleId: string;
-    type: string;
+    relatedId: string;
+    stockmovementvehicleType: string;
+    notes: string;
     sentGrossQuantity: number;
     sentTareQuantity: number;
     sentNetQuantity: number;
     sentTime?: string;
-    recivedGrossQuantity: number;
-    recivedTareQuantity: number;
-    recivedNetQuantity: number;
-    recivedTime?: string;
+    receivedGrossQuantity: number;
+    receivedTareQuantity: number;
+    receivedNetQuantity: number;
+    receivedTime?: string;
     shrinkage?: number;
-    status: string;
+    unitPrice?: number;
     number: string;
+    stockmovementvehicleStatus: string;
     createDt: string;
     updateBy: string;
     updateDt: string;
     createName: string;
     updateName: string;
+
+    fromLocation?: LocationView;
+    toLocation?: LocationView;
+    fromWarehouse?: WarehouseView;
+    toWarehouse?: WarehouseView;
+    product?: ProductView;
     vehicle?: VehicleView;
-    stockmovement?: StockmovementView;
-    stockmovementvehicle?: StockmovementvehicleView;
-    stockmovementvehicles?: StockmovementvehicleView[];
     purchaseorder?: PurchaseorderView;
     retail?: RetailView;
-    product?: ProductView;
     stockmovementvehiclephotos?: StockmovementvehiclephotoView[];
-}
-
-export declare interface CreateStockmovementvehiclePurchaseorder {
-    isDirect: boolean;
-    fromWarehouseId: string;
-    purchaseorderId: string;
-    productId: string;
-    isNewVehiclerdriver: boolean;
-    plateNumber: string;
-    vehicleId: string;
-    vehicleName: string;
-    stockmovementvehicleId: string;
-    nik: string;
-    driverName: string;
-    phoneNumber: string;
-    sentGrossQuantity: string | number;
-    sentTareQuantity: string | number;
-    sentNetQuantity: string | number;
-}
-
-export declare interface UpdateStockmovementvehiclePurchaseorder {
-    sentGrossQuantity: string | number;
-    sentTareQuantity: string | number;
-    sentNetQuantity: string | number;
-}
-
-export declare interface CreateStockmovementvehicleRetail {
-    isDirect: boolean;
-    fromWarehouseId: string;
-    retailId: string;
-    productId: string;
-    isNewVehiclerdriver: boolean;
-    plateNumber: string;
-    vehicleId: string;
-    vehicleName: string;
-    stockmovementvehicleId: string;
-    nik: string;
-    driverName: string;
-    phoneNumber: string;
-    sentGrossQuantity: string | number;
-    sentTareQuantity: string | number;
-    sentNetQuantity: string | number;
-}
-
-export declare interface UpdateStockmovementvehicleRetail {
-    sentGrossQuantity: string | number;
-    sentTareQuantity: string | number;
-    sentNetQuantity: string | number;
 }
 
 export declare interface PageStockmovementvehicle extends Paging {
@@ -99,18 +59,18 @@ export declare interface PageStockmovementvehicle extends Paging {
     startSentTareQuantity?: string | number;
     startSentNetQuantity?: string | number;
     startSentTime?: string;
-    startRecivedGrossQuantity?: string | number;
-    startRecivedTareQuantity?: string | number;
-    startRecivedNetQuantity?: string | number;
-    startRecivedTime?: string;
+    startReceivedGrossQuantity?: string | number;
+    startReceivedTareQuantity?: string | number;
+    startReceivedNetQuantity?: string | number;
+    startReceivedTime?: string;
     endSentGrossQuantity?: string | number;
     endSentTareQuantity?: string | number;
     endSentNetQuantity?: string | number;
     endSentTime?: string;
-    endRecivedGrossQuantity?: string | number;
-    endRecivedTareQuantity?: string | number;
-    endRecivedNetQuantity?: string | number;
-    endRecivedTime?: string;
+    endReceivedGrossQuantity?: string | number;
+    endReceivedTareQuantity?: string | number;
+    endReceivedNetQuantity?: string | number;
+    endReceivedTime?: string;
     createName?: string;
     startCreateDt?: string | DateConstructor;
     endCreateDt?: string | DateConstructor;

@@ -20,6 +20,7 @@ import { ProductView } from "@/types/product";
 import { PageTransaction, TransactionView } from "@/types/transaction";
 import { Tooltip } from "react-tooltip";
 import { VehicleView } from "@/types/vehicle";
+import { WarehouseView } from "@/types/warehouse";
 
 
 
@@ -49,7 +50,7 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
     limit: 10,
     page: 1,
     relatedId: id,
-    preloads: "Vehicle,Stockmovement,Stockmovement.FromWarehouse,Stockmovement.ToWarehouse,Product",
+    preloads: "Vehicle,FromWarehouse,ToWarehouse,Product",
   });
 
   const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView> }> = ({ value, row }) => {
@@ -115,8 +116,8 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
       },
     },
     {
-      id: 'stockmovement',
-      accessorKey: 'stockmovement',
+      id: 'fromWarehouse',
+      accessorKey: 'fromWarehouse',
       enableSorting: false,
       header: () => {
         return (
@@ -126,10 +127,10 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
         );
       },
       cell: ({ getValue, row }) => {
-        const stockmovement: StockmovementView = getValue() as StockmovementView
+        const fromWarehouse = getValue() as WarehouseView
         return (
           <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{stockmovement?.fromWarehouse?.name as string}</span>
+            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{fromWarehouse?.name as string}</span>
           </div>
         )
       },
@@ -180,8 +181,8 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
       },
     },
     {
-      id: 'status',
-      accessorKey: 'status',
+      id: 'stockmovementvehicle_status',
+      accessorKey: 'stockmovementvehicleStatus',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
@@ -214,12 +215,12 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
       },
     },
     // {
-    //   id: 'recived_net_quantity',
-    //   accessorKey: 'recivedNetQuantity',
+    //   id: 'received_net_quantity',
+    //   accessorKey: 'receivedNetQuantity',
     //   header: () => {
     //     return (
     //       <div className='whitespace-nowrap'>
-    //         {"Recived Quantity"}
+    //         {"Received Quantity"}
     //       </div>
     //     );
     //   },
@@ -417,7 +418,7 @@ const Index: NextPage<Props> = ({ id }) => {
 
   const [showModalEditRetail, setShowModalEditRetail] = useState<boolean>(false);
 
-  const preloads = 'Stockmovements,Stockmovements.Product'
+  const preloads = 'Retailproducts'
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['retail', id, preloads],
     queryFn: ({ queryKey }) => {
@@ -487,12 +488,12 @@ const Index: NextPage<Props> = ({ id }) => {
                       <div className="col-span-1 sm:col-span-4">{retail?.number}</div>
                       <div className="text-gray-600">{'Notes'}</div>
                       <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{retail?.notes || '-'}</div>
-                      {retail.stockmovements.map((stockmovement) => (
+                      {retail.retailproducts.map((retailproduct) => (
                         <>
                           <div className="text-gray-600">{'Product'}</div>
-                          <div className="col-span-1 sm:col-span-4">{stockmovement?.product?.name}</div>
+                          <div className="col-span-1 sm:col-span-4">{retailproduct?.product?.name}</div>
                           <div className="text-gray-600">{'Unit Price'}</div>
-                          <div className="col-span-1 sm:col-span-4">{displayMoney(stockmovement?.unitPrice)}</div>
+                          <div className="col-span-1 sm:col-span-4">{displayMoney(retailproduct?.unitPrice)}</div>
                         </>
                       ))}
                       <div className="text-gray-600">{'Total Price'}</div>

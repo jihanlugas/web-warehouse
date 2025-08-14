@@ -26,7 +26,7 @@ const defaultInitFormikValue: UpdateUserprivilege = {
   stockIn: false,
   transferIn: false,
   transferOut: false,
-  purchaseOrder: false,
+  purchaseorder: false,
   retail: false,
 
 }
@@ -111,7 +111,7 @@ const ModalEditUserprivilege: NextPage<Props> = ({ show, onClickOverlay, id }) =
                 enableReinitialize={true}
                 onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
               >
-                {({ values, setFieldValue, errors }) => {
+                {({ values, errors }) => {
                   return (
                     <Form noValidate={true}>
                       <div className="mb-4 grid grid-cols-2 gap-4">
@@ -135,7 +135,7 @@ const ModalEditUserprivilege: NextPage<Props> = ({ show, onClickOverlay, id }) =
                         </div>
                         <div className="">
                           <CheckboxField
-                            name="purchaseOrder"
+                            name="purchaseorder"
                             label="Purchase Order"
                           />
                         </div>
@@ -153,6 +153,16 @@ const ModalEditUserprivilege: NextPage<Props> = ({ show, onClickOverlay, id }) =
                           loading={isPending}
                         />
                       </div>
+                      {process.env.DEBUG === 'true' && (
+                        <>
+                          <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                            {JSON.stringify(values, null, 4)}
+                          </div>
+                          <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                            {JSON.stringify(errors, null, 4)}
+                          </div>
+                        </>
+                      )}
                     </Form>
                   )
                 }}

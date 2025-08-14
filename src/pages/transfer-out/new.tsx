@@ -3,7 +3,6 @@ import ButtonSubmit from '@/components/formik/button-submit';
 import TextAreaField from '@/components/formik/text-area-field';
 import TextField from '@/components/formik/text-field';
 import { Api } from '@/lib/api';
-import { CreateOutbound } from '@/types/outbound';
 import PageWithLayoutType from '@/types/layout';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
@@ -17,11 +16,10 @@ import DropdownField from '@/components/formik/dropdown-field';
 import { PageProduct, ProductView } from '@/types/product';
 import { useState, useEffect } from 'react';
 import TextFieldNumber from '@/components/formik/text-field-number';
-import { PageWarehouse, WarehouseView } from '@/types/warehouse';
 import { PageVehicle, VehicleView } from '@/types/vehicle';
 import { displayNumber } from '@/utils/formater';
 import { LoginUser } from '@/types/auth';
-import { InboundView, PageInbound } from '@/types/inbound';
+import { CreateTransferout } from '@/types/transferout';
 
 
 type Props = {
@@ -68,30 +66,23 @@ const schema = Yup.object().shape({
   }),
 });
 
-const initFormikValue: CreateOutbound = {
-  isDirect: false,
+const initFormikValue: CreateTransferout = {
   isNewVehiclerdriver: false,
   plateNumber: '',
   vehicleName: '',
   nik: '',
   driverName: '',
   phoneNumber: '',
-  fromWarehouseId: '',
   toWarehouseId: '',
-  remark: '',
+  notes: '',
   productId: '',
   vehicleId: '',
   sentGrossQuantity: '',
   sentTareQuantity: '',
   sentNetQuantity: '',
-  stockmovementvehicleId: '',
 }
 
 const pageRequestProduct: PageProduct = {
-  limit: -1,
-}
-
-const pageRequestWarehouse: PageWarehouse = {
   limit: -1,
 }
 
@@ -99,23 +90,16 @@ const pageRequestVehicle: PageVehicle = {
   limit: -1,
 }
 
-const pageRequestInbound: PageInbound = {
-  status: "UNLOADING",
-  limit: -1,
-  preloads: "Vehicle"
-}
-
 const New: NextPage<Props> = ({ loginUser }) => {
 
   const router = useRouter();
   const [products, setProducts] = useState<ProductView[]>([]);
-  const [warehouses, setWarehouses] = useState<WarehouseView[]>([]);
+  const [destinations, setDestinations] = useState<{ label: string, value: string }[]>([]);
   const [vehicles, setVehicles] = useState<(VehicleView & { label: string })[]>([]);
-  const [inbounds, setInbounds] = useState<InboundView[]>([]);
 
   const { mutate: mutateSubmit, isPending } = useMutation({
-    mutationKey: ['outbound', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/outbound', val),
+    mutationKey: ['stockmovementvehicle', 'transfer-out', 'create'],
+    mutationFn: (val: FormikValues) => Api.post('/stockmovementvehicle/transfer-out', val),
   });
 
   const { isLoading: isLoadingProduct, data: dataProduct } = useQuery({
@@ -123,19 +107,15 @@ const New: NextPage<Props> = ({ loginUser }) => {
     queryFn: ({ queryKey }) => Api.get('/product', queryKey[1] as object),
   });
 
+  const preloadsWarehouse = 'Warehousedestinations,Warehousedestinations.ToWarehouse'
   const { isLoading: isLoadingWarehouse, data: dataWarehouse } = useQuery({
-    queryKey: ['warehouse', pageRequestWarehouse],
-    queryFn: ({ queryKey }) => Api.get('/warehouse', queryKey[1] as object),
+    queryKey: ['warehouse', loginUser.user.warehouseId],
+    queryFn: () => Api.get('/warehouse/' + loginUser.user.warehouseId, { preloads: preloadsWarehouse }),
   });
 
   const { isLoading: isLoadingVehicle, data: dataVehicle } = useQuery({
     queryKey: ['vehicle', pageRequestVehicle],
     queryFn: ({ queryKey }) => Api.get('/vehicle', queryKey[1] as object),
-  });
-
-  const { isLoading: isLoadingInbound, data: dataInbound } = useQuery({
-    queryKey: ['inbound', pageRequestInbound],
-    queryFn: ({ queryKey }) => Api.get('/inbound', queryKey[1] as object),
   });
 
 
@@ -147,7 +127,15 @@ const New: NextPage<Props> = ({ loginUser }) => {
 
   useEffect(() => {
     if (dataWarehouse?.status) {
-      setWarehouses(dataWarehouse.payload.list);
+      const newList = []
+      dataWarehouse.payload.warehousedestinations?.map((destination) => {
+        newList.push({
+          label: destination.toWarehouse.name,
+          value: destination.toWarehouseId
+        })
+      })
+
+      setDestinations(newList);
     }
   }, [dataWarehouse]);
 
@@ -164,25 +152,6 @@ const New: NextPage<Props> = ({ loginUser }) => {
     }
   }, [dataVehicle]);
 
-  useEffect(() => {
-    if (dataInbound?.status) {
-      const newList = []
-      dataInbound.payload.list.map(data => {
-        newList.push({
-          ...data,
-          label: data.number + ' | ' + data.vehicle?.plateNumber
-        })
-      })
-      setInbounds(newList);
-    }
-  }, [dataInbound]);
-
-  const handleChangeSource = (setFieldValue, val: boolean) => {
-    setFieldValue('isDirect', val);
-    setFieldValue('stockmovementvehicleId', '');
-    setFieldValue('productId', '');
-  }
-
   const handleChangeVehicleType = (setFieldValue, val: boolean) => {
     setFieldValue('isNewVehiclerdriver', val);
     setFieldValue('vehicleId', '');
@@ -192,16 +161,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
     setFieldValue('phoneNumber', '');
   }
 
-  const handleChangeSourceStock = (setFieldValue, val) => {
-    const stockmovementvehicleId = val.target.value
-    setFieldValue('stockmovementvehicleId', stockmovementvehicleId);
-    const inbound = inbounds.find(inbound => inbound.id === stockmovementvehicleId)
-    setFieldValue('productId', inbound.productId);
-
-  }
-
-  const handleSubmit = async (values: CreateOutbound, formikHelpers: FormikHelpers<CreateOutbound>) => {
-    values.fromWarehouseId = loginUser.user.warehouseId
+  const handleSubmit = async (values: CreateTransferout, formikHelpers: FormikHelpers<CreateTransferout>) => {
     values.sentGrossQuantity = parseFloat(values.sentGrossQuantity as string) || 0
     values.sentTareQuantity = parseFloat(values.sentTareQuantity as string) || 0
     values.sentNetQuantity = values.sentGrossQuantity - values.sentTareQuantity
@@ -210,7 +170,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
         if (status) {
           notif.success(message);
           // formikHelpers.resetForm();
-          router.push('/outbound')
+          router.push('/transfer-out')
         } else if (payload?.listError) {
           formikHelpers.setErrors(payload.listError);
         } else {
@@ -231,7 +191,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Transfer Out', path: '/outbound' },
+            { name: 'Transfer Out', path: '/transfer-out' },
             { name: 'New', path: '' },
           ]}
         />
@@ -246,54 +206,23 @@ const New: NextPage<Props> = ({ loginUser }) => {
               enableReinitialize={true}
               onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
             >
-              {({ values, setFieldValue }) => {
+              {({ values, errors, setFieldValue }) => {
                 return (
                   <Form noValidate={true}>
-                    <div className="mb-4 max-w-xl ">
-                      <div>Source</div>
-                      <div className="flex items-center">
-                        <label className="flex items-center mr-4">
-                          <input type="radio" className="h-4 w-4 mr-2 accent-current" onChange={() => handleChangeSource(setFieldValue, false)} checked={!values.isDirect} />
-                          <span>Stock</span>
-                        </label>
-                        <label className="flex items-center mr-4">
-                          <input type="radio" className="h-4 w-4 mr-2 accent-current" onChange={() => handleChangeSource(setFieldValue, true)} checked={values.isDirect} />
-                          <span>Transfer In</span>
-                        </label>
-                      </div>
+                    <div className="mb-4 max-w-xl">
+                      <DropdownField
+                        label={"Product"}
+                        name={"productId"}
+                        items={products}
+                        keyValue={"id"}
+                        keyLabel={"name"}
+                        isLoading={isLoadingProduct}
+                        placeholder="Select Product"
+                        placeholderValue={""}
+                        field={true}
+                        required
+                      />
                     </div>
-                    {values.isDirect ? (
-                      <div className="mb-4 max-w-xl">
-                        <DropdownField
-                          label={"Source"}
-                          name={"stockmovementvehicleId"}
-                          items={inbounds}
-                          keyValue={"id"}
-                          keyLabel={"label"}
-                          isLoading={isLoadingInbound}
-                          placeholder="Select Source"
-                          placeholderValue={""}
-                          onChange={(e) => handleChangeSourceStock(setFieldValue, e)}
-                          field={true}
-                          required
-                        />
-                      </div>
-                    ) : (
-                      <div className="mb-4 max-w-xl">
-                        <DropdownField
-                          label={"Product"}
-                          name={"productId"}
-                          items={products}
-                          keyValue={"id"}
-                          keyLabel={"name"}
-                          isLoading={isLoadingProduct}
-                          placeholder="Select Product"
-                          placeholderValue={""}
-                          field={true}
-                          required
-                        />
-                      </div>
-                    )}
                     <div className="mb-4 max-w-xl ">
                       <div>Vehicle</div>
                       <div className="flex items-center">
@@ -367,9 +296,9 @@ const New: NextPage<Props> = ({ loginUser }) => {
                       <DropdownField
                         label={"Destination Warehouse"}
                         name={"toWarehouseId"}
-                        items={warehouses}
-                        keyValue={"id"}
-                        keyLabel={"name"}
+                        items={destinations}
+                        keyValue={"value"}
+                        keyLabel={"label"}
                         isLoading={isLoadingWarehouse}
                         placeholder="Select Warehouse"
                         placeholderValue={""}
@@ -379,9 +308,9 @@ const New: NextPage<Props> = ({ loginUser }) => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextAreaField
-                        label={'Remark'}
-                        name={'remark'}
-                        placeholder={'Remark'}
+                        label={'Notes'}
+                        name={'notes'}
+                        placeholder={'Notes'}
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
@@ -409,12 +338,16 @@ const New: NextPage<Props> = ({ loginUser }) => {
                         loading={isPending}
                       />
                     </div>
-                    <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(values, null, 4)}
-                    </div>
-                    {/* <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
-                      {JSON.stringify(errors, null, 4)}
-                    </div> */}
+                    {process.env.DEBUG === 'true' && (
+                      <>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(values, null, 4)}
+                        </div>
+                        <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                          {JSON.stringify(errors, null, 4)}
+                        </div>
+                      </>
+                    )}
                   </Form>
                 )
               }}

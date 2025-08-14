@@ -19,15 +19,39 @@ import { CgChevronDown } from "react-icons/cg";
 import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import ModalFilter from "@/components/modal/modal-filter-stockmovementvehicle";
 import MainAdmin from "@/components/layout/main-admin";
-import { StockmovementView } from "@/types/stockmovement";
 import { Tooltip } from "react-tooltip";
 import { StockmovementvehiclephotoView } from "@/types/stockmovementvehiclephoto";
 import ModalPhoto from "@/components/modal/modal-photo";
+import { WarehouseView } from "@/types/warehouse";
 
 type Props = object
 
 type PropsDropdownMore = {
   toggleModalDelete: (id: string, name: string) => void
+}
+
+
+const RenderType = ({ type }) => {
+  switch (type) {
+    case "IN":
+      return (
+        <div className="">STOCK IN</div>
+      )
+    case "TRANSFER":
+      return (
+        <div className="">TRANSFER</div>
+      )
+    case "PURCHASE_ORDER":
+      return (
+        <div className="">PURCHASE ORDER</div>
+      )
+    case "RETAIL":
+      return (
+        <div className="">RETAIL</div>
+      )
+    default:
+      return null
+  }
 }
 
 const DropdownMore: NextPage<CellContext<StockmovementvehicleView, unknown> & PropsDropdownMore> = ({
@@ -85,6 +109,22 @@ const DropdownMore: NextPage<CellContext<StockmovementvehicleView, unknown> & Pr
 
 const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView> }> = ({ value, row }) => {
 
+  const TooltipIn = ({ id }) => {
+    return (
+      <Tooltip id={id}>
+        <div className="font-bold">{"Status Stock In"}</div>
+        <hr className='border-gray-500 border-1 my-2' />
+        <div className="flex my-1">
+          <div className="w-20 font-bold">UNLOADING</div>
+          <div>Barang sedang di bongkar di lokasi tujuan</div>
+        </div>
+        <div className="flex my-1">
+          <div className="w-20 font-bold">COMPLETED</div>
+          <div>Barang sudah diterima</div>
+        </div>
+      </Tooltip>
+    )
+  }
   const TooltipTransfer = ({ id }) => {
     return (
       <Tooltip id={id}>
@@ -104,7 +144,7 @@ const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView>
         </div>
         <div className="flex my-1">
           <div className="w-20 font-bold">COMPLETED</div>
-          <div>Barang sudah dikirim</div>
+          <div>Barang sudah diterima</div>
         </div>
       </Tooltip>
     )
@@ -142,7 +182,26 @@ const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView>
     )
   }
 
-  switch (row.original.type) {
+  switch (row.original.stockmovementvehicleType) {
+    case "IN":
+      switch (value) {
+        case "COMPLETED":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipIn id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        case "UNLOADING":
+          return (
+            <div className='w-full'>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-amber-600 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <TooltipIn id={`tootltip-status-${row.original.id}`} />
+            </div>
+          )
+        default:
+          return null
+      }
     case "TRANSFER":
       switch (value) {
         case "LOADING":
@@ -152,7 +211,7 @@ const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView>
               <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
             </div>
           )
-        case "IN TRANSIT":
+        case "IN_TRANSIT":
           return (
             <div className='w-full'>
               <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
@@ -229,7 +288,7 @@ const Index: NextPage<Props> = () => {
   const [deleteVerify, setDeleteVerify] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string>('')
   const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
-  const [allowAdd, setAllowAdd] = useState<boolean>(false);
+  const [allowAdd] = useState<boolean>(false);
 
   const [filter, setFilter] = useState<PageStockmovementvehicle>({
     fromWarehouseId: '',
@@ -240,18 +299,18 @@ const Index: NextPage<Props> = () => {
     startSentTareQuantity: '',
     startSentNetQuantity: '',
     startSentTime: '',
-    startRecivedGrossQuantity: '',
-    startRecivedTareQuantity: '',
-    startRecivedNetQuantity: '',
-    startRecivedTime: '',
+    startReceivedGrossQuantity: '',
+    startReceivedTareQuantity: '',
+    startReceivedNetQuantity: '',
+    startReceivedTime: '',
     endSentGrossQuantity: '',
     endSentTareQuantity: '',
     endSentNetQuantity: '',
     endSentTime: '',
-    endRecivedGrossQuantity: '',
-    endRecivedTareQuantity: '',
-    endRecivedNetQuantity: '',
-    endRecivedTime: '',
+    endReceivedGrossQuantity: '',
+    endReceivedTareQuantity: '',
+    endReceivedNetQuantity: '',
+    endReceivedTime: '',
     createName: '',
     startCreateDt: '',
     endCreateDt: '',
@@ -267,7 +326,7 @@ const Index: NextPage<Props> = () => {
   const [pageRequest, setPageRequest] = useState<PageStockmovementvehicle>({
     limit: 10,
     page: 1,
-    preloads: "Stockmovement,Stockmovement.FromWarehouse,Stockmovement.ToWarehouse,Stockmovementvehiclephotos,Stockmovementvehicles",
+    preloads: "FromWarehouse,ToWarehouse,Stockmovementvehiclephotos",
   });
 
   const toggleModalPhoto = (id = '', refresh = false, status = '') => {
@@ -298,8 +357,8 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'type',
-      accessorKey: 'type',
+      id: 'stockmovementvehicleType',
+      accessorKey: 'stockmovementvehicleType',
       enableSorting: false,
       header: () => {
         return (
@@ -311,14 +370,14 @@ const Index: NextPage<Props> = () => {
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{(getValue() as string).replace('_', ' ')}</span>
+            <RenderType type={getValue() as string} />
           </div>
         )
       },
     },
     {
-      id: 'stockmovement',
-      accessorKey: 'stockmovement',
+      id: 'fromWarehouse',
+      accessorKey: 'fromWarehouse',
       enableSorting: false,
       header: () => {
         return (
@@ -328,17 +387,17 @@ const Index: NextPage<Props> = () => {
         );
       },
       cell: ({ getValue, row }) => {
-        const stockmovement: StockmovementView = getValue() as StockmovementView
+        const fromWarehouse: WarehouseView = getValue() as WarehouseView
         return (
           <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{stockmovement?.fromWarehouse?.name as string}</span>
+            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{fromWarehouse?.name || '-'}</span>
           </div>
         )
       },
     },
     {
-      id: 'stockmovement',
-      accessorKey: 'stockmovement',
+      id: 'toWarehouse',
+      accessorKey: 'toWarehouse',
       enableSorting: false,
       header: () => {
         return (
@@ -348,17 +407,17 @@ const Index: NextPage<Props> = () => {
         );
       },
       cell: ({ getValue, row }) => {
-        const stockmovement: StockmovementView = getValue() as StockmovementView
+        const toWarehouse: WarehouseView = getValue() as WarehouseView
         return (
           <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{stockmovement?.toWarehouse?.name || '-'}</span>
+            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{toWarehouse?.name || '-'}</span>
           </div>
         )
       },
     },
     {
-      id: 'status',
-      accessorKey: 'status',
+      id: 'stockmovementvehicleStatus',
+      accessorKey: 'stockmovementvehicleStatus',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
@@ -433,80 +492,39 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'recived_net_quantity',
-      accessorKey: 'recivedNetQuantity',
+      id: 'received_net_quantity',
+      accessorKey: 'receivedNetQuantity',
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Recived Quantity"}
+            {"Received Quantity"}
           </div>
         );
       },
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-recived-${row.original.id}`}>{row.original.status === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
-            <Tooltip id={`tootltip-recived-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Recived Quantity"}</div>
+            <span data-tooltip-id={`tootltip-received-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
+            <Tooltip id={`tootltip-received-${row.original.id}`} className="text-left">
+              <div className="font-bold">{"Received Quantity"}</div>
               <hr className='border-gray-500 border-1 my-2' />
               <div className="flex justify-between">
-                <div className="w-20 font-bold">Recived Time</div>
-                <div>{row.original.recivedTime ? displayDateTime(row.original.recivedTime) : ' - '}</div>
+                <div className="w-20 font-bold">Received Time</div>
+                <div>{row.original.receivedTime ? displayDateTime(row.original.receivedTime) : ' - '}</div>
               </div>
               <div className="flex justify-between">
                 <div className="w-20 font-bold">GROSS</div>
-                <div>{displayTon(row.original.recivedGrossQuantity)}</div>
+                <div>{displayTon(row.original.receivedGrossQuantity)}</div>
               </div>
               <div className="flex justify-between">
                 <div className="w-20 font-bold">TARE</div>
-                <div>{displayTon(row.original.recivedTareQuantity)}</div>
+                <div>{displayTon(row.original.receivedTareQuantity)}</div>
               </div>
               <div className="flex justify-between">
                 <div className="w-20 font-bold">NET</div>
-                <div>{displayTon(row.original.recivedNetQuantity)}</div>
+                <div>{displayTon(row.original.receivedNetQuantity)}</div>
               </div>
             </Tooltip>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'stockmovementvehicles',
-      accessorKey: 'stockmovementvehicles',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Direct"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-
-        const stockmovementvehicles = getValue() as StockmovementvehicleView[]
-        const getTotal = stockmovementvehicles?.reduce((total, item) => {
-          return total + item.sentNetQuantity
-        }, 0)
-
-
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-direct-${row.original.id}`}>{stockmovementvehicles ? displayTon(getTotal) : '-'}</span>
-            {stockmovementvehicles && stockmovementvehicles.length > 0 && (
-              <Tooltip id={`tootltip-direct-${row.original.id}`} className="text-left">
-                <div className="font-bold">{"Direct"}</div>
-                <hr className='border-gray-500 border-1 my-2' />
-                {stockmovementvehicles.map((stockmovementvehicle, key) => {
-                  return (
-                    <div key={key} className="flex justify-between items-center">
-                      <div className="w-48 font-bold">{stockmovementvehicle.number}</div>
-                      <div className="text-right">{displayTon(stockmovementvehicle.sentNetQuantity)}</div>
-                    </div>
-                  )
-                })}
-              </Tooltip>
-            )}
-
           </div>
         )
       },
@@ -524,7 +542,7 @@ const Index: NextPage<Props> = () => {
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.status === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
+            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
           </div>
         )
       },

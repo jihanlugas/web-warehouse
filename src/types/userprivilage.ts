@@ -6,7 +6,7 @@ export declare interface UserprivilegeView {
     stockIn: boolean;
     transferOut: boolean;
     transferIn: boolean;
-    purchaseOrder: boolean;
+    purchaseorder: boolean;
     retail: boolean;
     createBy: string;
     createDt: string;
@@ -20,7 +20,7 @@ export declare interface UpdateUserprivilege {
     stockIn: boolean;
     transferOut: boolean;
     transferIn: boolean;
-    purchaseOrder: boolean;
+    purchaseorder: boolean;
     retail: boolean;
 }
 
