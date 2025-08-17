@@ -88,18 +88,18 @@ const New: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - New Stockin'}</title>
+        <title>{process.env.APP_NAME + ' - Buat Stock Masuk'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Stock In', path: '/stock-in' },
-            { name: 'New', path: '' },
+            { name: 'Stock Masuk', path: '/stock-in' },
+            { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>New Stockin</div>
+            <div className='text-xl'>Buat Stock Masuk</div>
           </div>
           <div>
             <Formik
@@ -119,7 +119,7 @@ const New: NextPage<Props> = () => {
                         keyValue={"id"}
                         keyLabel={"name"}
                         isLoading={isLoadingProduct}
-                        placeholder="Select Product"
+                        placeholder="Pilih Product"
                         placeholderValue={""}
                         field={true}
                         required
@@ -127,22 +127,22 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextFieldNumber
-                        label={'Net Quantity'}
+                        label={'Berat Bersih'}
                         name={`netQuantity`}
-                        placeholder={'Net Quantity'}
+                        placeholder={'1...'}
                         required
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextAreaField
-                        label={'Notes'}
+                        label={'Catatan'}
                         name={'notes'}
-                        placeholder={'Notes'}
+                        placeholder={'Catatan'}
                       />
                     </div>
                     <div className="mb-8 max-w-xl">
                       <ButtonSubmit
-                        label={'Save'}
+                        label={'Simpan'}
                         disabled={isPending}
                         loading={isPending}
                       />

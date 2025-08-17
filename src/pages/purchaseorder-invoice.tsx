@@ -41,7 +41,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
         <table className="w-full table-auto">
           <thead>
             <tr className="text-left">
-              <th className='px-2 border-2 border-gray-400 py-4'>Sent Time</th>
+              <th className='px-2 border-2 border-gray-400 py-4'>Tanggal Dikirim</th>
               <th className='px-2 border-2 border-gray-400 py-4'>Produk</th>
               <th className='px-2 border-2 border-gray-400 py-4'>Unit Price</th>
               <th className='px-2 border-2 border-gray-400 py-4'>Net</th>

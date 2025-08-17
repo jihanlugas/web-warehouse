@@ -138,10 +138,10 @@ const ModalEditCustomer: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                       </div>
                       <div className="mb-4">
                         <TextField
-                          label={'Phone Number'}
+                          label={'Nomor Telepon'}
                           name={'phoneNumber'}
                           type={'text'}
-                          placeholder={'Phone Number'}
+                          placeholder={'Nomor Telepon'}
                         />
                       </div>
                       <div className="mb-4">
@@ -153,7 +153,7 @@ const ModalEditCustomer: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Save'}
+                          label={'Simpan'}
                           disabled={isPending}
                           loading={isPending}
                         />

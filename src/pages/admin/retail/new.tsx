@@ -155,7 +155,7 @@ const New: NextPage<Props> = () => {
         <Breadcrumb
           links={[
             { name: 'Retail', path: '/admin/retail' },
-            { name: 'New', path: '' },
+            { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
@@ -197,7 +197,7 @@ const New: NextPage<Props> = () => {
                         </div>
                         <div className="mb-4 max-w-xl">
                           <TextField
-                            label={'Customer Phone Number'}
+                            label={'Customer Nomor Telepon'}
                             name={'customerPhoneNumber'}
                             type={'text'}
                             placeholder={'628...'}
@@ -214,7 +214,7 @@ const New: NextPage<Props> = () => {
                           keyValue={"id"}
                           keyLabel={"name"}
                           isLoading={isLoadingCustomer}
-                          placeholder="Select Customer"
+                          placeholder="Pilih Customer"
                           placeholderValue={""}
                           field={true}
                           required
@@ -223,9 +223,9 @@ const New: NextPage<Props> = () => {
                     )}
                     <div className="mb-4 max-w-xl">
                       <TextAreaField
-                        label={'Notes'}
+                        label={'Catatan'}
                         name={'notes'}
-                        placeholder={'Notes'}
+                        placeholder={'Catatan'}
                       />
                     </div>
                     <FieldArray
@@ -246,7 +246,7 @@ const New: NextPage<Props> = () => {
                                     keyValue={"id"}
                                     keyLabel={"name"}
                                     isLoading={isLoadingProduct}
-                                    placeholder="Select Product"
+                                    placeholder="Pilih Product"
                                     placeholderValue={""}
                                     field={true}
                                     required
@@ -256,7 +256,7 @@ const New: NextPage<Props> = () => {
                                   <TextFieldNumber
                                     label={'Unit Price'}
                                     name={`products.${key}.unitPrice`}
-                                    placeholder={'Unit Price'}
+                                    placeholder={'1...'}
                                     required
                                   />
                                 </div>
@@ -268,7 +268,7 @@ const New: NextPage<Props> = () => {
                     />
                     <div className="mb-8 max-w-xl">
                       <ButtonSubmit
-                        label={'Save'}
+                        label={'Simpan'}
                         disabled={isPending}
                         loading={isPending}
                       />

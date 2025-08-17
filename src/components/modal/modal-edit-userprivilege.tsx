@@ -118,19 +118,19 @@ const ModalEditUserprivilege: NextPage<Props> = ({ show, onClickOverlay, id }) =
                         <div className="">
                           <CheckboxField
                             name="stockIn"
-                            label="Stock In"
+                            label="Stock Masuk"
                           />
                         </div>
                         <div className="">
                           <CheckboxField
                             name="transferIn"
-                            label="Transfer In"
+                            label="Pengiriman Masuk"
                           />
                         </div>
                         <div className="">
                           <CheckboxField
                             name="transferOut"
-                            label="Transfer Out"
+                            label="Pengiriman Keluar"
                           />
                         </div>
                         <div className="">
@@ -148,7 +148,7 @@ const ModalEditUserprivilege: NextPage<Props> = ({ show, onClickOverlay, id }) =
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Save'}
+                          label={'Simpan'}
                           disabled={isPending}
                           loading={isPending}
                         />

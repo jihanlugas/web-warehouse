@@ -78,6 +78,7 @@ const MainOperator: React.FC<Props> = ({ children }) => {
               sidebar={sidebar}
               onClickOverlay={onClickOverlay}
               userprivilege={loginUser.user.userprivilege}
+              warehouse={loginUser.warehouse}
             />
             <div className={`block duration-300 ease-in-out pt-16 min-h-svh overflow-y-auto`}>
               {React.isValidElement(children) ? React.cloneElement(children, { loginUser }) : children}

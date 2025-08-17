@@ -260,11 +260,11 @@ const Index: NextPage<Props> = ({ }) => {
                           <div className="flex justify-between items-center">
                             <div className="text-base">
                               <div className="font-bold">{data.number}</div>
-                              <div className="">
-                                <div className="">{data?.purchaseorder?.customer?.name}</div>
-                              </div>
                             </div>
                             <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
+                          </div>
+                          <div className="">
+                            <div className="">{data?.purchaseorder?.customer?.name}</div>
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="mb-2">
@@ -273,7 +273,7 @@ const Index: NextPage<Props> = ({ }) => {
                               <div className="text-sm">{data?.vehicle?.driverName}</div>
                             </div>
                             <div className="text-sm flex">
-                              <div className="">{'Sent time : '}</div>
+                              <div className="">{'Tanggal Dikirim : '}</div>
                               <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
                             </div>
                           </div>
@@ -314,7 +314,7 @@ const Index: NextPage<Props> = ({ }) => {
                                 onClick={() => handleGenerateDeliveryOrder(data.id)}
                                 disabled={isPendingDeliveryOrder}
                               >
-                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
+                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Jalan</div>}
                               </button>
                             )}
 
@@ -324,7 +324,7 @@ const Index: NextPage<Props> = ({ }) => {
                                 onClick={() => handleGenerateDeliveryOrder(data.id)}
                                 disabled={isPendingDeliveryOrder}
                               >
-                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
+                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Jalan</div>}
                               </button>
                             ) : (
                               <>
@@ -365,7 +365,7 @@ const Index: NextPage<Props> = ({ }) => {
                       <div className='flex justify-center items-center mb-4'>
                         <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
                       </div>
-                      <div className="text-xl">{'No data found'}</div>
+                      <div className="text-xl">{'Data Tidak Ditemukan'}</div>
                     </div>
                   )}
                 </div>

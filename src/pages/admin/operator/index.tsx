@@ -159,7 +159,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Phone Number"}
+            {"Nomor Telepon"}
           </div>
         );
       },
@@ -234,7 +234,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Stock In"}
+            {"Stock Masuk"}
           </div>
         );
       },
@@ -253,7 +253,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Transfer In"}
+            {"Pengiriman Masuk"}
           </div>
         );
       },
@@ -272,7 +272,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Transfer Out"}
+            {"Pengiriman Keluar"}
           </div>
         );
       },

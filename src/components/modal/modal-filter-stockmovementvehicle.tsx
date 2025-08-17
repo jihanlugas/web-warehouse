@@ -9,6 +9,10 @@ import ButtonSubmit from "@/components/formik/button-submit";
 import TextField from "@/components/formik/text-field";
 import TextAreaField from "@/components/formik/text-area-field";
 import DateField from "@/components/formik/date-field";
+import { PageWarehouse, WarehouseView } from "@/types/warehouse";
+import { useQuery } from "@tanstack/react-query";
+import { Api } from "@/lib/api";
+import DropdownField from "../formik/dropdown-field";
 
 
 type Props = {
@@ -21,9 +25,20 @@ type Props = {
 const schema = Yup.object().shape({
 });
 
+const pageRequestWarehouse: PageWarehouse = {
+  limit: -1,
+}
+
 const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
 
   const [initFormikValue, setInitFormikValue] = useState<PageStockmovementvehicle>(filter)
+  const [warehouses, setWarehouses] = useState<WarehouseView[]>([])
+
+
+  const { isLoading: isLoadingWarehouse, data: dataWarehouse } = useQuery({
+    queryKey: ['warehouse', pageRequestWarehouse],
+    queryFn: ({ queryKey }) => Api.get('/warehouse', queryKey[1] as object),
+  });
 
   const handleSubmit = async (values: PageStockmovementvehicle) => {
     setFilter(values)
@@ -38,6 +53,8 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
       relatedId: '',
       productId: '',
       vehicleId: '',
+      number: '',
+      status: '',
       startSentGrossQuantity: '',
       startSentTareQuantity: '',
       startSentNetQuantity: '',
@@ -75,6 +92,12 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
     }
   }, [show])
 
+  useEffect(() => {
+    if (dataWarehouse?.status) {
+      setWarehouses(dataWarehouse.payload.list);
+    }
+  }, [dataWarehouse]);
+
 
   return (
     <Modal show={show} onClickOverlay={() => onClickOverlay()} layout={'sm:max-w-2xl'}>
@@ -99,33 +122,34 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
                   <Form noValidate={true}>
                     <div className="mb-4">
                       <TextField
-                        label={'Stockmovementvehicle Name'}
-                        name={'name'}
+                        label={'Nomor Pengiriman'}
+                        name={'number'}
                         type={'text'}
-                        placeholder={'Stockmovementvehicle Name'}
+                        placeholder={'Nomor Pengiriman'}
                       />
                     </div>
-                    <div className="mb-4">
-                      <TextField
-                        label={'Email'}
-                        name={'email'}
-                        type={'text'}
-                        placeholder={'Email'}
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <DropdownField
+                        label={"Sumber Warehouse"}
+                        name={"fromWarehouseId"}
+                        items={warehouses}
+                        keyValue={"id"}
+                        keyLabel={"name"}
+                        isLoading={isLoadingWarehouse}
+                        placeholder="Pilih Sumber Warehouse"
+                        placeholderValue={""}
+                        field={true}
                       />
-                    </div>
-                    <div className="mb-4">
-                      <TextField
-                        label={'Phone Number'}
-                        name={'phoneNumber'}
-                        type={'text'}
-                        placeholder={'Phone Number'}
-                      />
-                    </div>
-                    <div className="mb-4">
-                      <TextAreaField
-                        label={'Address'}
-                        name={'address'}
-                        placeholder={'Address'}
+                      <DropdownField
+                        label={"Tujuan Warehouse"}
+                        name={"toWarehouseId"}
+                        items={warehouses}
+                        keyValue={"id"}
+                        keyLabel={"name"}
+                        isLoading={isLoadingWarehouse}
+                        placeholder="Pilih Tujuan Warehouse"
+                        placeholderValue={""}
+                        field={true}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">

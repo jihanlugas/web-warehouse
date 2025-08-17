@@ -151,9 +151,9 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                     <div className="col-span-1 sm:col-span-4">{purchaseorder?.number}</div>
                     <div className="text-gray-600">{'Customer'}</div>
                     <div className="col-span-1 sm:col-span-4">{purchaseorder.customer?.name}</div>
-                    <div className="text-gray-600">{'Phone Number'}</div>
+                    <div className="text-gray-600">{'Nomor Telepon'}</div>
                     <div className="col-span-1 sm:col-span-4">{displayPhoneNumber(purchaseorder.customer?.phoneNumber)}</div>
-                    <div className="text-gray-600">{'Notes'}</div>
+                    <div className="text-gray-600">{'Catatan'}</div>
                     <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{purchaseorder?.notes || '-'}</div>
                   </div>
                 </div>
@@ -257,7 +257,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                                 <PiFolderOpenDuotone size={'3rem'} className={'text-gray-500'} />
                               </div>
                               <div>
-                                {'No data found'}
+                                {'Data Tidak Ditemukan'}
                               </div>
                             </div>
                           </td>
@@ -320,20 +320,20 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                                   <TextFieldNumber
                                     label={'Amount'}
                                     name={`amount`}
-                                    placeholder={'Amount'}
+                                    placeholder={'1...'}
                                     required
                                   />
                                 </div>
                                 <div className="mb-4">
                                   <TextAreaField
-                                    label={'Payment Notes'}
+                                    label={'Payment Catatan'}
                                     name={'notes'}
-                                    placeholder={'Payment Notes'}
+                                    placeholder={'Payment Catatan'}
                                   />
                                 </div>
                                 <div className="mb-4">
                                   <ButtonSubmit
-                                    label={'Save'}
+                                    label={'Simpan'}
                                     disabled={isPending}
                                     loading={isPending}
                                   />

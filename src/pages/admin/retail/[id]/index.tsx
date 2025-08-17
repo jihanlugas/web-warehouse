@@ -103,7 +103,7 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Delivery Number"}
+            {"Nomor Pengiriman"}
           </div>
         );
       },
@@ -122,7 +122,7 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Source"}
+            {"Sumber"}
           </div>
         );
       },
@@ -202,7 +202,7 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Sent Quantity"}
+            {"Berat Dikirim"}
           </div>
         );
       },
@@ -220,7 +220,7 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
     //   header: () => {
     //     return (
     //       <div className='whitespace-nowrap'>
-    //         {"Received Quantity"}
+    //         {"Berat Diterima"}
     //       </div>
     //     );
     //   },
@@ -238,7 +238,7 @@ const Stockmovementvehicle: NextPage<PropsStockmovementvehicle> = ({ id }) => {
     //   header: () => {
     //     return (
     //       <div className='whitespace-nowrap'>
-    //         {"Shrinkage"}
+    //         {"Penyusutan"}
     //       </div>
     //     );
     //   },
@@ -328,7 +328,7 @@ const Transaction: NextPage<PropsTransaction> = ({ id }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Notes"}
+            {"Catatan"}
           </div>
         );
       },
@@ -486,7 +486,7 @@ const Index: NextPage<Props> = ({ id }) => {
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4">
                       <div className="text-gray-600">{'Name'}</div>
                       <div className="col-span-1 sm:col-span-4">{retail?.number}</div>
-                      <div className="text-gray-600">{'Notes'}</div>
+                      <div className="text-gray-600">{'Catatan'}</div>
                       <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{retail?.notes || '-'}</div>
                       {retail.retailproducts.map((retailproduct) => (
                         <>
@@ -508,7 +508,7 @@ const Index: NextPage<Props> = ({ id }) => {
                       )}
                       <div className="text-gray-600">{'Create By'}</div>
                       <div className="col-span-1 sm:col-span-4">{retail?.createName}</div>
-                      <div className="text-gray-600">{'Create Date'}</div>
+                      <div className="text-gray-600">{'Tanggal Buat'}</div>
                       <div className="col-span-1 sm:col-span-4">{displayDateTime(retail?.createDt)}</div>
                       <div className="text-gray-600">{'Last Update By'}</div>
                       <div className="col-span-1 sm:col-span-4">{retail?.updateName}</div>

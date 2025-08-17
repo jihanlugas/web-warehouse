@@ -55,6 +55,7 @@ export declare interface PageStockmovementvehicle extends Paging {
     vehicleId?: string;
     relatedId?: string;
     status?: string;
+    number?: string;
     startSentGrossQuantity?: string | number;
     startSentTareQuantity?: string | number;
     startSentNetQuantity?: string | number;

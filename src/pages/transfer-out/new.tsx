@@ -186,18 +186,18 @@ const New: NextPage<Props> = ({ loginUser }) => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - New Transfer Out'}</title>
+        <title>{process.env.APP_NAME + ' - Buat Pengiriman Keluar'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Transfer Out', path: '/transfer-out' },
-            { name: 'New', path: '' },
+            { name: 'Pengiriman Keluar', path: '/transfer-out' },
+            { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>New Transfer Out</div>
+            <div className='text-xl'>Buat Pengiriman Keluar</div>
           </div>
           <div>
             <Formik
@@ -217,22 +217,21 @@ const New: NextPage<Props> = ({ loginUser }) => {
                         keyValue={"id"}
                         keyLabel={"name"}
                         isLoading={isLoadingProduct}
-                        placeholder="Select Product"
+                        placeholder="Pilih Product"
                         placeholderValue={""}
                         field={true}
                         required
                       />
                     </div>
                     <div className="mb-4 max-w-xl ">
-                      <div>Vehicle</div>
                       <div className="flex items-center">
                         <label className="flex items-center mr-4">
                           <input type="radio" className="h-4 w-4 mr-2 accent-current" onChange={() => handleChangeVehicleType(setFieldValue, false)} checked={!values.isNewVehiclerdriver} />
-                          <span>Saved Vehicle</span>
+                          <span>Kendaraan Tersimpan</span>
                         </label>
                         <label className="flex items-center mr-4">
                           <input type="radio" className="h-4 w-4 mr-2 accent-current" onChange={() => handleChangeVehicleType(setFieldValue, true)} checked={values.isNewVehiclerdriver} />
-                          <span>New Vehicle</span>
+                          <span>Kendaraan Baru</span>
                         </label>
                       </div>
                     </div>
@@ -240,16 +239,16 @@ const New: NextPage<Props> = ({ loginUser }) => {
                       <>
                         <div className="mb-4 max-w-xl">
                           <TextField
-                            label={'Vehicle Name'}
+                            label={'Kendaraan'}
                             name={'vehicleName'}
                             type={'text'}
-                            placeholder={'Vehicle Name'}
+                            placeholder={'Kendaraan'}
                             required
                           />
                         </div>
                         <div className="mb-4 max-w-xl">
                           <TextField
-                            label={'Plate Number'}
+                            label={'Nomor Kendaraan'}
                             name={'plateNumber'}
                             type={'text'}
                             placeholder={'B 123...'}
@@ -259,16 +258,16 @@ const New: NextPage<Props> = ({ loginUser }) => {
                         </div>
                         <div className="mb-4 max-w-xl">
                           <TextField
-                            label={'Driver Name'}
+                            label={'Nama Supir / Penanggung Jawab'}
                             name={'driverName'}
                             type={'text'}
-                            placeholder={'Driver Name'}
+                            placeholder={'Nama Supir / Penanggung Jawab'}
                             required
                           />
                         </div>
                         <div className="mb-4 max-w-xl">
                           <TextField
-                            label={'Phone Number'}
+                            label={'Nomor Telepon'}
                             name={'phoneNumber'}
                             type={'text'}
                             placeholder={'628...'}
@@ -279,13 +278,13 @@ const New: NextPage<Props> = ({ loginUser }) => {
                     ) : (
                       <div className="mb-4 max-w-xl">
                         <DropdownField
-                          label={"Vehicle"}
+                          label={"Kendaraan"}
                           name={"vehicleId"}
                           items={vehicles}
                           keyValue={"id"}
                           keyLabel={"label"}
                           isLoading={isLoadingVehicle}
-                          placeholder="Select Vehicle"
+                          placeholder="Pilih Vehicle"
                           placeholderValue={""}
                           field={true}
                           required
@@ -300,7 +299,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
                         keyValue={"value"}
                         keyLabel={"label"}
                         isLoading={isLoadingWarehouse}
-                        placeholder="Select Warehouse"
+                        placeholder="Pilih Warehouse"
                         placeholderValue={""}
                         field={true}
                         required
@@ -308,32 +307,32 @@ const New: NextPage<Props> = ({ loginUser }) => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextAreaField
-                        label={'Notes'}
+                        label={'Catatan'}
                         name={'notes'}
-                        placeholder={'Notes'}
+                        placeholder={'Catatan'}
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextFieldNumber
-                        label={'Tare Quantity'}
+                        label={'Berat Kosong'}
                         name={`sentTareQuantity`}
-                        placeholder={'Tare Quantity'}
+                        placeholder={'1...'}
                       />
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextFieldNumber
-                        label={'Gross Quantity'}
+                        label={'Berat Kotor'}
                         name={`sentGrossQuantity`}
-                        placeholder={'Gross Quantity'}
+                        placeholder={'1...'}
                       />
                     </div>
-                    <div className="mb-4 max-w-xl">
-                      <div>Net Quantity</div>
+                    <div className="mb-4 max-w-xl flex justify-between items-center">
+                      <div>Berat Bersih</div>
                       <div>{displayNumber((parseFloat(values.sentGrossQuantity as string || "0") - parseFloat(values.sentTareQuantity as string || "0")))}</div>
                     </div>
                     <div className="mb-8 max-w-xl">
                       <ButtonSubmit
-                        label={'Save'}
+                        label={'Simpan'}
                         disabled={isPending}
                         loading={isPending}
                       />

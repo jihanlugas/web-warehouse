@@ -18,6 +18,7 @@ const TextFieldNumber: NextPage<Props> = ({ name, ...props }) => {
   'h-10',
   'px-2',
   'select-all',
+  'text-right',
   hasError && '!border-rose-400',
   props.className || ''
 ].filter(Boolean).join(' ');

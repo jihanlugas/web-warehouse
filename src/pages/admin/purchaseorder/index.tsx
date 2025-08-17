@@ -238,7 +238,7 @@ const Index: NextPage<Props> = () => {
           <div className='w-full capitalize'>
             <span data-tooltip-id={`tootltip-notes-${row.original.id}`}>{getValue() as string}</span>
             <Tooltip id={`tootltip-notes-${row.original.id}`}>
-              <div className="font-bold">{"Notes"}</div>
+              <div className="font-bold">{"Catatan"}</div>
               <div className="">{row.original.notes ? row.original.notes : '-'}</div>
             </Tooltip>
           </div>

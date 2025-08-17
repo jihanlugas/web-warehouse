@@ -159,7 +159,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Notes"}
+            {"Catatan"}
           </div>
         );
       },

@@ -157,7 +157,7 @@ const ModalPhoto: NextPage<Props> = ({ show, onClickOverlay, id, allowAdd }) => 
                       <div className="flex justify-center items-center mb-4">
                         <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
                       </div>
-                      <div className="text-xl">{'No data found'}</div>
+                      <div className="text-xl">{'Data Tidak Ditemukan'}</div>
                     </div>
                   </div>
                 )}
@@ -182,7 +182,7 @@ const ModalPhoto: NextPage<Props> = ({ show, onClickOverlay, id, allowAdd }) => 
                             </div>
                             <div className="mb-4">
                               <ButtonSubmit
-                                label={'Save'}
+                                label={'Simpan'}
                                 disabled={isPending}
                                 loading={isPending}
                               />
@@ -200,7 +200,7 @@ const ModalPhoto: NextPage<Props> = ({ show, onClickOverlay, id, allowAdd }) => 
                   <div className="flex justify-center items-center mb-4">
                     <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
                   </div>
-                  <div className="text-xl">{'No data found'}</div>
+                  <div className="text-xl">{'Data Tidak Ditemukan'}</div>
                 </div>
               </div>
             )}

@@ -9,12 +9,14 @@ import { UserprivilegeView } from '@/types/userprivilage';
 import { FiDownload, FiLogIn, FiLogOut } from 'react-icons/fi';
 import { LuClipboardList } from 'react-icons/lu';
 import { RiShoppingBag4Line } from 'react-icons/ri';
+import { WarehouseView } from '@/types/warehouse';
 
 
 interface Props {
   sidebar: boolean,
   onClickOverlay: (boolean?) => void,
-  userprivilege: UserprivilegeView
+  userprivilege: UserprivilegeView,
+  warehouse: WarehouseView,
 }
 
 const icons = {
@@ -35,17 +37,17 @@ const defaultMenu = [
     path: '/dashboard',
   },
   {
-    name: 'Stock In',
+    name: 'Stock Masuk',
     icon: 'FiDownload',
     path: '/stock-in',
   },
   {
-    name: 'Transfer Out',
+    name: 'Pengiriman Keluar',
     icon: 'FiLogOut',
     path: '/transfer-out',
   },
   {
-    name: 'Transfer In',
+    name: 'Pemgiriman Masuk',
     icon: 'FiLogIn',
     path: '/transfer-in',
   },
@@ -61,52 +63,52 @@ const defaultMenu = [
   },
 ];
 
-const mapingMenu = (defaultMenu, userprivilege: UserprivilegeView) => {
+const mapingMenu = (defaultMenu, userprivilege: UserprivilegeView, warehouse: WarehouseView) => {
   const mapmenu = []
-  if (userprivilege) {
+
+  if (userprivilege && warehouse) {
     defaultMenu.map((menu) => {
-    switch (menu.name) {
-      case 'Dashboard':
+    switch (menu.path) {
+      case '/dashboard':
           mapmenu.push(menu)
         break;
-      case 'Stock In':
-          if (userprivilege.stockIn) mapmenu.push(menu)
+      case '/stock-in':
+          if (userprivilege.stockIn && warehouse.isStockin) mapmenu.push(menu)
         break;
-      case 'Transfer Out':
-          if (userprivilege.transferOut) mapmenu.push(menu)
+      case '/transfer-out':
+          if (userprivilege.transferOut && warehouse.isTransferOut) mapmenu.push(menu)
         break;
-      case 'Transfer In':
-          if (userprivilege.transferIn) mapmenu.push(menu)
+      case '/transfer-in':
+          if (userprivilege.transferIn && warehouse.isTransferIn) mapmenu.push(menu)
         break;
-      case 'Purchase Order':
-          if (userprivilege.purchaseorder) mapmenu.push(menu)
+      case '/purchaseorder':
+          if (userprivilege.purchaseorder && warehouse.isPurchaseorder) mapmenu.push(menu)
         break;
-      case 'Retail':
-          if (userprivilege.retail) mapmenu.push(menu)
+      case '/retail':
+          if (userprivilege.retail && warehouse.isRetail) mapmenu.push(menu)
         break;
       default:
         break;
     }
   }) 
   }
-  
 
   return mapmenu
 }
 
-const SidebarOperator: React.FC<Props> = ({ sidebar, onClickOverlay, userprivilege }) => {
+const SidebarOperator: React.FC<Props> = ({ sidebar, onClickOverlay, userprivilege, warehouse }) => {
 
   const router = useRouter();
 
-  const [menu, setMenu] = useState(mapingMenu(defaultMenu, userprivilege))
+  const [menu, setMenu] = useState(mapingMenu(defaultMenu, userprivilege, warehouse))
 
   useEffect(() => {
     onClickOverlay(false);
   }, [router.pathname]);
 
   useEffect(() => {
-    setMenu(mapingMenu(defaultMenu, userprivilege))
-  }, [userprivilege])
+    setMenu(mapingMenu(defaultMenu, userprivilege, warehouse))
+  }, [userprivilege, warehouse])
 
   const Menu = ({ name, icon, path }) => {
     const isSelected = path.replace('/', '') === router.pathname.split('/')[1];

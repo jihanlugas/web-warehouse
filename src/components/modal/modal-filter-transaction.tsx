@@ -109,7 +109,7 @@ const ModalFilterTransaction: NextPage<Props> = ({ show, onClickOverlay, filter,
                         keyValue={"id"}
                         keyLabel={"name"}
                         isLoading={isLoadingCustomer}
-                        placeholder="Select Customer"
+                        placeholder="Pilih Customer"
                         placeholderValue={""}
                         field={true}
                       />
@@ -126,12 +126,12 @@ const ModalFilterTransaction: NextPage<Props> = ({ show, onClickOverlay, filter,
                       <TextFieldNumber
                         label={'Amount From'}
                         name={'startAmount'}
-                        placeholder={'Amount From'}
+                        placeholder={'1...'}
                       />
                       <TextFieldNumber
                         label={'Amount To'}
                         name={'endAmount'}
-                        placeholder={'Amount To'}
+                        placeholder={'1...'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">

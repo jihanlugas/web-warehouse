@@ -149,11 +149,11 @@ const RenderData: NextPage<{ stockmovementvehicle: StockmovementvehicleView }> =
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
               <div className="text-gray-600">{'Product'}</div>
               <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.product?.name || '-'}</div>
-              <div className="text-gray-600">{'Notes'}</div>
+              <div className="text-gray-600">{'Catatan'}</div>
               <div className="col-span-1 sm:col-span-2 whitespace-pre-wrap">{stockmovementvehicle?.notes || '-'}</div>
-              <div className="text-gray-600">{'Net Quantity'}</div>
+              <div className="text-gray-600">{'Berat Bersih'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.receivedNetQuantity)}</div>
-              <div className="text-gray-600">{'Create Date'}</div>
+              <div className="text-gray-600">{'Tanggal Buat'}</div>
               <div className="col-span-1 sm:col-span-2">{displayDateTime(stockmovementvehicle.createDt)}</div>
             </div>
           </div>
@@ -170,46 +170,46 @@ const RenderData: NextPage<{ stockmovementvehicle: StockmovementvehicleView }> =
               <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.fromWarehouse?.name || '-'}</div>
               <div className="text-gray-600">{'To Warehouse'}</div>
               <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.toWarehouse?.name || '-'}</div>
-              <div className="text-gray-600">{'Notes'}</div>
+              <div className="text-gray-600">{'Catatan'}</div>
               <div className="col-span-1 sm:col-span-2 whitespace-pre-wrap">{stockmovementvehicle?.notes || '-'}</div>
-              <div className="text-gray-600">{'Create Date'}</div>
+              <div className="text-gray-600">{'Tanggal Buat'}</div>
               <div className="col-span-1 sm:col-span-2">{displayDateTime(stockmovementvehicle.createDt)}</div>
             </div>
           </div>
           {stockmovementvehicle.vehicle && (
             <div className="mb-4">
-              <div className="text-lg mb-4">Vehicle</div>
+              <div className="text-lg mb-4">Kendaraan</div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-                <div className="text-gray-600">{'Vehicle Name'}</div>
+                <div className="text-gray-600">{'Kendaraan'}</div>
                 <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.vehicle?.name || '-'}</div>
-                <div className="text-gray-600">{'Plate Number'}</div>
+                <div className="text-gray-600">{'Nomor Kendaraan'}</div>
                 <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.vehicle?.plateNumber || '-'}</div>
-                <div className="text-gray-600">{'Driver Name'}</div>
+                <div className="text-gray-600">{'Nama Supir / Penanggung Jawab'}</div>
                 <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.vehicle?.driverName || '-'}</div>
-                <div className="text-gray-600">{'Phone Number'}</div>
+                <div className="text-gray-600">{'Nomor Telepon'}</div>
                 <div className="col-span-1 sm:col-span-2">{displayPhoneNumber(stockmovementvehicle.vehicle?.phoneNumber) || '-'}</div>
               </div>
             </div>
           )}
           <div className="mb-4">
-            <div className="text-lg mb-4">Sent Data</div>
+            <div className="text-lg mb-4">Barang Dikirim</div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-              <div className="text-gray-600">{'Sent Gross Quantity'}</div>
+              <div className="text-gray-600">{'Sent Berat Kotor'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentGrossQuantity)}</div>
-              <div className="text-gray-600">{'Sent Tare Quantity'}</div>
+              <div className="text-gray-600">{'Sent Berat Kosong'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentTareQuantity)}</div>
-              <div className="text-gray-600">{'Sent Net Quantity'}</div>
+              <div className="text-gray-600">{'Sent Berat Bersih'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentNetQuantity)}</div>
             </div>
           </div>
           <div className="mb-4">
-            <div className="text-lg mb-4">Received Data</div>
+            <div className="text-lg mb-4">Barang Diterima</div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-              <div className="text-gray-600">{'Received Gross Quantity'}</div>
+              <div className="text-gray-600">{'Received Berat Kotor'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.receivedGrossQuantity)}</div>
-              <div className="text-gray-600">{'Received Tare Quantity'}</div>
+              <div className="text-gray-600">{'Received Berat Kosong'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.receivedTareQuantity)}</div>
-              <div className="text-gray-600">{'Received Net Quantity'}</div>
+              <div className="text-gray-600">{'Received Berat Bersih'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.receivedNetQuantity)}</div>
             </div>
           </div>
@@ -224,15 +224,15 @@ const RenderData: NextPage<{ stockmovementvehicle: StockmovementvehicleView }> =
               <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.product?.name || '-'}</div>
               <div className="text-gray-600">{'Customer'}</div>
               <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.purchaseorder?.customer?.name || '-'}</div>
-              <div className="text-gray-600">{'Notes'}</div>
+              <div className="text-gray-600">{'Catatan'}</div>
               <div className="col-span-1 sm:col-span-2 whitespace-pre-wrap">{stockmovementvehicle?.notes || '-'}</div>
-              <div className="text-gray-600">{'Gross Quantity'}</div>
+              <div className="text-gray-600">{'Berat Kotor'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentGrossQuantity)}</div>
-              <div className="text-gray-600">{'Tare Quantity'}</div>
+              <div className="text-gray-600">{'Berat Kosong'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentTareQuantity)}</div>
-              <div className="text-gray-600">{'Net Quantity'}</div>
+              <div className="text-gray-600">{'Berat Bersih'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentNetQuantity)}</div>
-              <div className="text-gray-600">{'Create Date'}</div>
+              <div className="text-gray-600">{'Tanggal Buat'}</div>
               <div className="col-span-1 sm:col-span-2">{displayDateTime(stockmovementvehicle.createDt)}</div>
             </div>
           </div>
@@ -247,15 +247,15 @@ const RenderData: NextPage<{ stockmovementvehicle: StockmovementvehicleView }> =
               <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.product?.name || '-'}</div>
               <div className="text-gray-600">{'Customer'}</div>
               <div className="col-span-1 sm:col-span-2">{stockmovementvehicle.retail?.customer?.name || '-'}</div>
-              <div className="text-gray-600">{'Notes'}</div>
+              <div className="text-gray-600">{'Catatan'}</div>
               <div className="col-span-1 sm:col-span-2 whitespace-pre-wrap">{stockmovementvehicle?.notes || '-'}</div>
-              <div className="text-gray-600">{'Gross Quantity'}</div>
+              <div className="text-gray-600">{'Berat Kotor'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentGrossQuantity)}</div>
-              <div className="text-gray-600">{'Tare Quantity'}</div>
+              <div className="text-gray-600">{'Berat Kosong'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentTareQuantity)}</div>
-              <div className="text-gray-600">{'Net Quantity'}</div>
+              <div className="text-gray-600">{'Berat Bersih'}</div>
               <div className="col-span-1 sm:col-span-2">{displayTon(stockmovementvehicle?.sentNetQuantity)}</div>
-              <div className="text-gray-600">{'Create Date'}</div>
+              <div className="text-gray-600">{'Tanggal Buat'}</div>
               <div className="col-span-1 sm:col-span-2">{displayDateTime(stockmovementvehicle.createDt)}</div>
             </div>
           </div>

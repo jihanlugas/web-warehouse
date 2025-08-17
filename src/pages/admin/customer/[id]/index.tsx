@@ -95,13 +95,13 @@ const Index: NextPage<Props> = ({ id }) => {
                   <div className="col-span-1 sm:col-span-4">{customer?.name}</div>
                   <div className="text-gray-600">{'Email'}</div>
                   <div className="col-span-1 sm:col-span-4">{customer?.email}</div>
-                  <div className="text-gray-600">{'Phone Number'}</div>
+                  <div className="text-gray-600">{'Nomor Telepon'}</div>
                   <div className="col-span-1 sm:col-span-4">{displayPhoneNumber(customer?.phoneNumber)}</div>
                   <div className="text-gray-600">{'Address'}</div>
                   <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{customer?.address || '-'}</div>
                   <div className="text-gray-600">{'Create By'}</div>
                   <div className="col-span-1 sm:col-span-4">{customer?.createName}</div>
-                  <div className="text-gray-600">{'Create Date'}</div>
+                  <div className="text-gray-600">{'Tanggal Buat'}</div>
                   <div className="col-span-1 sm:col-span-4">{displayDateTime(customer?.createDt)}</div>
                   <div className="text-gray-600">{'Last Update By'}</div>
                   <div className="col-span-1 sm:col-span-4">{customer?.updateName}</div>

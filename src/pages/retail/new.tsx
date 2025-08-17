@@ -194,7 +194,7 @@ const New: NextPage<Props> = ({  }) => {
         <Breadcrumb
           links={[
             { name: 'Purcahse Order', path: '/retail' },
-            { name: 'New', path: '' },
+            { name: 'Buat', path: '' },
           ]}
         />
         <div>
@@ -219,7 +219,7 @@ const New: NextPage<Props> = ({  }) => {
                         keyValue={"id"}
                         keyLabel={"label"}
                         isLoading={isLoadingRetail}
-                        placeholder="Select Retail"
+                        placeholder="Pilih Retail"
                         placeholderValue={""}
                         field={true}
                         onChange={(e) => handleChangeRetail(e, setFieldValue)}
@@ -247,7 +247,7 @@ const New: NextPage<Props> = ({  }) => {
                           keyValue={"id"}
                           keyLabel={"name"}
                           // isLoading={isLoadingVehicle}
-                          placeholder="Select Product"
+                          placeholder="Pilih Product"
                           placeholderValue={""}
                           field={true}
                           required
@@ -257,11 +257,11 @@ const New: NextPage<Props> = ({  }) => {
                         <div className="flex items-center">
                           <label className="flex items-center mr-4">
                             <input type="radio" className="h-4 w-4 mr-2 accent-current" name="custamerType" value={"old"} onChange={() => handleChangeVehicleType(setFieldValue, false)} checked={!values.isNewVehiclerdriver} />
-                            <span>Saved Vehicle</span>
+                            <span>Kendaraan Tersimpan</span>
                           </label>
                           <label className="flex items-center mr-4">
                             <input type="radio" className="h-4 w-4 mr-2 accent-current" name="custamerType" value={"new"} onChange={() => handleChangeVehicleType(setFieldValue, true)} checked={values.isNewVehiclerdriver} />
-                            <span>New Vehicle</span>
+                            <span>Kendaraan Baru</span>
                           </label>
                         </div>
                       </div>
@@ -269,16 +269,16 @@ const New: NextPage<Props> = ({  }) => {
                         <>
                           <div className="mb-4 max-w-xl">
                             <TextField
-                              label={'Vehicle Name'}
+                              label={'Kendaraan'}
                               name={'vehicleName'}
                               type={'text'}
-                              placeholder={'Vehicle Name'}
+                              placeholder={'Kendaraan'}
                               required
                             />
                           </div>
                           <div className="mb-4 max-w-xl">
                             <TextField
-                              label={'Plate Number'}
+                              label={'Nomor Kendaraan'}
                               name={'plateNumber'}
                               type={'text'}
                               placeholder={'B 123...'}
@@ -288,16 +288,16 @@ const New: NextPage<Props> = ({  }) => {
                           </div>
                           <div className="mb-4 max-w-xl">
                             <TextField
-                              label={'Driver Name'}
+                              label={'Nama Supir / Penanggung Jawab'}
                               name={'driverName'}
                               type={'text'}
-                              placeholder={'Driver Name'}
+                              placeholder={'Nama Supir / Penanggung Jawab'}
                               required
                             />
                           </div>
                           <div className="mb-4 max-w-xl">
                             <TextField
-                              label={'Phone Number'}
+                              label={'Nomor Telepon'}
                               name={'phoneNumber'}
                               type={'text'}
                               placeholder={'628...'}
@@ -308,13 +308,13 @@ const New: NextPage<Props> = ({  }) => {
                       ) : (
                         <div className="mb-4 max-w-xl">
                           <DropdownField
-                            label={"Vehicle"}
+                            label={"Kendaraan"}
                             name={"vehicleId"}
                             items={vehicles}
                             keyValue={"id"}
                             keyLabel={"label"}
                             isLoading={isLoadingVehicle}
-                            placeholder="Select Vehicle"
+                            placeholder="Pilih Vehicle"
                             placeholderValue={""}
                             field={true}
                             required
@@ -323,25 +323,25 @@ const New: NextPage<Props> = ({  }) => {
                       )}
                       <div className="mb-4 max-w-xl">
                         <TextFieldNumber
-                          label={'Tare Quantity'}
+                          label={'Berat Kosong'}
                           name={`sentTareQuantity`}
-                          placeholder={'Tare Quantity'}
+                          placeholder={'1...'}
                         />
                       </div>
                       <div className="mb-4 max-w-xl">
                         <TextFieldNumber
-                          label={'Gross Quantity'}
+                          label={'Berat Kotor'}
                           name={`sentGrossQuantity`}
-                          placeholder={'Gross Quantity'}
+                          placeholder={'1...'}
                         />
                       </div>
                       <div className="mb-4 max-w-xl">
-                        <div>Net Quantity</div>
+                        <div>Berat Bersih</div>
                         <div>{displayNumber((parseFloat(values.sentGrossQuantity as string || "0") - parseFloat(values.sentTareQuantity as string || "0")))}</div>
                       </div>
                       <div className="mb-8 max-w-xl">
                         <ButtonSubmit
-                          label={'Save'}
+                          label={'Simpan'}
                           disabled={isPending}
                           loading={isPending}
                         />

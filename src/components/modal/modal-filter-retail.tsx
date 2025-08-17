@@ -111,53 +111,53 @@ const ModalFilterRetail: NextPage<Props> = ({ show, onClickOverlay, filter, setF
                         keyValue={"id"}
                         keyLabel={"name"}
                         isLoading={isLoadingCustomer}
-                        placeholder="Select Customer"
+                        placeholder="Pilih Customer"
                         placeholderValue={""}
                         field={true}
                       />
                     </div>
                     <div className="mb-4">
                       <TextField
-                        label={'Notes'}
+                        label={'Catatan'}
                         name={'notes'}
                         type={'text'}
-                        placeholder={'Notes'}
+                        placeholder={'Catatan'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <TextFieldNumber
                         label={'Total Price From'}
                         name={'startTotalPrice'}
-                        placeholder={'Total Price From'}
+                        placeholder={'1...'}
                       />
                       <TextFieldNumber
                         label={'Total Price To'}
                         name={'endTotalPrice'}
-                        placeholder={'Total Price To'}
+                        placeholder={'1...'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <TextFieldNumber
                         label={'Total Payment From'}
                         name={'startTotalPayment'}
-                        placeholder={'Total Payment From'}
+                        placeholder={'1...'}
                       />
                       <TextFieldNumber
                         label={'Total Payment To'}
                         name={'endTotalPayment'}
-                        placeholder={'Total Payment To'}
+                        placeholder={'1...'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <TextFieldNumber
                         label={'Outstanding From'}
                         name={'startOutstanding'}
-                        placeholder={'Outstanding From'}
+                        placeholder={'1...'}
                       />
                       <TextFieldNumber
                         label={'Outstanding To'}
                         name={'endOutstanding'}
-                        placeholder={'Outstanding To'}
+                        placeholder={'1...'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">

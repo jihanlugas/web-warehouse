@@ -63,7 +63,7 @@ const defaultMenu = [
     path: '/admin/customer',
   },
   {
-    name: 'Transfer',
+    name: 'Pengiriman',
     icon: 'RiArrowLeftRightLine',
     path: '/admin/stockmovementvehicle',
   },

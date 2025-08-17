@@ -188,7 +188,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Transfer Out'}</title>
+        <title>{process.env.APP_NAME + ' - Pengiriman Keluar'}</title>
       </Head>
       <ModalEditTransferout
         show={showModalEditTransferout}
@@ -239,7 +239,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Transfer Out', path: '' },
+            { name: 'Pengiriman Keluar', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -253,7 +253,7 @@ const Index: NextPage<Props> = () => {
                   <Link href={{ pathname: '/transfer-out/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Transfer Out</div>
+                      <div>Buat Pengiriman Keluar</div>
                     </div>
                   </Link>
                 </div>
@@ -271,11 +271,11 @@ const Index: NextPage<Props> = () => {
                           <div className="flex justify-between items-center">
                             <div className="text-base">
                               <div className="font-bold">{data.number}</div>
-                              <div className="">
-                                <div className="">{data?.toWarehouse?.name}</div>
-                              </div>
                             </div>
                             <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
+                          </div>
+                          <div className="">
+                            <div className="">{data?.toWarehouse?.name}</div>
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="mb-2">
@@ -284,7 +284,7 @@ const Index: NextPage<Props> = () => {
                               <div className="text-sm">{data?.vehicle?.driverName}</div>
                             </div>
                             <div className="text-sm flex">
-                              <div className="">{'Sent time : '}</div>
+                              <div className="">{'Tanggal Dikirim : '}</div>
                               <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
                             </div>
                           </div>
@@ -323,7 +323,7 @@ const Index: NextPage<Props> = () => {
                                 onClick={() => handleGenerateDeliveryOrder(data.id)}
                                 disabled={isPendingDeliveryOrder}
                               >
-                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Order</div>}
+                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Jalan</div>}
                               </button>
                             )}
                             <button
@@ -347,7 +347,7 @@ const Index: NextPage<Props> = () => {
                       <div className='flex justify-center items-center mb-4'>
                         <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
                       </div>
-                      <div className="text-xl">{'No data found'}</div>
+                      <div className="text-xl">{'Data Tidak Ditemukan'}</div>
                     </div>
                   )}
                 </div>

@@ -114,14 +114,14 @@ const ModalEditPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, id }) =
                     <Form noValidate={true}>
                       <div className="mb-4">
                         <TextAreaField
-                          label={'Notes'}
+                          label={'Catatan'}
                           name={'notes'}
-                          placeholder={'Notes'}
+                          placeholder={'Catatan'}
                         />
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Save'}
+                          label={'Simpan'}
                           disabled={isPending}
                           loading={isPending}
                         />

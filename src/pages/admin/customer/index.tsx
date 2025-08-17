@@ -150,7 +150,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Phone Number"}
+            {"Nomor Telepon"}
           </div>
         );
       },

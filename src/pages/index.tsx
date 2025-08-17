@@ -1,10 +1,9 @@
 import PageWithLayoutType from '@/types/layout';
 import MainAuth from '@/components/layout/main-auth';
-import Dashboard from '@/pages/dashboard';
-import AdminDashboard from '@/pages/admin/dashboard';
 import { LoginUser } from '@/types/auth';
 import { NextPage } from 'next/types';
 import { USER_ROLE_ADMIN } from '@/utils/constant';
+import { useRouter } from 'next/router';
 
 
 type Props = {
@@ -12,13 +11,15 @@ type Props = {
 }
 
 const Index: NextPage<Props> = ({ loginUser }) => {
+  const router = useRouter();
   if (loginUser) {
     if (loginUser.user.userRole === USER_ROLE_ADMIN) {
-      return <AdminDashboard loginUser={loginUser} />;
+      router.replace('/admin/dashboard');
     } else {
-      return <Dashboard loginUser={loginUser} />;
+      router.replace('/dashboard');
     }
   }
+  return null
 };
 
 (Index as PageWithLayoutType).layout = MainAuth;

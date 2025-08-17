@@ -97,7 +97,7 @@ const Index: NextPage<Props> = ({ id }) => {
                   <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{product?.description || '-'}</div>
                   <div className="text-gray-600">{'Create By'}</div>
                   <div className="col-span-1 sm:col-span-4">{product?.createName}</div>
-                  <div className="text-gray-600">{'Create Date'}</div>
+                  <div className="text-gray-600">{'Tanggal Buat'}</div>
                   <div className="col-span-1 sm:col-span-4">{displayDateTime(product?.createDt)}</div>
                   <div className="text-gray-600">{'Last Update By'}</div>
                   <div className="col-span-1 sm:col-span-4">{product?.updateName}</div>

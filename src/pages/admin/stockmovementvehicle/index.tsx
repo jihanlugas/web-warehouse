@@ -12,7 +12,6 @@ import { isEmptyObject } from "@/utils/validate";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { CellContext, ColumnDef, Row } from "@tanstack/react-table";
 import Head from "next/head";
-import Link from "next/link";
 import { NextPage } from "next/types"
 import { useEffect, useRef, useState } from "react";
 import { CgChevronDown } from "react-icons/cg";
@@ -23,11 +22,13 @@ import { Tooltip } from "react-tooltip";
 import { StockmovementvehiclephotoView } from "@/types/stockmovementvehiclephoto";
 import ModalPhoto from "@/components/modal/modal-photo";
 import { WarehouseView } from "@/types/warehouse";
+import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
 
 type Props = object
 
 type PropsDropdownMore = {
   toggleModalDelete: (id: string, name: string) => void
+  toggleModalDetail: (id: string) => void
 }
 
 
@@ -57,6 +58,7 @@ const RenderType = ({ type }) => {
 const DropdownMore: NextPage<CellContext<StockmovementvehicleView, unknown> & PropsDropdownMore> = ({
   row,
   toggleModalDelete,
+  toggleModalDetail,
 }) => {
   const refMore = useRef<HTMLDivElement>(null);
   const [moreBar, setMoreBar] = useState(false);
@@ -91,11 +93,9 @@ const DropdownMore: NextPage<CellContext<StockmovementvehicleView, unknown> & Pr
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          <Link href={{ pathname: '/admin/stockmovementvehicle/[id]', query: { id: row.original.id } }}>
-            <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'} title='Edit'>
-              {'Detail'}
-            </div>
-          </Link>
+          <button onClick={() => toggleModalDetail(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+            {'Detail'}
+          </button>
           <button onClick={() => handleClickDelete(row.original.id, row.original.number)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Delete'}
           </button>
@@ -112,7 +112,7 @@ const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView>
   const TooltipIn = ({ id }) => {
     return (
       <Tooltip id={id}>
-        <div className="font-bold">{"Status Stock In"}</div>
+        <div className="font-bold">{"Status Stock Masuk"}</div>
         <hr className='border-gray-500 border-1 my-2' />
         <div className="flex my-1">
           <div className="w-20 font-bold">UNLOADING</div>
@@ -282,13 +282,14 @@ const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView>
 const Index: NextPage<Props> = () => {
 
   const [stockmovementvehicle, setStockmovementvehicle] = useState<StockmovementvehicleView[]>([]);
+  const [showModalDetail, setShowModalDetail] = useState<boolean>(false);
   const [showModalFilter, setShowModalFilter] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
+  const [detailId, setDetailId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
   const [deleteVerify, setDeleteVerify] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string>('')
   const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
-  const [allowAdd] = useState<boolean>(false);
 
   const [filter, setFilter] = useState<PageStockmovementvehicle>({
     fromWarehouseId: '',
@@ -329,7 +330,7 @@ const Index: NextPage<Props> = () => {
     preloads: "FromWarehouse,ToWarehouse,Stockmovementvehiclephotos",
   });
 
-  const toggleModalPhoto = (id = '', refresh = false, status = '') => {
+  const toggleModalPhoto = (id = '', refresh = false) => {
     if (refresh) {
       refetch()
     }
@@ -344,7 +345,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Delivery Number"}
+            {"Nomor Pengiriman"}
           </div>
         );
       },
@@ -367,7 +368,7 @@ const Index: NextPage<Props> = () => {
           </div>
         );
       },
-      cell: ({ getValue, row }) => {
+      cell: ({ getValue }) => {
         return (
           <div className='w-full capitalize'>
             <RenderType type={getValue() as string} />
@@ -382,7 +383,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Source"}
+            {"Sumber"}
           </div>
         );
       },
@@ -402,7 +403,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Destination"}
+            {"Tujuan"}
           </div>
         );
       },
@@ -459,7 +460,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Sent Quantity"}
+            {"Berat Dikirim"}
           </div>
         );
       },
@@ -468,10 +469,10 @@ const Index: NextPage<Props> = () => {
           <div className='w-full capitalize text-right'>
             <span data-tooltip-id={`tootltip-sent-${row.original.id}`}>{displayTon(getValue() as number) || '-'}</span>
             <Tooltip id={`tootltip-sent-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Sent Quantity"}</div>
+              <div className="font-bold">{"Berat Dikirim"}</div>
               <hr className='border-gray-500 border-1 my-2' />
               <div className="flex justify-between">
-                <div className="w-20 font-bold">Sent Time</div>
+                <div className="w-20 font-bold">Tanggal Dikirim</div>
                 <div>{row.original.sentTime ? displayDateTime(row.original.sentTime) : ' - '}</div>
               </div>
               <div className="flex justify-between">
@@ -497,7 +498,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Received Quantity"}
+            {"Berat Diterima"}
           </div>
         );
       },
@@ -506,10 +507,10 @@ const Index: NextPage<Props> = () => {
           <div className='w-full capitalize text-right'>
             <span data-tooltip-id={`tootltip-received-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
             <Tooltip id={`tootltip-received-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Received Quantity"}</div>
+              <div className="font-bold">{"Berat Diterima"}</div>
               <hr className='border-gray-500 border-1 my-2' />
               <div className="flex justify-between">
-                <div className="w-20 font-bold">Received Time</div>
+                <div className="w-20 font-bold">Tanggal Diterima</div>
                 <div>{row.original.receivedTime ? displayDateTime(row.original.receivedTime) : ' - '}</div>
               </div>
               <div className="flex justify-between">
@@ -535,7 +536,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Shrinkage"}
+            {"Penyusutan"}
           </div>
         );
       },
@@ -576,6 +577,7 @@ const Index: NextPage<Props> = () => {
         return (
           <DropdownMore
             toggleModalDelete={toggleModalDelete}
+            toggleModalDetail={toggleModalDetail}
             {...props}
           />
         );
@@ -592,6 +594,11 @@ const Index: NextPage<Props> = () => {
     mutationKey: ['stockmovementvehicle', 'delete', deleteId],
     mutationFn: (id: string) => Api.delete('/stockmovementvehicle/' + id)
   });
+
+  const toggleModalDetail = (id = '') => {
+    setDetailId(id);
+    setShowModalDetail(!showModalDetail);
+  };
 
   const toggleModalFilter = () => {
     setShowModalFilter(!showModalFilter);
@@ -645,8 +652,13 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Transfer'}</title>
+        <title>{process.env.APP_NAME + ' - Pengiriman'}</title>
       </Head>
+      <ModalDetailStockmovementvehicle
+        show={showModalDetail}
+        onClickOverlay={toggleModalDetail}
+        id={detailId}
+      />
       <ModalFilter
         show={showModalFilter}
         onClickOverlay={toggleModalFilter}
@@ -657,7 +669,6 @@ const Index: NextPage<Props> = () => {
         show={showModalPhoto}
         onClickOverlay={toggleModalPhoto}
         id={selectedId}
-        allowAdd={allowAdd}
       />
       <ModalDeleteVerify
         show={showModalDelete}
@@ -674,7 +685,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Transfer', path: '' },
+            { name: 'Pengiriman', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>

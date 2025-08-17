@@ -18,11 +18,12 @@ import Table from "@/components/table/table";
 import { ImArrowDown, ImArrowUp } from "react-icons/im";
 import { VehicleView } from "@/types/vehicle";
 import { PageStockmovementvehicle, StockmovementvehicleView } from "@/types/stockmovementvehicle";
-import moment from "moment";
-import { PageTransferin } from "@/types/transferin";
 import { Tooltip } from "react-tooltip";
 import { StockmovementvehiclephotoView } from "@/types/stockmovementvehiclephoto";
 import ModalPhoto from "@/components/modal/modal-photo";
+import { MdRefresh } from "react-icons/md";
+import ModalAdjustmentStock from "@/components/modal/modal-adjusment-stock";
+import { FaRightLeft } from "react-icons/fa6";
 
 
 
@@ -32,6 +33,7 @@ type Props = {
 
 type PropsStock = {
   stock: StockView
+  refetch: () => void
 }
 
 type PropsTransferIn = {
@@ -47,7 +49,7 @@ const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView>
   const TooltipIn = ({ id }) => {
     return (
       <Tooltip id={id}>
-        <div className="font-bold">{"Status Stock In"}</div>
+        <div className="font-bold">{"Status Stock Masuk"}</div>
         <hr className='border-gray-500 border-1 my-2' />
         <div className="flex my-1">
           <div className="w-20 font-bold">UNLOADING</div>
@@ -275,7 +277,7 @@ const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Delivery Number"}
+            {"Nomor Pengiriman"}
           </div>
         );
       },
@@ -313,7 +315,7 @@ const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Source"}
+            {"Sumber"}
           </div>
         );
       },
@@ -333,7 +335,7 @@ const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
     //   header: () => {
     //     return (
     //       <div className='whitespace-nowrap'>
-    //         {"Destination"}
+    //         {"Tujuan"}
     //       </div>
     //     );
     //   },
@@ -390,7 +392,7 @@ const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Sent Quantity"}
+            {"Berat Dikirim"}
           </div>
         );
       },
@@ -399,10 +401,10 @@ const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
           <div className='w-full capitalize text-right'>
             <span data-tooltip-id={`tootltip-sent-${row.original.id}`}>{displayTon(getValue() as number) || '-'}</span>
             <Tooltip id={`tootltip-sent-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Sent Quantity"}</div>
+              <div className="font-bold">{"Berat Dikirim"}</div>
               <hr className='border-gray-500 border-1 my-2' />
               <div className="flex justify-between">
-                <div className="w-20 font-bold">Sent Time</div>
+                <div className="w-20 font-bold">Tanggal Dikirim</div>
                 <div>{row.original.sentTime ? displayDateTime(row.original.sentTime) : ' - '}</div>
               </div>
               <div className="flex justify-between">
@@ -428,7 +430,7 @@ const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Received Quantity"}
+            {"Berat Diterima"}
           </div>
         );
       },
@@ -437,10 +439,10 @@ const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
           <div className='w-full capitalize text-right'>
             <span data-tooltip-id={`tootltip-received-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
             <Tooltip id={`tootltip-received-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Received Quantity"}</div>
+              <div className="font-bold">{"Berat Diterima"}</div>
               <hr className='border-gray-500 border-1 my-2' />
               <div className="flex justify-between">
-                <div className="w-20 font-bold">Received Time</div>
+                <div className="w-20 font-bold">Tanggal Diterima</div>
                 <div>{row.original.receivedTime ? displayDateTime(row.original.receivedTime) : ' - '}</div>
               </div>
               <div className="flex justify-between">
@@ -466,7 +468,7 @@ const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Shrinkage"}
+            {"Penyusutan"}
           </div>
         );
       },
@@ -584,7 +586,7 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Delivery Number"}
+            {"Nomor Pengiriman"}
           </div>
         );
       },
@@ -622,7 +624,7 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
     //   header: () => {
     //     return (
     //       <div className='whitespace-nowrap'>
-    //         {"Source"}
+    //         {"Sumber"}
     //       </div>
     //     );
     //   },
@@ -642,7 +644,7 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Destination"}
+            {"Tujuan"}
           </div>
         );
       },
@@ -699,7 +701,7 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Sent Quantity"}
+            {"Berat Dikirim"}
           </div>
         );
       },
@@ -708,10 +710,10 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
           <div className='w-full capitalize text-right'>
             <span data-tooltip-id={`tootltip-sent-${row.original.id}`}>{displayTon(getValue() as number) || '-'}</span>
             <Tooltip id={`tootltip-sent-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Sent Quantity"}</div>
+              <div className="font-bold">{"Berat Dikirim"}</div>
               <hr className='border-gray-500 border-1 my-2' />
               <div className="flex justify-between">
-                <div className="w-20 font-bold">Sent Time</div>
+                <div className="w-20 font-bold">Tanggal Dikirim</div>
                 <div>{row.original.sentTime ? displayDateTime(row.original.sentTime) : ' - '}</div>
               </div>
               <div className="flex justify-between">
@@ -737,7 +739,7 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Received Quantity"}
+            {"Berat Diterima"}
           </div>
         );
       },
@@ -746,10 +748,10 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
           <div className='w-full capitalize text-right'>
             <span data-tooltip-id={`tootltip-received-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
             <Tooltip id={`tootltip-received-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Received Quantity"}</div>
+              <div className="font-bold">{"Berat Diterima"}</div>
               <hr className='border-gray-500 border-1 my-2' />
               <div className="flex justify-between">
-                <div className="w-20 font-bold">Received Time</div>
+                <div className="w-20 font-bold">Tanggal Diterima</div>
                 <div>{row.original.receivedTime ? displayDateTime(row.original.receivedTime) : ' - '}</div>
               </div>
               <div className="flex justify-between">
@@ -775,7 +777,7 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Shrinkage"}
+            {"Penyusutan"}
           </div>
         );
       },
@@ -854,9 +856,11 @@ const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
   )
 }
 
-const Stock: NextPage<PropsStock> = ({ stock }) => {
+const Stock: NextPage<PropsStock> = ({ stock, refetch }) => {
 
-  const [stocklog, setStocklog] = useState<StocklogView[]>([]);
+  const [stocklogs, setStocklogs] = useState<StocklogView[]>([]);
+  const [showModalDetail, setShowModalDetail] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<string>('')
 
   const [filter] = useState<PageStocklog>({
     stockmovementId: '',
@@ -890,7 +894,7 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
     stockId: stock.id,
   });
 
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, refetch: refetchStocklog } = useQuery({
     queryKey: ['stocklog', pageRequest],
     queryFn: ({ queryKey }) => Api.get('/stocklog', queryKey[1] as object),
   });
@@ -910,21 +914,37 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
         );
       },
       cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            {getValue() === "IN" ? (
-              <div className="flex items-center">
-                <ImArrowDown size={"1rem"} className="text-sky-500 mr-4" />
-                <RenderType type={row.original.stockmovementvehicle?.stockmovementvehicleType} />
+        switch (getValue()) {
+          case "IN":
+            return (
+              <div className='w-full capitalize text-right'>
+                <div className="flex items-center">
+                  <ImArrowDown size={"1rem"} className="text-sky-500 mr-4" />
+                  <RenderType type={row.original.stockmovementvehicle?.stockmovementvehicleType} />
+                </div>
               </div>
-            ) : (
-              <div className="flex items-center">
-                <ImArrowUp size={"1rem"} className="text-rose-500 mr-4" />
-                <RenderType type={row.original.stockmovementvehicle?.stockmovementvehicleType} />
+            )
+          case "OUT":
+            return (
+              <div className='w-full capitalize text-right'>
+                <div className="flex items-center">
+                  <ImArrowUp size={"1rem"} className="text-rose-500 mr-4" />
+                  <RenderType type={row.original.stockmovementvehicle?.stockmovementvehicleType} />
+                </div>
               </div>
-            )}
-          </div>
-        )
+            )
+          case "ADJUSTMENT":
+            return (
+              <div className='w-full capitalize text-right'>
+                <div className="flex items-center">
+                  <FaRightLeft size={"1rem"} className="text-amber-500 mr-4" />
+                  <div>{"ADJUSTMENT"}</div>
+                </div>
+              </div>
+            )
+          default:
+            break;
+        }
       },
     },
     {
@@ -934,7 +954,7 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Vehicle"}
+            {"Kendaraan"}
           </div>
         );
       },
@@ -953,7 +973,7 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Gross Quantity"}
+            {"Berat Kotor"}
           </div>
         );
       },
@@ -971,7 +991,7 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Tare Quantity"}
+            {"Berat Kosong"}
           </div>
         );
       },
@@ -989,7 +1009,7 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Net Quantity"}
+            {"Berat Bersih"}
           </div>
         );
       },
@@ -1021,9 +1041,18 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
     },
   ]
 
+  const toggleModalAdjustment = (id = '', refresh = false) => {
+    if (refresh) {
+      refetch()
+      refetchStocklog()
+    }
+    setSelectedId(id)
+    setShowModalDetail(!showModalDetail);
+  }
+
   useEffect(() => {
     if (data?.status) {
-      setStocklog(data.payload.list);
+      setStocklogs(data.payload.list);
       setPageInfo({
         pageCount: data.payload.totalPage,
         pageSize: data.payload.dataPerPage,
@@ -1044,16 +1073,27 @@ const Stock: NextPage<PropsStock> = ({ stock }) => {
 
   return (
     <div>
+      <ModalAdjustmentStock
+        show={showModalDetail}
+        onClickOverlay={toggleModalAdjustment}
+        id={selectedId}
+      />
       <div className="my-4">
-        <div className="text-lg text-gray-600 flex">
-          <div className="mr-4">{stock.product?.name || stock.id}</div>
-          <div className="font-bold mr-4">{displayTon(stock.quantity)}</div>
+        <div className="flex justify-between items-center">
+          <div className="text-lg text-gray-600 flex">
+            <div className="mr-4">{stock.product?.name || stock.id}</div>
+            <div className="font-bold mr-4">{displayTon(stock.quantity)}</div>
+          </div>
+          <button type="button" onClick={() => toggleModalAdjustment(stock.id)} className='w-60 h-10 bg-amber-500 hover:bg-amber-600 rounded text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
+            <MdRefresh className='mr-2' size={'1.5rem'} />
+            <div>Adjustment Stock</div>
+          </button>
         </div>
       </div>
       <div className=''>
         <Table
           columns={column}
-          data={stocklog}
+          data={stocklogs}
           setPageRequest={setPageRequest}
           pageRequest={pageRequest}
           pageInfo={pageInfo}
@@ -1070,7 +1110,7 @@ const Index: NextPage<Props> = ({ id }) => {
   const [warehouse, setWarehouse] = useState<WarehouseView>(null)
 
   const preloads = 'Stocks,Stocks.Product'
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['warehouse', id, preloads],
     queryFn: ({ queryKey }) => {
       const [, id] = queryKey;
@@ -1098,11 +1138,13 @@ const Index: NextPage<Props> = ({ id }) => {
             { name: warehouse?.name || id, path: '' },
           ]}
         />
-        <div className='bg-white mb-20 p-4 rounded shadow'>
+        <div className=''>
           {isLoading ? (
-            <div className="flex justify-center items-center">
-              <div className="py-20">
-                <AiOutlineLoading3Quarters className={'animate-spin'} size={'5rem'} />
+            <div className='bg-white mb-4 p-4 rounded shadow'>
+              <div className="flex justify-center items-center">
+                <div className="py-20">
+                  <AiOutlineLoading3Quarters className={'animate-spin'} size={'5rem'} />
+                </div>
               </div>
             </div>
           ) : (
@@ -1110,9 +1152,9 @@ const Index: NextPage<Props> = ({ id }) => {
               {warehouse && (
                 <>
                   {warehouse.isTransferIn && (
-                    <div className="mb-4">
+                    <div className='bg-white mb-4 p-4 rounded shadow'>
                       <div className="text-xl flex justify-between items-center mb-2">
-                        <div>Transfer In</div>
+                        <div>Pengiriman Masuk</div>
                       </div>
                       <div>
                         <TransferIn warehouse={warehouse} />
@@ -1120,21 +1162,21 @@ const Index: NextPage<Props> = ({ id }) => {
                     </div>
                   )}
                   {warehouse.isTransferOut && (
-                    <div className="mb-4">
+                    <div className='bg-white mb-4 p-4 rounded shadow'>
                       <div className="text-xl flex justify-between items-center mb-2">
-                        <div>Transfer Out</div>
+                        <div>Pengiriman Keluar</div>
                       </div>
                       <div>
                         <TransferOut warehouse={warehouse} />
                       </div>
                     </div>
                   )}
-                  <div className="mb-4">
+                  <div className='bg-white mb-4 p-4 rounded shadow'>
                     <div className="text-xl flex justify-between items-center mb-2">
                       <div>Stock Product</div>
                     </div>
                     {warehouse?.stocks.map((stock) => (
-                      <Stock key={stock.id} stock={stock} />
+                      <Stock key={stock.id} stock={stock} refetch={refetch} />
                     ))}
                   </div>
                 </>

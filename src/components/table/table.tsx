@@ -190,7 +190,7 @@ const Table: React.FC<Props> = ({ columns, data, setPageRequest, pageRequest, pa
                       <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
                       </div>
                       <div>
-                        {'No data found'}
+                        {'Data Tidak Ditemukan'}
                       </div>
                     </div>
                   </td>

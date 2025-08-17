@@ -189,7 +189,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Stock In', path: '' },
+            { name: 'Stock Masuk', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -203,7 +203,7 @@ const Index: NextPage<Props> = () => {
                   <Link href={{ pathname: '/stock-in/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Stockin</div>
+                      <div>Buat Stock Masuk</div>
                     </div>
                   </Link>
                 </div>
@@ -217,47 +217,50 @@ const Index: NextPage<Props> = () => {
                   {stockins.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {stockins.map((data, key) => (
-                        <div key={key} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
-                          <div className="flex justify-between items-center">
-                            <div>
+                        <div key={key} className="">
+                          <div className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
+                            <div className="flex justify-between items-center">
                               <div className="text-lg">{data?.number}</div>
+                              <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
+                            </div>
+                            <hr className="my-2 border-gray-200" />
+                            <div>
                               <div className="text-lg">{data?.product?.name}</div>
                               <div className="">{displayTon(data.receivedNetQuantity)}</div>
                             </div>
-                            <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
-                          </div>
-                          <hr className="my-2 border-gray-200" />
-                          <div className="text-sm">{data.notes}</div>
-                          <div className="text-sm text-right mt-4">
-                            <div className="">{displayDateTime(data.createDt)}</div>
-                            <div className="">{data.createName}</div>
-                          </div>
-                          <hr className="my-2 border-gray-200" />
-                          <div className="text-primary-400 flex justify-end">
-                            {data.stockmovementvehicleStatus === 'UNLOADING' && (
-                              <>
-                                <button
-                                  className="ml-4 px-2 py-1 cursor-pointer"
-                                  onClick={() => toggleModalSetComplete(data.id)}
-                                  disabled={isPendingSetComplete}
-                                >
-                                  {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
-                                </button>
-                                <button
-                                  className="ml-4 px-2 py-1 cursor-pointer"
-                                  onClick={() => toggleModalDelete(data.id, data.number)}
-                                  disabled={isPendingDelete}
-                                >
-                                  {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
-                                </button>
-                              </>
-                            )}
-                            <button
-                              className="ml-4 px-2 py-1 cursor-pointer"
-                              onClick={() => toggleModalDetail(data.id)}
-                            >
-                              <div>Detail</div>
-                            </button>
+                            <hr className="my-2 border-gray-200" />
+                            <div className="text-sm">{data.notes}</div>
+                            <div className="text-sm text-right mt-4">
+                              <div className="">{displayDateTime(data.createDt)}</div>
+                              <div className="">{data.createName}</div>
+                            </div>
+                            <hr className="my-2 border-gray-200" />
+                            <div className="text-primary-400 flex justify-end">
+                              {data.stockmovementvehicleStatus === 'UNLOADING' && (
+                                <>
+                                  <button
+                                    className="ml-4 px-2 py-1 cursor-pointer"
+                                    onClick={() => toggleModalSetComplete(data.id)}
+                                    disabled={isPendingSetComplete}
+                                  >
+                                    {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+                                  </button>
+                                  <button
+                                    className="ml-4 px-2 py-1 cursor-pointer"
+                                    onClick={() => toggleModalDelete(data.id, data.number)}
+                                    disabled={isPendingDelete}
+                                  >
+                                    {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
+                                  </button>
+                                </>
+                              )}
+                              <button
+                                className="ml-4 px-2 py-1 cursor-pointer"
+                                onClick={() => toggleModalDetail(data.id)}
+                              >
+                                <div>Detail</div>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -267,7 +270,7 @@ const Index: NextPage<Props> = () => {
                       <div className='flex justify-center items-center mb-4'>
                         <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
                       </div>
-                      <div className="text-xl">{'No data found'}</div>
+                      <div className="text-xl">{'Data Tidak Ditemukan'}</div>
                     </div>
                   )}
                 </div>

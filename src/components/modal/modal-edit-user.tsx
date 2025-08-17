@@ -172,10 +172,10 @@ const ModalEditUser: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                       </div>
                       <div className="mb-4">
                         <TextField
-                          label={'Phone Number'}
+                          label={'Nomor Telepon'}
                           name={'phoneNumber'}
                           type={'text'}
-                          placeholder={'Phone Number'}
+                          placeholder={'Nomor Telepon'}
                           required
                         />
                       </div>
@@ -204,11 +204,21 @@ const ModalEditUser: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Save'}
+                          label={'Simpan'}
                           disabled={isPending}
                           loading={isPending}
                         />
                       </div>
+                      {process.env.DEBUG === 'true' && (
+                        <>
+                          <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                            {JSON.stringify(values, null, 4)}
+                          </div>
+                          <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                            {JSON.stringify(errors, null, 4)}
+                          </div>
+                        </>
+                      )}
                     </Form>
                   )
                 }}

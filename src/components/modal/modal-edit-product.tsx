@@ -133,7 +133,7 @@ const ModalEditProduct: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Save'}
+                          label={'Simpan'}
                           disabled={isPending}
                           loading={isPending}
                         />

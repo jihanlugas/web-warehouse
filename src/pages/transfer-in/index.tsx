@@ -217,7 +217,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Transfer In'}</title>
+        <title>{process.env.APP_NAME + ' - Pengiriman Masuk'}</title>
       </Head>
       <ModalEditTransferIn
         show={showModalEditTransferIn}
@@ -279,8 +279,8 @@ const Index: NextPage<Props> = () => {
               <div>Number : {unloadingData.number}</div>
               <div>Source : {unloadingData.fromWarehouse?.name}</div>
               <div>Product : {unloadingData.product.name}</div>
-              <div>Vehicle Name : {unloadingData.vehicle?.name}</div>
-              <div>Plate Number : {unloadingData.vehicle?.plateNumber}</div>
+              <div>Kendaraan : {unloadingData.vehicle?.name}</div>
+              <div>Nomor Kendaraan : {unloadingData.vehicle?.plateNumber}</div>
               <div>Product : {unloadingData.product.name}</div>
             </div>
           )}
@@ -289,7 +289,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Transfer In', path: '' },
+            { name: 'Pengiriman Masuk', path: '' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -306,11 +306,11 @@ const Index: NextPage<Props> = () => {
                           <div className="flex justify-between items-center">
                             <div className="text-base">
                               <div className="font-bold">{data.number}</div>
-                              <div className="">
-                                <div className="">{data?.fromWarehouse?.name}</div>
-                              </div>
                             </div>
                             <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
+                          </div>
+                          <div className="">
+                            <div className="">{data?.fromWarehouse?.name}</div>
                           </div>
                           <hr className="my-2 border-gray-200" />
                           <div className="mb-2">
@@ -319,11 +319,11 @@ const Index: NextPage<Props> = () => {
                               <div className="text-sm">{data?.vehicle?.driverName}</div>
                             </div>
                             <div className="text-sm flex">
-                              <div className="">{'Sent time : '}</div>
+                              <div className="">{'Tanggal Dikirim : '}</div>
                               <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
                             </div>
                             <div className="text-sm flex">
-                              <div className="">{'Received time : '}</div>
+                              <div className="">{'Tanggal Diterima : '}</div>
                               <div className="ml-4">{data.receivedTime ? displayDateTime(data.receivedTime) : '-'}</div>
                             </div>
                           </div>
@@ -365,7 +365,7 @@ const Index: NextPage<Props> = () => {
                                 onClick={() => handleGenerateDeliveryRecipt(data.id)}
                                 disabled={isPendingDeliveryRecipt}
                               >
-                                {isPendingDeliveryRecipt ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delivery Recipt</div>}
+                                {isPendingDeliveryRecipt ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Terima</div>}
                               </button>
                             )}
                             <button
@@ -389,7 +389,7 @@ const Index: NextPage<Props> = () => {
                       <div className='flex justify-center items-center mb-4'>
                         <PiFolderOpenDuotone size={'4rem'} className={'text-gray-500'} />
                       </div>
-                      <div className="text-xl">{'No data found'}</div>
+                      <div className="text-xl">{'Data Tidak Ditemukan'}</div>
                     </div>
                   )}
                 </div>

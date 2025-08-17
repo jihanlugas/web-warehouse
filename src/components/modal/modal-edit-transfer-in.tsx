@@ -119,19 +119,19 @@ const ModalEditTransferin: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                     <div>{stockmovementvehicle?.fromWarehouse?.name}</div>
                   </div>
                   <div className="mb-2 grid grid-cols-2 gap-4">
-                    <div className="">Tare Quantity</div>
+                    <div className="">Berat Kosong</div>
                     <div className="">{displayNumber(stockmovementvehicle.sentTareQuantity)}</div>
                   </div>
                   <div className="mb-2 grid grid-cols-2 gap-4">
-                    <div className="">Gross Quantity</div>
+                    <div className="">Berat Kotor</div>
                     <div className="">{displayNumber(stockmovementvehicle.sentGrossQuantity)}</div>
                   </div>
                   <div className="mb-2 grid grid-cols-2 gap-4">
-                    <div className="">Net Quantity</div>
+                    <div className="">Berat Bersih</div>
                     <div className="">{displayNumber(stockmovementvehicle.sentNetQuantity)}</div>
                   </div>
                   <div className="mb-2 grid grid-cols-2 gap-4">
-                    <div className="">Sent Time</div>
+                    <div className="">Tanggal Dikirim</div>
                     <div className="">{displayDateTime(stockmovementvehicle.sentTime)}</div>
                   </div>
                 </div>
@@ -147,25 +147,25 @@ const ModalEditTransferin: NextPage<Props> = ({ show, onClickOverlay, id }) => {
                       <Form noValidate={true}>
                         <div className="mb-4">
                           <TextFieldNumber
-                            label={'Tare Quantity'}
+                            label={'Berat Kosong'}
                             name={`receivedTareQuantity`}
-                            placeholder={'Tare Quantity'}
+                            placeholder={'1...'}
                           />
                         </div>
                         <div className="mb-4">
                           <TextFieldNumber
-                            label={'Gross Quantity'}
+                            label={'Berat Kotor'}
                             name={`receivedGrossQuantity`}
-                            placeholder={'Gross Quantity'}
+                            placeholder={'1...'}
                           />
                         </div>
                         <div className="mb-4 flex justify-between items-center">
-                          <div>Net Quantity</div>
+                          <div>Berat Bersih</div>
                           <div>{displayNumber((parseFloat(values.receivedGrossQuantity as string || "0") - parseFloat(values.receivedTareQuantity as string || "0")))}</div>
                         </div>
                         <div className="mb-4">
                           <ButtonSubmit
-                            label={'Save'}
+                            label={'Simpan'}
                             disabled={isPending}
                             loading={isPending}
                           />

@@ -24,8 +24,7 @@ export declare interface CreateStock {
 }
 
 export declare interface UpdateStock {
-    productId: string;
-    quantity: number;
+    quantity: string | number;
 }
 
 export declare interface PageStock extends Paging {

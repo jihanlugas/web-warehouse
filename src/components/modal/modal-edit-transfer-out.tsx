@@ -117,34 +117,44 @@ const ModalEditTransferout: NextPage<Props> = ({ show, onClickOverlay, id }) => 
                 enableReinitialize={true}
                 onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
               >
-                {({ values }) => {
+                {({ values, errors }) => {
                   return (
                     <Form noValidate={true}>
                       <div className="mb-4">
                         <TextFieldNumber
-                          label={'Tare Quantity'}
+                          label={'Berat Kosong'}
                           name={`sentTareQuantity`}
-                          placeholder={'Tare Quantity'}
+                          placeholder={'1...'}
                         />
                       </div>
                       <div className="mb-4">
                         <TextFieldNumber
-                          label={'Gross Quantity'}
+                          label={'Berat Kotor'}
                           name={`sentGrossQuantity`}
-                          placeholder={'Gross Quantity'}
+                          placeholder={'1...'}
                         />
                       </div>
                       <div className="mb-4 flex justify-between items-center">
-                        <div>Net Quantity</div>
+                        <div>Berat Bersih</div>
                       <div>{displayNumber((parseFloat(values.sentGrossQuantity as string || "0") - parseFloat(values.sentTareQuantity as string || "0")))}</div>
                       </div>
                       <div className="mb-4">
                         <ButtonSubmit
-                          label={'Save'}
+                          label={'Simpan'}
                           disabled={isPending}
                           loading={isPending}
                         />
                       </div>
+                      {process.env.DEBUG === 'true' && (
+                        <>
+                          <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                            {JSON.stringify(values, null, 4)}
+                          </div>
+                          <div className="hidden md:flex mb-4 p-4 whitespace-pre-wrap">
+                            {JSON.stringify(errors, null, 4)}
+                          </div>
+                        </>
+                      )}
                     </Form>
                   )
                 }}

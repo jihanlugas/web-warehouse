@@ -143,7 +143,7 @@ const New: NextPage<Props> = () => {
                         keyValue={"id"}
                         keyLabel={"name"}
                         isLoading={isLoadingWarehouse}
-                        placeholder="Select Warehouse"
+                        placeholder="Pilih Warehouse"
                         placeholderValue={""}
                         field={true}
                         required
@@ -179,10 +179,10 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextField
-                        label={'Phone Number'}
+                        label={'Nomor Telepon'}
                         name={'phoneNumber'}
                         type={'text'}
-                        placeholder={'Phone Number'}
+                        placeholder={'Nomor Telepon'}
                         required
                       />
                     </div>
@@ -226,19 +226,19 @@ const New: NextPage<Props> = () => {
                         <div className="">
                           <CheckboxField
                             name="stockIn"
-                            label="Stock In"
+                            label="Stock Masuk"
                           />
                         </div>
                         <div className="">
                           <CheckboxField
                             name="transferIn"
-                            label="Transfer In"
+                            label="Pengiriman Masuk"
                           />
                         </div>
                         <div className="">
                           <CheckboxField
                             name="transferOut"
-                            label="Transfer Out"
+                            label="Pengiriman Keluar"
                           />
                         </div>
                         <div className="">
@@ -257,7 +257,7 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-8 max-w-xl">
                       <ButtonSubmit
-                        label={'Save'}
+                        label={'Simpan'}
                         disabled={isPending}
                         loading={isPending}
                       />

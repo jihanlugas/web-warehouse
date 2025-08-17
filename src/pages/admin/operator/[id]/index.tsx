@@ -112,7 +112,7 @@ const Index: NextPage<Props> = ({ id }) => {
                   <div className="col-span-1 sm:col-span-4">{user?.username}</div>
                   <div className="text-gray-600">{'Email'}</div>
                   <div className="col-span-1 sm:col-span-4">{user?.email}</div>
-                  <div className="text-gray-600">{'Phone Number'}</div>
+                  <div className="text-gray-600">{'Nomor Telepon'}</div>
                   <div className="col-span-1 sm:col-span-4">{displayPhoneNumber(user?.phoneNumber)}</div>
                   <div className="text-gray-600">{'Address'}</div>
                   <div className="col-span-1 sm:col-span-4 whitespace-pre-wrap">{user?.address || '-'}</div>
@@ -122,7 +122,7 @@ const Index: NextPage<Props> = ({ id }) => {
                   <div className="col-span-1 sm:col-span-4">{displayDate(user?.birthDt)}</div>
                   <div className="text-gray-600">{'Create By'}</div>
                   <div className="col-span-1 sm:col-span-4">{user?.createName}</div>
-                  <div className="text-gray-600">{'Create Date'}</div>
+                  <div className="text-gray-600">{'Tanggal Buat'}</div>
                   <div className="col-span-1 sm:col-span-4">{displayDateTime(user?.createDt)}</div>
                   <div className="text-gray-600">{'Last Update By'}</div>
                   <div className="col-span-1 sm:col-span-4">{user?.updateName}</div>
@@ -157,11 +157,11 @@ const Index: NextPage<Props> = ({ id }) => {
                     </button>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4">
-                    <div className="text-gray-600">{'Stock In'}</div>
+                    <div className="text-gray-600">{'Stock Masuk'}</div>
                     <div className="col-span-1 sm:col-span-4">{displayBoolean(user.userprivilege.stockIn, "Yes", "No")}</div>
-                    <div className="text-gray-600">{'Transfer In'}</div>
+                    <div className="text-gray-600">{'Pengiriman Masuk'}</div>
                     <div className="col-span-1 sm:col-span-4">{displayBoolean(user.userprivilege.transferIn, "Yes", "No")}</div>
-                    <div className="text-gray-600">{'Transfer Out'}</div>
+                    <div className="text-gray-600">{'Pengiriman Keluar'}</div>
                     <div className="col-span-1 sm:col-span-4">{displayBoolean(user.userprivilege.transferOut, "Yes", "No")}</div>
                     <div className="text-gray-600">{'Purchase Order'}</div>
                     <div className="col-span-1 sm:col-span-4">{displayBoolean(user.userprivilege.purchaseorder, "Yes", "No")}</div>

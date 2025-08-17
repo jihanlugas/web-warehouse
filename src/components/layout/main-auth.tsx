@@ -25,19 +25,19 @@ const Loading: React.FC = () => {
 
 const MainAuth: React.FC<Props> = ({ children }) => {
   const [sidebar, setSidebar] = useState<boolean>(false);
-    const [loginUser, setLoginUser] = useState<LoginUser>();
-  
-  
-    const { data: dataLoginUser, isLoading } = useQuery({
-      queryKey: ['init'],
-      queryFn: () => Api.get('/auth/init'),
-    })
-  
-    const { data: dataRefreshToken } = useQuery({
-      queryKey: ['refresh-token'],
-      queryFn: () => Api.get('/auth/refresh-token'),
-      refetchInterval: 1000 * 60 * (process.env.REFRESH_TOKEN_MINUTES as unknown as number),
-    })
+  const [loginUser, setLoginUser] = useState<LoginUser>();
+
+
+  const { data: dataLoginUser, isLoading } = useQuery({
+    queryKey: ['init'],
+    queryFn: () => Api.get('/auth/init'),
+  })
+
+  const { data: dataRefreshToken } = useQuery({
+    queryKey: ['refresh-token'],
+    queryFn: () => Api.get('/auth/refresh-token'),
+    refetchInterval: 1000 * 60 * (process.env.REFRESH_TOKEN_MINUTES as unknown as number),
+  })
 
   useEffect(() => {
     if (dataRefreshToken && dataRefreshToken.status) {
@@ -70,18 +70,24 @@ const MainAuth: React.FC<Props> = ({ children }) => {
           <>
             <Header sidebar={sidebar} setSidebar={setSidebar} loginUser={loginUser} />
             {loginUser.user.userRole === USER_ROLE_ADMIN ? (
-              <SidebarAdmin sidebar={sidebar} onClickOverlay={onClickOverlay} />
+              <SidebarAdmin
+                sidebar={sidebar}
+                onClickOverlay={onClickOverlay}
+              />
             ) : (
-              <SidebarUser sidebar={sidebar} onClickOverlay={onClickOverlay} userprivilege={loginUser.user.userprivilege} />
+              <SidebarUser
+                sidebar={sidebar}
+                onClickOverlay={onClickOverlay}
+                userprivilege={loginUser.user.userprivilege}
+                warehouse={loginUser.warehouse}
+              />
             )}
             <div className={`block duration-300 ease-in-out pt-16 min-h-svh overflow-y-auto`}>
               {React.isValidElement(children) ? React.cloneElement(children, { loginUser }) : children}
             </div>
           </>
         ) : (
-          <>
-            <Loading />
-          </>
+          <Loading />
         )}
       </main>
     </>

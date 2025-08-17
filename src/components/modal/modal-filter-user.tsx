@@ -110,7 +110,7 @@ const ModalFilterUser: NextPage<Props> = ({ show, onClickOverlay, filter, setFil
                         keyValue={"id"}
                         keyLabel={"name"}
                         isLoading={isLoadingWarehouse}
-                        placeholder="Select Warehouse"
+                        placeholder="Pilih Warehouse"
                         placeholderValue={""}
                         field={true}
                       />
@@ -141,10 +141,10 @@ const ModalFilterUser: NextPage<Props> = ({ show, onClickOverlay, filter, setFil
                     </div>
                     <div className="mb-4">
                       <TextField
-                        label={'Phone Number'}
+                        label={'Nomor Telepon'}
                         name={'phoneNumber'}
                         type={'text'}
-                        placeholder={'Phone Number'}
+                        placeholder={'Nomor Telepon'}
                       />
                     </div>
                     <div className="mb-4">

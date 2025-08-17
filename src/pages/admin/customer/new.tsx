@@ -74,7 +74,7 @@ const New: NextPage<Props> = () => {
         <Breadcrumb
           links={[
             { name: 'Customer', path: '/admin/customer' },
-            { name: 'New', path: '' },
+            { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
@@ -110,10 +110,10 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextField
-                        label={'Phone Number'}
+                        label={'Nomor Telepon'}
                         name={'phoneNumber'}
                         type={'text'}
-                        placeholder={'Phone Number'}
+                        placeholder={'Nomor Telepon'}
                         required
                       />
                     </div>
@@ -126,7 +126,7 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-8 max-w-xl">
                       <ButtonSubmit
-                        label={'Save'}
+                        label={'Simpan'}
                         disabled={isPending}
                         loading={isPending}
                       />
