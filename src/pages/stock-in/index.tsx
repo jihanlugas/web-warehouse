@@ -9,7 +9,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Link from "next/link";
 import { NextPage } from "next/types"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
@@ -19,9 +19,19 @@ import { LoginUser } from "@/types/auth";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import ModalConfirm from "@/components/modal/modal-confirm";
 import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
+import { HiDotsVertical } from "react-icons/hi";
 
 type Props = {
   loginUser: LoginUser
+}
+
+type PropsCard = {
+  data: StockmovementvehicleView
+  toggleModalSetComplete: (id?: string) => void
+  toggleModalDelete: (id?: string, verify?: string) => void
+  toggleModalDetail: (id?: string) => void
+  isPendingSetComplete: boolean
+  isPendingDelete: boolean
 }
 
 const RenderStatus = ({ status }) => {
@@ -53,6 +63,87 @@ const RenderStatus = ({ status }) => {
     default:
       return null
   }
+}
+
+const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalDetail, toggleModalSetComplete, isPendingSetComplete, isPendingDelete }) => {
+
+  const refMenu = useRef<HTMLDivElement>(null);
+  const [menuBar, setMenuBar] = useState(false);
+
+  useEffect(() => {
+    const checkIfClickedOutside = e => {
+      // If the menu is open and the clicked target is not within the menu,
+      // then close the menu
+      if (menuBar && refMenu.current && !refMenu.current.contains(e.target)) {
+        setMenuBar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', checkIfClickedOutside);
+
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener('mousedown', checkIfClickedOutside);
+    };
+  }, [menuBar]);
+
+  return (
+    <div className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
+      <div className="flex justify-between items-center">
+        <div className="text-base">
+          <div className="font-bold">{data.number}</div>
+        </div>
+        <div className="flex items-center">
+          <RenderStatus status={data.stockmovementvehicleStatus} />
+          <div className="ml-2 relative" ref={refMenu}>
+            <button className="duration-300 rounded-full text-primary-400 hover:text-primary-500 hover:bg-gray-200 cursor-pointer p-2" onClick={() => setMenuBar(!menuBar)}>
+              <HiDotsVertical className="" size={"1.5rem"} />
+            </button>
+            <div className={`absolute right-4 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white focus:outline-none duration-300 ease-in-out ${!menuBar && 'scale-0 shadow-none'}`}>
+              <div className="" role="none">
+                {data.stockmovementvehicleStatus === 'UNLOADING' && (
+                  <>
+                    <button
+                      className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                      onClick={() => toggleModalSetComplete(data.id)}
+                      disabled={isPendingSetComplete}
+                    >
+                      {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+                    </button>
+                    <button
+                      className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                      onClick={() => toggleModalDelete(data.id, data.number)}
+                      disabled={isPendingDelete}
+                    >
+                      {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
+                    </button>
+                  </>
+                )}
+                <button
+                  className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                  onClick={() => toggleModalDetail(data.id)}
+                >
+                  <div>Detail</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr className="my-2 border-gray-200" />
+      <div>
+        <div className="text-lg">{data?.product?.name}</div>
+        <div className="">{displayTon(data.receivedNetQuantity)}</div>
+      </div>
+      <hr className="my-2 border-gray-200" />
+      <div className="text-sm">{data.notes}</div>
+      <div className="text-sm text-right mt-4">
+        <div className="">{displayDateTime(data.createDt)}</div>
+        <div className="">{data.createName}</div>
+      </div>
+    </div>
+  )
 }
 
 const Index: NextPage<Props> = () => {
@@ -217,52 +308,15 @@ const Index: NextPage<Props> = () => {
                   {stockins.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {stockins.map((data, key) => (
-                        <div key={key} className="">
-                          <div className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
-                            <div className="flex justify-between items-center">
-                              <div className="text-lg">{data?.number}</div>
-                              <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
-                            </div>
-                            <hr className="my-2 border-gray-200" />
-                            <div>
-                              <div className="text-lg">{data?.product?.name}</div>
-                              <div className="">{displayTon(data.receivedNetQuantity)}</div>
-                            </div>
-                            <hr className="my-2 border-gray-200" />
-                            <div className="text-sm">{data.notes}</div>
-                            <div className="text-sm text-right mt-4">
-                              <div className="">{displayDateTime(data.createDt)}</div>
-                              <div className="">{data.createName}</div>
-                            </div>
-                            <hr className="my-2 border-gray-200" />
-                            <div className="text-primary-400 flex justify-end">
-                              {data.stockmovementvehicleStatus === 'UNLOADING' && (
-                                <>
-                                  <button
-                                    className="ml-4 px-2 py-1 cursor-pointer"
-                                    onClick={() => toggleModalSetComplete(data.id)}
-                                    disabled={isPendingSetComplete}
-                                  >
-                                    {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
-                                  </button>
-                                  <button
-                                    className="ml-4 px-2 py-1 cursor-pointer"
-                                    onClick={() => toggleModalDelete(data.id, data.number)}
-                                    disabled={isPendingDelete}
-                                  >
-                                    {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
-                                  </button>
-                                </>
-                              )}
-                              <button
-                                className="ml-4 px-2 py-1 cursor-pointer"
-                                onClick={() => toggleModalDetail(data.id)}
-                              >
-                                <div>Detail</div>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                        <RenderCard
+                          key={data.id}
+                          data={data}
+                          toggleModalDetail={toggleModalDetail}
+                          toggleModalDelete={toggleModalDelete}
+                          toggleModalSetComplete={toggleModalSetComplete}
+                          isPendingDelete={isPendingDelete}
+                          isPendingSetComplete={isPendingSetComplete}
+                        />
                       ))}
                     </div>
                   ) : (

@@ -7,7 +7,7 @@ import notif from "@/utils/notif";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { NextPage } from "next/types"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
 import ModalConfirm from "@/components/modal/modal-confirm";
@@ -19,9 +19,23 @@ import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
 import { PageTransferin } from "@/types/transferin";
 import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { HiDotsVertical } from "react-icons/hi";
 
 type Props = {
   loginUser: LoginUser
+}
+
+type PropsCard = {
+  data: StockmovementvehicleView
+  toggleModalSetUnloading: (id?: string) => void
+  toggleModalSetComplete: (id?: string) => void
+  toggleModalDetail: (id?: string) => void
+  toggleModalPhoto: (id?: string, refresh?: boolean, status?: string) => void
+  toggleModalEditTransferIn: (id?: string, refresh?: boolean) => void
+  handleGenerateDeliveryRecipt: (id?: string) => void
+  isPendingSetUnloading: boolean
+  isPendingSetComplete: boolean
+  isPendingDeliveryRecipt: boolean
 }
 
 const RenderStatus = ({ status }) => {
@@ -54,7 +68,175 @@ const RenderStatus = ({ status }) => {
       return null
   }
 }
+const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetUnloading, toggleModalSetComplete, toggleModalDetail, toggleModalPhoto, toggleModalEditTransferIn, handleGenerateDeliveryRecipt, isPendingSetUnloading, isPendingSetComplete, isPendingDeliveryRecipt }) => {
 
+  const refMenu = useRef<HTMLDivElement>(null);
+  const [menuBar, setMenuBar] = useState(false);
+
+  useEffect(() => {
+    const checkIfClickedOutside = e => {
+      // If the menu is open and the clicked target is not within the menu,
+      // then close the menu
+      if (menuBar && refMenu.current && !refMenu.current.contains(e.target)) {
+        setMenuBar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', checkIfClickedOutside);
+
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener('mousedown', checkIfClickedOutside);
+    };
+  }, [menuBar]);
+
+  return (
+    <div className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
+      <div className="flex justify-between items-center">
+        <div className="text-base">
+          <div className="font-bold">{data.number}</div>
+        </div>
+        <div className="flex items-center">
+          <RenderStatus status={data.stockmovementvehicleStatus} />
+          <div className="ml-2 relative" ref={refMenu}>
+            <button className="duration-300 rounded-full text-primary-400 hover:text-primary-500 hover:bg-gray-200 cursor-pointer p-2" onClick={() => setMenuBar(!menuBar)}>
+              <HiDotsVertical className="" size={"1.5rem"} />
+            </button>
+            <div className={`absolute right-4 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white focus:outline-none duration-300 ease-in-out ${!menuBar && 'scale-0 shadow-none'}`}>
+              <div className="" role="none">
+                {data.stockmovementvehicleStatus === 'IN_TRANSIT' && (
+                  <button
+                    className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                    onClick={() => toggleModalSetUnloading(data.id)}
+                    disabled={isPendingSetUnloading}
+                  >
+                    <div className="flex">
+                      <div>Set Unloading</div>
+                      {isPendingSetUnloading && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                    </div>
+                  </button>
+                )}
+                {data.stockmovementvehicleStatus === 'UNLOADING' && (
+                  <>
+                    <button
+                      className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                      onClick={() => toggleModalSetComplete(data.id)}
+                      disabled={isPendingSetComplete}
+                    >
+                      {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+                    </button>
+                    <button
+                      className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                      onClick={() => toggleModalEditTransferIn(data.id)}
+                    >
+                      <div>Unloading</div>
+                    </button>
+                  </>
+                )}
+                {data.stockmovementvehicleStatus === 'COMPLETED' && (
+                  <button
+                    className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                    onClick={() => handleGenerateDeliveryRecipt(data.id)}
+                    disabled={isPendingDeliveryRecipt}
+                  >
+                    <div className="flex">
+                      <div>Surat Terima</div>
+                      {isPendingDeliveryRecipt && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                    </div>
+                  </button>
+                )}
+                <button
+                  className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                  onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
+                >
+                  <div>Photo</div>
+                </button>
+                <button
+                  className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                  onClick={() => toggleModalDetail(data.id)}
+                >
+                  <div>Detail</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="">
+        <div className="">{data?.fromWarehouse?.name}</div>
+      </div>
+      <hr className="my-2 border-gray-200" />
+      <div className="mb-2">
+        <div className="mb-2">
+          <div className="text-sm uppercase">{data?.vehicle?.plateNumber}</div>
+          <div className="text-sm">{data?.vehicle?.driverName}</div>
+        </div>
+        <div className="text-sm flex">
+          <div className="">{'Tanggal Dikirim : '}</div>
+          <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
+        </div>
+        <div className="text-sm flex">
+          <div className="">{'Tanggal Diterima : '}</div>
+          <div className="ml-4">{data.receivedTime ? displayDateTime(data.receivedTime) : '-'}</div>
+        </div>
+      </div>
+      <div className="text-right text-xs mb-2">
+        <div className="">{data.createName}</div>
+        <div>{displayDateTime(data.createDt)}</div>
+      </div>
+      {/* <hr className="my-2 border-gray-200" />
+      <div className="text-primary-400 flex justify-end">
+        {data.stockmovementvehicleStatus === 'IN_TRANSIT' && (
+          <button
+            className="ml-4 px-2 py-1"
+            onClick={() => toggleModalSetUnloading(data.id)}
+            disabled={isPendingSetUnloading}
+          >
+            {isPendingSetUnloading ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Unloading</div>}
+          </button>
+        )}
+        {data.stockmovementvehicleStatus === 'UNLOADING' && (
+          <>
+            <button
+              className="ml-4 px-2 py-1"
+              onClick={() => toggleModalSetComplete(data.id)}
+              disabled={isPendingSetComplete}
+            >
+              {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+            </button>
+            <button
+              className="ml-4 px-2 py-1"
+              onClick={() => toggleModalEditTransferIn(data.id)}
+            >
+              <div>Unloading</div>
+            </button>
+          </>
+        )}
+        {data.stockmovementvehicleStatus === 'COMPLETED' && (
+          <button
+            className="ml-4 px-2 py-1"
+            onClick={() => handleGenerateDeliveryRecipt(data.id)}
+            disabled={isPendingDeliveryRecipt}
+          >
+            {isPendingDeliveryRecipt ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Terima</div>}
+          </button>
+        )}
+        <button
+          className="ml-4 px-2 py-1"
+          onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
+        >
+          <div>Photo</div>
+        </button>
+        <button
+          className="ml-4 px-2 py-1 cursor-pointer"
+          onClick={() => toggleModalDetail(data.id)}
+        >
+          <div>Detail</div>
+        </button>
+      </div> */}
+    </div>
+  )
+}
 const Index: NextPage<Props> = () => {
 
 
@@ -302,86 +484,19 @@ const Index: NextPage<Props> = () => {
                   {transferins.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {transferins.map((data) => (
-                        <div key={data.id} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
-                          <div className="flex justify-between items-center">
-                            <div className="text-base">
-                              <div className="font-bold">{data.number}</div>
-                            </div>
-                            <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
-                          </div>
-                          <div className="">
-                            <div className="">{data?.fromWarehouse?.name}</div>
-                          </div>
-                          <hr className="my-2 border-gray-200" />
-                          <div className="mb-2">
-                            <div className="mb-2">
-                              <div className="text-sm uppercase">{data?.vehicle?.plateNumber}</div>
-                              <div className="text-sm">{data?.vehicle?.driverName}</div>
-                            </div>
-                            <div className="text-sm flex">
-                              <div className="">{'Tanggal Dikirim : '}</div>
-                              <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
-                            </div>
-                            <div className="text-sm flex">
-                              <div className="">{'Tanggal Diterima : '}</div>
-                              <div className="ml-4">{data.receivedTime ? displayDateTime(data.receivedTime) : '-'}</div>
-                            </div>
-                          </div>
-                          <div className="text-right text-xs mb-2">
-                            <div className="">{data.createName}</div>
-                            <div>{displayDateTime(data.createDt)}</div>
-                          </div>
-                          <hr className="my-2 border-gray-200" />
-                          <div className="text-primary-400 flex justify-end">
-                            {data.stockmovementvehicleStatus === 'IN_TRANSIT' && (
-                              <button
-                                className="ml-4 px-2 py-1"
-                                onClick={() => toggleModalSetUnloading(data.id)}
-                                disabled={isPendingSetUnloading}
-                              >
-                                {isPendingSetUnloading ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Unloading</div>}
-                              </button>
-                            )}
-                            {data.stockmovementvehicleStatus === 'UNLOADING' && (
-                              <>
-                                <button
-                                  className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalSetComplete(data.id)}
-                                  disabled={isPendingSetComplete}
-                                >
-                                  {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
-                                </button>
-                                <button
-                                  className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalEditTransferIn(data.id)}
-                                >
-                                  <div>Unloading</div>
-                                </button>
-                              </>
-                            )}
-                            {data.stockmovementvehicleStatus === 'COMPLETED' && (
-                              <button
-                                className="ml-4 px-2 py-1"
-                                onClick={() => handleGenerateDeliveryRecipt(data.id)}
-                                disabled={isPendingDeliveryRecipt}
-                              >
-                                {isPendingDeliveryRecipt ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Terima</div>}
-                              </button>
-                            )}
-                            <button
-                              className="ml-4 px-2 py-1"
-                              onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
-                            >
-                              <div>Photo</div>
-                            </button>
-                            <button
-                              className="ml-4 px-2 py-1 cursor-pointer"
-                              onClick={() => toggleModalDetail(data.id)}
-                            >
-                              <div>Detail</div>
-                            </button>
-                          </div>
-                        </div>
+                        <RenderCard
+                          key={data.id}
+                          data={data}
+                          handleGenerateDeliveryRecipt={handleGenerateDeliveryRecipt}
+                          toggleModalEditTransferIn={toggleModalEditTransferIn}
+                          toggleModalPhoto={toggleModalPhoto}
+                          toggleModalDetail={toggleModalDetail}
+                          toggleModalSetComplete={toggleModalSetComplete}
+                          toggleModalSetUnloading={toggleModalSetUnloading}
+                          isPendingSetComplete={isPendingSetComplete}
+                          isPendingSetUnloading={isPendingSetUnloading}
+                          isPendingDeliveryRecipt={isPendingDeliveryRecipt}
+                        />
                       ))}
                     </div>
                   ) : (

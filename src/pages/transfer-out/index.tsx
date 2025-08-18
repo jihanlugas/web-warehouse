@@ -8,7 +8,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Link from "next/link";
 import { NextPage } from "next/types"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
@@ -21,9 +21,23 @@ import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
 import { PageTransferout } from "@/types/transferout";
 import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { HiDotsVertical } from "react-icons/hi";
 
 type Props = {
   loginUser: LoginUser
+}
+
+type PropsCard = {
+  data: StockmovementvehicleView
+  toggleModalSetInTransit: (id?: string) => void
+  toggleModalDelete: (id?: string, verify?: string) => void
+  toggleModalDetail: (id?: string) => void
+  toggleModalPhoto: (id?: string, refresh?: boolean, status?: string) => void
+  toggleModalEditTransferout: (id?: string, refresh?: boolean) => void
+  handleGenerateDeliveryOrder: (id?: string) => void
+  isPendingSetInTransit: boolean
+  isPendingDelete: boolean
+  isPendingDeliveryOrder: boolean
 }
 
 const RenderStatus = ({ status }) => {
@@ -55,6 +69,169 @@ const RenderStatus = ({ status }) => {
     default:
       return null
   }
+}
+
+const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalDetail, toggleModalSetInTransit, toggleModalPhoto, toggleModalEditTransferout, handleGenerateDeliveryOrder, isPendingSetInTransit, isPendingDelete, isPendingDeliveryOrder }) => {
+
+  const refMenu = useRef<HTMLDivElement>(null);
+  const [menuBar, setMenuBar] = useState(false);
+
+  useEffect(() => {
+    const checkIfClickedOutside = e => {
+      // If the menu is open and the clicked target is not within the menu,
+      // then close the menu
+      if (menuBar && refMenu.current && !refMenu.current.contains(e.target)) {
+        setMenuBar(false);
+      }
+    };
+
+    document.addEventListener('mousedown', checkIfClickedOutside);
+
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener('mousedown', checkIfClickedOutside);
+    };
+  }, [menuBar]);
+
+  return (
+    <div className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
+      <div className="flex justify-between items-center">
+        <div className="text-base">
+          <div className="font-bold">{data.number}</div>
+        </div>
+        <div className="flex items-center">
+          <RenderStatus status={data.stockmovementvehicleStatus} />
+          <div className="ml-2 relative" ref={refMenu}>
+            <button className="duration-300 rounded-full text-primary-400 hover:text-primary-500 hover:bg-gray-200 cursor-pointer p-2" onClick={() => setMenuBar(!menuBar)}>
+              <HiDotsVertical className="" size={"1.5rem"} />
+            </button>
+            <div className={`absolute right-4 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white focus:outline-none duration-300 ease-in-out ${!menuBar && 'scale-0 shadow-none'}`}>
+              <div className="" role="none">
+                {data.stockmovementvehicleStatus === 'LOADING' ? (
+                  <>
+                    <button
+                      className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                      onClick={() => toggleModalSetInTransit(data.id)}
+                      disabled={isPendingSetInTransit}
+                    >
+                      <div className="flex">
+                        <div>Set In Transit</div>
+                        {isPendingSetInTransit && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      </div>
+                    </button>
+                    <button
+                      className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                      onClick={() => toggleModalEditTransferout(data.id)}
+                    >
+                      <div>Loading</div>
+                    </button>
+                    <button
+                      className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                      onClick={() => toggleModalDelete(data.id, data.number)}
+                      disabled={isPendingDelete}
+                    >
+                      <div className="flex">
+                        <div>Delete</div>
+                        {isPendingDelete && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      </div>
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                    onClick={() => handleGenerateDeliveryOrder(data.id)}
+                    disabled={isPendingDeliveryOrder}
+                  >
+                    <div className="flex">
+                      <div>Surat Jalan</div>
+                      {isPendingDeliveryOrder && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                    </div>
+                  </button>
+                )}
+                <button
+                  className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                  onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
+                >
+                  <div>Photo</div>
+                </button>
+                <button
+                  className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
+                  onClick={() => toggleModalDetail(data.id)}
+                >
+                  <div>Detail</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="">
+        <div className="">{data?.toWarehouse?.name}</div>
+      </div>
+      <hr className="my-2 border-gray-200" />
+      <div className="mb-2">
+        <div className="mb-2">
+          <div className="text-sm uppercase">{data?.vehicle?.plateNumber}</div>
+          <div className="text-sm">{data?.vehicle?.driverName}</div>
+        </div>
+        <div className="text-sm flex">
+          <div className="">{'Tanggal Dikirim : '}</div>
+          <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
+        </div>
+      </div>
+      <div className="text-right text-xs mb-2">
+        <div className="">{data.createName}</div>
+        <div>{displayDateTime(data.createDt)}</div>
+      </div>
+      {/* <hr className="my-2 border-gray-200" />
+      <div className="text-primary-400 flex justify-end">
+        {data.stockmovementvehicleStatus === 'LOADING' ? (
+          <>
+            <button
+              className="ml-4 px-2 py-1"
+              onClick={() => toggleModalSetInTransit(data.id)}
+              disabled={isPendingSetInTransit}
+            >
+              {isPendingSetInTransit ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set In Transit</div>}
+            </button>
+            <button
+              className="ml-4 px-2 py-1"
+              onClick={() => toggleModalEditTransferout(data.id)}
+            >
+              <div>Loading</div>
+            </button>
+            <button
+              className="ml-4 px-2 py-1 cursor-pointer"
+              onClick={() => toggleModalDelete(data.id, data.number)}
+              disabled={isPendingDelete}
+            >
+              {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
+            </button>
+          </>
+        ) : (
+          <button
+            className="ml-4 px-2 py-1"
+            onClick={() => handleGenerateDeliveryOrder(data.id)}
+            disabled={isPendingDeliveryOrder}
+          >
+            {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Jalan</div>}
+          </button>
+        )}
+        <button
+          className="ml-4 px-2 py-1"
+          onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
+        >
+          <div>Photo</div>
+        </button>
+        <button
+          className="ml-4 px-2 py-1 cursor-pointer"
+          onClick={() => toggleModalDetail(data.id)}
+        >
+          <div>Detail</div>
+        </button>
+      </div> */}
+    </div>
+  )
 }
 
 const Index: NextPage<Props> = () => {
@@ -267,79 +444,19 @@ const Index: NextPage<Props> = () => {
                   {transferouts.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {transferouts.map((data) => (
-                        <div key={data.id} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
-                          <div className="flex justify-between items-center">
-                            <div className="text-base">
-                              <div className="font-bold">{data.number}</div>
-                            </div>
-                            <div><RenderStatus status={data.stockmovementvehicleStatus} /></div>
-                          </div>
-                          <div className="">
-                            <div className="">{data?.toWarehouse?.name}</div>
-                          </div>
-                          <hr className="my-2 border-gray-200" />
-                          <div className="mb-2">
-                            <div className="mb-2">
-                              <div className="text-sm uppercase">{data?.vehicle?.plateNumber}</div>
-                              <div className="text-sm">{data?.vehicle?.driverName}</div>
-                            </div>
-                            <div className="text-sm flex">
-                              <div className="">{'Tanggal Dikirim : '}</div>
-                              <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
-                            </div>
-                          </div>
-                          <div className="text-right text-xs mb-2">
-                            <div className="">{data.createName}</div>
-                            <div>{displayDateTime(data.createDt)}</div>
-                          </div>
-                          <hr className="my-2 border-gray-200" />
-                          <div className="text-primary-400 flex justify-end">
-                            {data.stockmovementvehicleStatus === 'LOADING' ? (
-                              <>
-                                <button
-                                  className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalSetInTransit(data.id)}
-                                  disabled={isPendingSetInTransit}
-                                >
-                                  {isPendingSetInTransit ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set In Transit</div>}
-                                </button>
-                                <button
-                                  className="ml-4 px-2 py-1"
-                                  onClick={() => toggleModalEditTransferout(data.id)}
-                                >
-                                  <div>Loading</div>
-                                </button>
-                                <button
-                                  className="ml-4 px-2 py-1 cursor-pointer"
-                                  onClick={() => toggleModalDelete(data.id, data.number)}
-                                  disabled={isPendingDelete}
-                                >
-                                  {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
-                                </button>
-                              </>
-                            ) : (
-                              <button
-                                className="ml-4 px-2 py-1"
-                                onClick={() => handleGenerateDeliveryOrder(data.id)}
-                                disabled={isPendingDeliveryOrder}
-                              >
-                                {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Jalan</div>}
-                              </button>
-                            )}
-                            <button
-                              className="ml-4 px-2 py-1"
-                              onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
-                            >
-                              <div>Photo</div>
-                            </button>
-                            <button
-                              className="ml-4 px-2 py-1 cursor-pointer"
-                              onClick={() => toggleModalDetail(data.id)}
-                            >
-                              <div>Detail</div>
-                            </button>
-                          </div>
-                        </div>
+                        <RenderCard
+                          key={data.id}
+                          data={data}
+                          handleGenerateDeliveryOrder={handleGenerateDeliveryOrder}
+                          toggleModalEditTransferout={toggleModalEditTransferout}
+                          toggleModalPhoto={toggleModalPhoto}
+                          toggleModalDetail={toggleModalDetail}
+                          toggleModalDelete={toggleModalDelete}
+                          toggleModalSetInTransit={toggleModalSetInTransit}
+                          isPendingDelete={isPendingDelete}
+                          isPendingSetInTransit={isPendingSetInTransit}
+                          isPendingDeliveryOrder={isPendingDeliveryOrder}
+                        />
                       ))}
                     </div>
                   ) : (

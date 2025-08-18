@@ -59,7 +59,7 @@ const DropdownMore: NextPage<CellContext<UserView, unknown> & PropsDropdownMore>
   return (
     <div className="relative inline-block py-2 text-right" ref={refMore}>
       <button className="flex justify-center items-center text-primary-500" type="button" onClick={() => setMoreBar(!moreBar)} >
-        <div>More</div>
+        <div>Lainnya</div>
         <CgChevronDown size={'1.2rem'} className={'ml-2'} />
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
@@ -107,7 +107,7 @@ const Index: NextPage<Props> = () => {
   const [pageRequest, setPageRequest] = useState<PageUser>({
     limit: 10,
     page: 1,
-    preloads: 'Userprivilege,Warehouse',
+    preloads: 'Userprivilege,Warehouse,Warehouse.Location',
   });
 
   const column: ColumnDef<UserView>[] = [
@@ -125,12 +125,6 @@ const Index: NextPage<Props> = () => {
         return (
           <div className='w-full capitalize'>
             <span data-tooltip-id={`tootltip-name-${row.original.id}`}>{getValue() as string}</span>
-            {/* {row.original.description && (
-                <Tooltip id={`tootltip-name-${row.original.id}`} clickable>
-                  <div className="font-bold">Description</div>
-                  <div className="whitespace-pre-line">{row.original.description}</div>
-                </Tooltip>
-              )} */}
           </div>
         )
       },
@@ -191,7 +185,7 @@ const Index: NextPage<Props> = () => {
     },
     {
       id: 'location',
-      accessorKey: 'location.name',
+      accessorKey: 'warehouse.location.name',
       enableSorting: false,
       header: () => {
         return (

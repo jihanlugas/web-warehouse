@@ -108,7 +108,7 @@ const DropdownMore: NextPage<CellContext<RetailView, unknown> & PropsDropdownMor
   return (
     <div className="relative inline-block py-2 text-right" ref={refMore}>
       <button className="flex justify-center items-center text-primary-500" type="button" onClick={() => setMoreBar(!moreBar)} >
-        <div>More</div>
+        <div>Lainnya</div>
         <CgChevronDown size={'1.2rem'} className={'ml-2'} />
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
