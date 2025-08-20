@@ -22,6 +22,9 @@ import ModalEditStockmovementvehiclePurchasorder from "@/components/modal/modal-
 import ModalPhoto from "@/components/modal/modal-photo";
 import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
 import { HiDotsVertical } from "react-icons/hi";
+import { RiTruckLine } from "react-icons/ri";
+import { FaBalanceScale, FaMapMarkerAlt, FaRegCalendarCheck, FaTruckLoading } from "react-icons/fa";
+import { TbPackage, TbNotes } from "react-icons/tb";
 
 type Props = {
   loginUser: LoginUser
@@ -44,13 +47,13 @@ const RenderStatus = ({ status }) => {
   switch (status) {
     case "LOADING":
       return (
-        <div className="p-2 ">
+        <div className="">
           <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} >{status}</span>
         </div>
       )
     case "COMPLETED":
       return (
-        <div className="p-2 ">
+        <div className="">
           <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} >{status}</span>
         </div>
       )
@@ -82,7 +85,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetComplete, toggleM
   }, [menuBar]);
 
   return (
-    <div key={data.id} className="shadow p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
+    <div className="shadow p-2 sm:p-4 rounded bg-gray-50 border-l-4 border-l-primary-400">
       <div className="flex justify-between items-center">
         <div className="text-base">
           <div className="font-bold">{data.number}</div>
@@ -91,7 +94,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetComplete, toggleM
           <RenderStatus status={data.stockmovementvehicleStatus} />
           <div className="ml-2 relative" ref={refMenu}>
             <button className="duration-300 rounded-full text-primary-400 hover:text-primary-500 hover:bg-gray-200 cursor-pointer p-2" onClick={() => setMenuBar(!menuBar)}>
-              <HiDotsVertical className="" size={"1.5rem"} />
+              <HiDotsVertical className="" size={"1.2rem"} />
             </button>
             <div className={`absolute right-4 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white focus:outline-none duration-300 ease-in-out ${!menuBar && 'scale-0 shadow-none'}`}>
               <div className="" role="none">
@@ -155,73 +158,65 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetComplete, toggleM
           </div>
         </div>
       </div>
-      <div className="">
-        <div className="">{data?.purchaseorder?.customer?.name}</div>
+      <hr className="my-2 border-gray-200" />
+      <div>
+        <div className="flex items-center mb-1">
+          <TbPackage size={"1.2rem"} className="text-gray-500 mr-1" />
+          <div className="ml-4">{data.product?.name}</div>
+        </div>
+        <div className="flex items-center mb-1">
+          <TbNotes size={"1.2rem"} className="text-gray-500 mr-1" />
+          <div className="ml-4">{data.notes || '-'}</div>
+        </div>
       </div>
       <hr className="my-2 border-gray-200" />
-      <div className="mb-2">
-        <div className="mb-2">
-          <div className="text-sm uppercase">{data?.vehicle?.plateNumber}</div>
-          <div className="text-sm">{data?.vehicle?.driverName}</div>
+      <div className="mb-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="">
+          <div className="font-bold mb-2">{'Dikirim'}</div>
+          <div className="text-sm">
+            <div className="flex items-center mb-1">
+              <FaMapMarkerAlt size={"1.2rem"} className="text-rose-500 mr-1" />
+              <div className="ml-4">{data.fromWarehouse?.name}</div>
+            </div>
+            <div className="flex items-center mb-1">
+              <FaRegCalendarCheck size={"1.2rem"} className="text-amber-400 mr-1" />
+              <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
+            </div>
+            <div className="flex items-center mb-1">
+              <RiTruckLine size={"1.2rem"} className="text-gray-400 mr-1" />
+              <div className="ml-4">{displayTon(data.sentTareQuantity)}</div>
+            </div>
+            <div className="flex items-center mb-1">
+              <FaTruckLoading size={"1.2rem"} className="text-blue-500 mr-1" />
+              <div className="ml-4">{displayTon(data.sentGrossQuantity)}</div>
+            </div>
+            <div className="flex items-center mb-1">
+              <FaBalanceScale size={"1.2rem"} className="text-green-500 mr-1" />
+              <div className="ml-4">{displayTon(data.sentNetQuantity)}</div>
+            </div>
+          </div>
         </div>
-        <div className="text-sm flex">
-          <div className="">{'Tanggal Dikirim : '}</div>
-          <div className="ml-4">{data.sentTime ? displayDateTime(data.sentTime) : '-'}</div>
+        <div className="">
+          <div className="font-bold mb-2">{'Tujuan'}</div>
+          <div className="text-sm">
+            <div className="flex items-center mb-1">
+              <FaMapMarkerAlt size={"1.2rem"} className="text-rose-500 mr-1" />
+              <div className="ml-4">{data.purchaseorder?.customer?.name}</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="text-right text-xs mb-2">
-        <div className="">{data.createName}</div>
-        <div>{displayDateTime(data.createDt)}</div>
+      <hr className="my-2 border-gray-200" />
+      <div className="flex justify-between text-xs">
+        <div>
+          <div className="uppercase">{data.vehicle?.plateNumber}</div>
+          <div className="">{data.vehicle?.driverName}</div>
+        </div>
+        <div>
+          <div className="text-right">{data.createName}</div>
+          <div>{displayDateTime(data.createDt)}</div>
+        </div>
       </div>
-      {/* <hr className="my-2 border-gray-200" />
-      <div className="text-primary-400 flex justify-end">
-        {data.stockmovementvehicleStatus === 'LOADING' && (
-          <>
-            <button
-              className="ml-4 px-2 py-1"
-              onClick={() => toggleModalSetComplete(data.id)}
-              disabled={isPendingSetComplete}
-            >
-              {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
-            </button>
-            <button
-              className="ml-4 px-2 py-1 cursor-pointer"
-              onClick={() => toggleModalDelete(data.id, data.number)}
-              disabled={isPendingDelete}
-            >
-              {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
-            </button>
-            <button
-              className="ml-4 px-2 py-1"
-              onClick={() => toggleModalEditStockmovementvehiclePurchasorder(data.id)}
-              disabled={isPendingDeliveryOrder}
-            >
-              <div>Loading</div>
-            </button>
-          </>
-        )}
-        {data.stockmovementvehicleStatus === 'COMPLETED' && (
-          <button
-            className="ml-4 px-2 py-1"
-            onClick={() => handleGenerateDeliveryOrder(data.id)}
-            disabled={isPendingDeliveryOrder}
-          >
-            {isPendingDeliveryOrder ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Surat Jalan</div>}
-          </button>
-        )}
-        <button
-          className="ml-4 px-2 py-1"
-          onClick={() => toggleModalPhoto(data.id, false, data.stockmovementvehicleStatus)}
-        >
-          <div>Photo</div>
-        </button>
-        <button
-          className="ml-4 px-2 py-1 cursor-pointer"
-          onClick={() => toggleModalDetail(data.id)}
-        >
-          <div>Detail</div>
-        </button>
-      </div> */}
     </div>
   )
 }
@@ -246,7 +241,7 @@ const Index: NextPage<Props> = ({ }) => {
   const [pageRequest] = useState<PageStockmovementvehiclePurchaseorder>({
     limit: -1,
     startCreateDt: moment().subtract(2, 'days').toISOString(), // 2 days ago
-    preloads: "Product,Purchaseorder,Purchaseorder.Customer,Vehicle",
+    preloads: "FromWarehouse,Product,Purchaseorder,Purchaseorder.Customer,Vehicle",
   });
 
   const { isLoading, data, refetch } = useQuery({
@@ -383,7 +378,7 @@ const Index: NextPage<Props> = ({ }) => {
         isLoading={isPendingDelete}
       >
         <div>
-          <div className='mb-4'>Are you sure ?</div>
+          <div className='mb-4'>Apakah anda yakin ?</div>
           <div className='text-sm mb-4 text-gray-700'>Data related to this will also be deleted</div>
         </div>
       </ModalDeleteVerify>
@@ -394,14 +389,67 @@ const Index: NextPage<Props> = ({ }) => {
         isLoading={isPendingSetComplete}
       >
         <div>
-          <div className='mb-4'>Are you sure ?</div>
+          <div className='mb-4'>Apakah anda yakin ?</div>
           {completeData && (
-            <div className='text-sm mb-4 text-gray-700'>
-              <div>Purchase Order : {completeData.purchaseorder?.customer?.name}</div>
-              <div>Product : {completeData.product.name}</div>
-              <div>Berat Kotor : {displayTon(completeData.sentGrossQuantity)}</div>
-              <div>Berat Kosong : {displayTon(completeData.sentTareQuantity)}</div>
-              <div>Berat Bersih : {displayTon(completeData.sentNetQuantity)}</div>
+            <div className=''>
+              <div>
+                <div className="flex items-center mb-1">
+                  <TbPackage size={"1.2rem"} className="text-gray-500 mr-1" />
+                  <div className="ml-4">{completeData.product?.name}</div>
+                </div>
+                <div className="flex items-center mb-1">
+                  <TbNotes size={"1.2rem"} className="text-gray-500 mr-1" />
+                  <div className="ml-4">{completeData.notes || '-'}</div>
+                </div>
+              </div>
+              <hr className="my-2 border-gray-200" />
+              <div className="mb-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="">
+                  <div className="font-bold mb-2">{'Dikirim'}</div>
+                  <div className="text-sm">
+                    <div className="flex items-center mb-1">
+                      <FaMapMarkerAlt size={"1.2rem"} className="text-rose-500 mr-1" />
+                      <div className="ml-4">{completeData.fromWarehouse?.name}</div>
+                    </div>
+                    <div className="flex items-center mb-1">
+                      <FaRegCalendarCheck size={"1.2rem"} className="text-amber-400 mr-1" />
+                      <div className="ml-4">{completeData.sentTime ? displayDateTime(completeData.sentTime) : '-'}</div>
+                    </div>
+                    <div className="flex items-center mb-1">
+                      <RiTruckLine size={"1.2rem"} className="text-gray-400 mr-1" />
+                      <div className="ml-4">{displayTon(completeData.sentTareQuantity)}</div>
+                    </div>
+                    <div className="flex items-center mb-1">
+                      <FaTruckLoading size={"1.2rem"} className="text-blue-500 mr-1" />
+                      <div className="ml-4">{displayTon(completeData.sentGrossQuantity)}</div>
+                    </div>
+                    <div className="flex items-center mb-1">
+                      <FaBalanceScale size={"1.2rem"} className="text-green-500 mr-1" />
+                      <div className="ml-4">{displayTon(completeData.sentNetQuantity)}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="">
+                  <div className="font-bold mb-2">{'Tujuan'}</div>
+                  <div className="text-sm">
+                    <div className="flex items-center mb-1">
+                      <FaMapMarkerAlt size={"1.2rem"} className="text-rose-500 mr-1" />
+                      <div className="ml-4">{completeData.purchaseorder?.customer?.name}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr className="my-2 border-gray-200" />
+              <div className="flex justify-between text-xs">
+                <div>
+                  <div className="uppercase">{completeData.vehicle?.plateNumber}</div>
+                  <div className="">{completeData.vehicle?.driverName}</div>
+                </div>
+                <div>
+                  <div className="text-right">{completeData.createName}</div>
+                  <div>{displayDateTime(completeData.createDt)}</div>
+                </div>
+              </div>
             </div>
           )}
         </div>

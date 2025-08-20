@@ -193,7 +193,7 @@ const New: NextPage<Props> = ({  }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Purcahse Order', path: '/retail' },
+            { name: 'Retail', path: '/retail' },
             { name: 'Buat', path: '' },
           ]}
         />
@@ -209,7 +209,7 @@ const New: NextPage<Props> = ({  }) => {
                 <Form noValidate={true}>
                   <div className='bg-white mb-4 p-4 rounded shadow'>
                     <div className='mb-4'>
-                      <div className='text-xl'>Purcahse Order</div>
+                      <div className='text-xl'>Retail</div>
                     </div>
                     <div className="mb-2 max-w-xl">
                       <DropdownField

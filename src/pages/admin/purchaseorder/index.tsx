@@ -517,7 +517,7 @@ const Index: NextPage<Props> = () => {
         isLoading={isPendingDelete}
       >
         <div>
-          <div className='mb-4'>Are you sure ?</div>
+          <div className='mb-4'>Apakah anda yakin ?</div>
           <div className='text-sm mb-4 text-gray-700'>Data related to this will also be deleted</div>
         </div>
       </ModalDeleteVerify>
@@ -533,7 +533,7 @@ const Index: NextPage<Props> = () => {
         isLoading={isPendingSetClose || isPendingSetOpen}
       >
         <div>
-          <div className='mb-4'>Are you sure ?</div>
+          <div className='mb-4'>Apakah anda yakin ?</div>
           <div className='text-sm mb-4 text-gray-700'>Are you sure to change the status</div>
         </div>
       </ModalConfirm>
