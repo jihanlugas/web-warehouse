@@ -21,7 +21,6 @@ import { PageStockmovementvehicle, StockmovementvehicleView } from "@/types/stoc
 import { Tooltip } from "react-tooltip";
 import { StockmovementvehiclephotoView } from "@/types/stockmovementvehiclephoto";
 import ModalPhoto from "@/components/modal/modal-photo";
-import { MdRefresh } from "react-icons/md";
 import ModalAdjustmentStock from "@/components/modal/modal-adjusment-stock";
 import { FaRightLeft } from "react-icons/fa6";
 
@@ -1085,7 +1084,7 @@ const Stock: NextPage<PropsStock> = ({ stock, refetch }) => {
             <div className="font-bold mr-4">{displayTon(stock.quantity)}</div>
           </div>
           <button type="button" onClick={() => toggleModalAdjustment(stock.id)} className='w-60 h-10 bg-amber-500 hover:bg-amber-600 rounded text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
-            <MdRefresh className='mr-2' size={'1.5rem'} />
+            <FaRightLeft className='mr-2' size={'1rem'} />
             <div>Adjustment Stock</div>
           </button>
         </div>

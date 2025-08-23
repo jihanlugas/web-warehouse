@@ -164,9 +164,9 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetComplete, toggleM
           <TbPackage size={"1.2rem"} className="text-gray-500 mr-1" />
           <div className="ml-4">{data.product?.name}</div>
         </div>
-        <div className="flex items-center mb-1">
+        <div className="flex items-start mb-1">
           <TbNotes size={"1.2rem"} className="text-gray-500 mr-1" />
-          <div className="ml-4">{data.notes || '-'}</div>
+          <div className="ml-4 whitespace-pre-wrap">{data.notes || '-'}</div>
         </div>
       </div>
       <hr className="my-2 border-gray-200" />
@@ -240,7 +240,6 @@ const Index: NextPage<Props> = ({ }) => {
 
   const [pageRequest] = useState<PageStockmovementvehiclePurchaseorder>({
     limit: -1,
-    startCreateDt: moment().subtract(2, 'days').toISOString(), // 2 days ago
     preloads: "FromWarehouse,Product,Purchaseorder,Purchaseorder.Customer,Vehicle",
   });
 
@@ -397,9 +396,9 @@ const Index: NextPage<Props> = ({ }) => {
                   <TbPackage size={"1.2rem"} className="text-gray-500 mr-1" />
                   <div className="ml-4">{completeData.product?.name}</div>
                 </div>
-                <div className="flex items-center mb-1">
+                <div className="flex items-start mb-1">
                   <TbNotes size={"1.2rem"} className="text-gray-500 mr-1" />
-                  <div className="ml-4">{completeData.notes || '-'}</div>
+                  <div className="ml-4 whitespace-pre-wrap">{completeData.notes || '-'}</div>
                 </div>
               </div>
               <hr className="my-2 border-gray-200" />

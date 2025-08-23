@@ -92,6 +92,8 @@ const pageRequestVehicle: PageVehicle = {
 
 const New: NextPage<Props> = ({ loginUser }) => {
 
+  pageRequestVehicle.warehouseId = loginUser.user.warehouseId
+
   const router = useRouter();
   const [products, setProducts] = useState<ProductView[]>([]);
   const [destinations, setDestinations] = useState<{ label: string, value: string }[]>([]);
@@ -293,7 +295,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
                     )}
                     <div className="mb-4 max-w-xl">
                       <DropdownField
-                        label={"Destination Warehouse"}
+                        label={"Warehouse Tujuan"}
                         name={"toWarehouseId"}
                         items={destinations}
                         keyValue={"value"}

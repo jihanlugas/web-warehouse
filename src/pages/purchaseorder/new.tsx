@@ -90,7 +90,8 @@ const pageRequestVehicle: PageVehicle = {
   limit: -1,
 }
 
-const New: NextPage<Props> = ({ }) => {
+const New: NextPage<Props> = ({ loginUser }) => {
+  pageRequestVehicle.warehouseId = loginUser.user.warehouseId
 
   const router = useRouter();
   const [purchaseorder, setPurchaseorder] = useState<PurchaseorderView>(null);
