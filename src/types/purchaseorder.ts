@@ -13,7 +13,7 @@ export declare interface PurchaseorderView {
     outstanding: number;
     notes: string;
     number: string;
-    status: string;
+    purchaseorderStatus: string;
     createBy: string;
     createDt: string;
     updateBy: string;

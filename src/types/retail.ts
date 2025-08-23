@@ -13,7 +13,7 @@ export declare interface RetailView {
     outstanding: number;
     notes: string;
     number: string;
-    status: string;
+    retailStatus: string;
     createBy: string;
     createDt: string;
     updateBy: string;

@@ -326,9 +326,9 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                                 </div>
                                 <div className="mb-4">
                                   <TextAreaField
-                                    label={'Payment Catatan'}
+                                    label={'Catatan'}
                                     name={'notes'}
-                                    placeholder={'Payment Catatan'}
+                                    placeholder={'Catatan'}
                                   />
                                 </div>
                                 <div className="mb-4">

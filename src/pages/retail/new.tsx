@@ -337,7 +337,7 @@ const New: NextPage<Props> = ({ loginUser }) => {
                           placeholder={'1...'}
                         />
                       </div>
-                      <div className="mb-4 max-w-xl">
+                      <div className="mb-4 max-w-xl flex justify-between items-center">
                         <div>Berat Bersih</div>
                         <div>{displayNumber((parseFloat(values.sentGrossQuantity as string || "0") - parseFloat(values.sentTareQuantity as string || "0")))}</div>
                       </div>

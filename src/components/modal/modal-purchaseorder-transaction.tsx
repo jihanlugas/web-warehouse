@@ -326,9 +326,9 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                                 </div>
                                 <div className="mb-4">
                                   <TextAreaField
-                                    label={'Payment Catatan'}
+                                    label={'Catatan'}
                                     name={'notes'}
-                                    placeholder={'Payment Catatan'}
+                                    placeholder={'Catatan'}
                                   />
                                 </div>
                                 <div className="mb-4">

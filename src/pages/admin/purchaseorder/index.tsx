@@ -87,17 +87,17 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
     toggleModalStatus(id, status)
   }
 
-  const renderStatusButton = () => {
-    const { id, status } = row.original;
-    if (status === "CLOSE") {
+  const RenderStatusButton = () => {
+    const { id, purchaseorderStatus } = row.original;
+    if (purchaseorderStatus === "CLOSE") {
       return (
-        <button onClick={() => handleClickStatus(id, status)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+        <button onClick={() => handleClickStatus(id, purchaseorderStatus)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
           {'Set Open'}
         </button>
       );
-    } else if (status === "OPEN") {
+    } else if (purchaseorderStatus === "OPEN") {
       return (
-        <button onClick={() => handleClickStatus(id, status)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+        <button onClick={() => handleClickStatus(id, purchaseorderStatus)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
           {'Set Close'}
         </button>
       );
@@ -113,7 +113,8 @@ const DropdownMore: NextPage<CellContext<PurchaseorderView, unknown> & PropsDrop
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          {renderStatusButton()}
+          <RenderStatusButton />
+          <hr className="border-b border-gray-200" />
           <button onClick={() => handleClickTransaction(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Transaction'}
           </button>
@@ -384,12 +385,12 @@ const Index: NextPage<Props> = () => {
 
   const { mutate: mutateSetOpen, isPending: isPendingSetOpen } = useMutation({
     mutationKey: ['purchase-order', confirmId, 'set-status-open'],
-    mutationFn: (id: string) => Api.get('/purchase-order/' + id + '/set-status-open')
+    mutationFn: (id: string) => Api.put('/purchase-order/' + id + '/set-status-open')
   });
 
   const { mutate: mutateSetClose, isPending: isPendingSetClose } = useMutation({
     mutationKey: ['purchase-order', confirmId, 'set-status-close'],
-    mutationFn: (id: string) => Api.get('/purchase-order/' + id + '/set-status-close')
+    mutationFn: (id: string) => Api.put('/purchase-order/' + id + '/set-status-close')
   });
 
   const toggleModalFilter = () => {
