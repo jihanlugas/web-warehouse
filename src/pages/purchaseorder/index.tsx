@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { BiPlus } from "react-icons/bi";
 import MainOperator from "@/components/layout/main-operator";
 import moment from "moment";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import ModalConfirm from "@/components/modal/modal-confirm";
 import { LoginUser } from "@/types/auth";
 import { PiFolderOpenDuotone } from "react-icons/pi";
@@ -107,7 +107,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetComplete, toggleM
                     >
                       <div className="flex">
                         <div>Set Complete</div>
-                        {isPendingSetComplete && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                        {isPendingSetComplete && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
                       </div>
                     </button>
                     <button
@@ -117,7 +117,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetComplete, toggleM
                     >
                       <div className="flex">
                         <div>Delete</div>
-                        {isPendingDelete && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                        {isPendingDelete && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
                       </div>
                     </button>
                     <button
@@ -137,7 +137,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetComplete, toggleM
                   >
                     <div className="flex">
                       <div>Surat Jalan</div>
-                      {isPendingDeliveryOrder && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      {isPendingDeliveryOrder && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
                     </div>
                   </button>
                 )}

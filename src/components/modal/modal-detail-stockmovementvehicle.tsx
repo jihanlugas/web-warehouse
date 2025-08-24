@@ -1,4 +1,4 @@
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import Modal from "./modal";
 import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
@@ -116,7 +116,7 @@ const ModalDetailStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
         {isLoading ? (
           <div className="flex justify-center items-center">
             <div className="py-20">
-              <AiOutlineLoading3Quarters className={'animate-spin'} size={'5rem'} />
+              <ImSpinner2 className={'animate-spin'} size={'5rem'} />
             </div>
           </div>
         ) : (

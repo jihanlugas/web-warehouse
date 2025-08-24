@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Api } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import { PiFolderOpenDuotone } from "react-icons/pi";
 import ButtonSubmit from "../formik/button-submit";
 import { Form, Formik, FormikHelpers, FormikValues } from "formik";
@@ -126,7 +126,7 @@ const ModalPhoto: NextPage<Props> = ({ show, onClickOverlay, id, allowAdd }) => 
         {isLoading ? (
           <div className="flex justify-center items-center">
             <div className="py-20">
-              <AiOutlineLoading3Quarters className={'animate-spin'} size={'5rem'} />
+              <ImSpinner2 className={'animate-spin'} size={'5rem'} />
             </div>
           </div>
         ) : (

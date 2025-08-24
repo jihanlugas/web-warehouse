@@ -20,7 +20,7 @@ import { LoginUser } from "@/types/auth";
 import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
 import { PageTransferout } from "@/types/transferout";
 import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import { HiDotsVertical } from "react-icons/hi";
 import { RiTruckLine } from "react-icons/ri";
 import { FaTruckLoading, FaBalanceScale, FaRegCalendarCheck, FaMapMarkerAlt } from "react-icons/fa";
@@ -119,7 +119,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalD
                     >
                       <div className="flex">
                         <div>Set In Transit</div>
-                        {isPendingSetInTransit && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                        {isPendingSetInTransit && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
                       </div>
                     </button>
                     <button
@@ -135,7 +135,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalD
                     >
                       <div className="flex">
                         <div>Delete</div>
-                        {isPendingDelete && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                        {isPendingDelete && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
                       </div>
                     </button>
                   </>
@@ -147,7 +147,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalD
                   >
                     <div className="flex">
                       <div>Surat Jalan</div>
-                      {isPendingDeliveryOrder && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      {isPendingDeliveryOrder && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
                     </div>
                   </button>
                 )}

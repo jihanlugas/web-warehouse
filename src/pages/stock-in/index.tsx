@@ -15,7 +15,7 @@ import MainOperator from "@/components/layout/main-operator";
 import { PiFolderOpenDuotone } from "react-icons/pi";
 import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
 import { LoginUser } from "@/types/auth";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import ModalConfirm from "@/components/modal/modal-confirm";
 import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
 import { HiDotsVertical } from "react-icons/hi";
@@ -110,14 +110,14 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalD
                       onClick={() => toggleModalSetComplete(data.id)}
                       disabled={isPendingSetComplete}
                     >
-                      {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+                      {isPendingSetComplete ? <ImSpinner2 className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
                     </button>
                     <button
                       className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
                       onClick={() => toggleModalDelete(data.id, data.number)}
                       disabled={isPendingDelete}
                     >
-                      {isPendingDelete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
+                      {isPendingDelete ? <ImSpinner2 className={'animate-spin'} size={'1.2rem'} /> : <div>Delete</div>}
                     </button>
                   </>
                 )}

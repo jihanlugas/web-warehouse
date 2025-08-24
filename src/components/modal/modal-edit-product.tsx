@@ -4,7 +4,7 @@ import { UpdateProduct } from "@/types/product";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { useEffect, useState } from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import { IoClose } from "react-icons/io5";
 import { Form, Formik, FormikHelpers, FormikValues } from "formik";
 import * as Yup from 'yup';
@@ -100,7 +100,7 @@ const ModalEditProduct: NextPage<Props> = ({ show, onClickOverlay, id }) => {
         {isLoading ? (
           <div className="flex justify-center items-center">
             <div className="py-20">
-              <AiOutlineLoading3Quarters className={'animate-spin'} size={'5rem'} />
+              <ImSpinner2 className={'animate-spin'} size={'5rem'} />
             </div>
           </div>
         ) : (

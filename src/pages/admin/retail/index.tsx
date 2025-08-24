@@ -23,7 +23,7 @@ import MainAdmin from "@/components/layout/main-admin";
 import ModalRetailTransaction from "@/components/modal/modal-retail-transaction";
 import ModalConfirm from "@/components/modal/modal-confirm";
 import { Tooltip } from "react-tooltip";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 
 type Props = object
 
@@ -122,7 +122,7 @@ const DropdownMore: NextPage<CellContext<RetailView, unknown> & PropsDropdownMor
               <div className="mr-2">
                 {'Invoice'}
               </div>
-              {isPendingInvoice && <AiOutlineLoading3Quarters className={'animate-spin text-primary-500'} size={'1rem'} />}
+              {isPendingInvoice && <ImSpinner2 className={'animate-spin text-primary-500'} size={'1rem'} />}
             </div>
           </button>
           <hr className="border-b border-gray-200" />

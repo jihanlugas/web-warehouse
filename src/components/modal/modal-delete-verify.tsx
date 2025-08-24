@@ -1,7 +1,7 @@
 import Modal from '@/components/modal/modal';
 import { NextPage } from 'next';
 import { useState } from 'react';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { ImSpinner2 } from 'react-icons/im';
 import { MdClose } from 'react-icons/md';
 
 type Props = {
@@ -44,7 +44,7 @@ const ModalDelete: NextPage<Props> = ({ show, onClickOverlay, onDelete, isLoadin
             onClick={() => onDelete()}
             disabled={isLoading || verifyValue !== verify}
           >
-            {isLoading ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : 'Delete'}
+            {isLoading ? <ImSpinner2 className={'animate-spin'} size={'1.2rem'} /> : 'Delete'}
           </button>
         </div>
       </div>

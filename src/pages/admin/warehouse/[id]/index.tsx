@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { GetServerSideProps, NextPage } from "next/types";
 import { useEffect, useState } from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import MainAdmin from "@/components/layout/main-admin";
 import { StockView } from "@/types/stock";
 import { displayDateTime, displayTon } from "@/utils/formater";
@@ -1142,7 +1142,7 @@ const Index: NextPage<Props> = ({ id }) => {
             <div className='bg-white mb-4 p-4 rounded shadow'>
               <div className="flex justify-center items-center">
                 <div className="py-20">
-                  <AiOutlineLoading3Quarters className={'animate-spin'} size={'5rem'} />
+                  <ImSpinner2 className={'animate-spin'} size={'5rem'} />
                 </div>
               </div>
             </div>

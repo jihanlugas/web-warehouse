@@ -13,7 +13,7 @@ import { Api } from '@/lib/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import TextAreaField from '../formik/text-area-field';
 import TextFieldNumber from '../formik/text-field-number';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { ImSpinner2 } from 'react-icons/im';
 import { PurchaseorderView } from '@/types/purchaseorder';
 import { displayDate, displayMoney, displayPhoneNumber, displayTon } from '@/utils/formater';
 import { PiFolderOpenDuotone } from 'react-icons/pi';
@@ -135,7 +135,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
         {isLoading ? (
           <div className="flex justify-center items-center">
             <div className="py-20">
-              <AiOutlineLoading3Quarters className={'animate-spin'} size={'5rem'} />
+              <ImSpinner2 className={'animate-spin'} size={'5rem'} />
             </div>
           </div>
         ) : (

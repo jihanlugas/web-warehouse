@@ -18,7 +18,7 @@ import { LoginUser } from "@/types/auth";
 import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
 import { PageTransferin } from "@/types/transferin";
 import ModalDetailStockmovementvehicle from "@/components/modal/modal-detail-stockmovementvehicle";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import { HiDotsVertical } from "react-icons/hi";
 import { FaMapMarkerAlt, FaTruckLoading, FaBalanceScale } from "react-icons/fa";
 import { FaRegCalendarCheck } from "react-icons/fa6";
@@ -116,7 +116,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetUnloading, toggle
                   >
                     <div className="flex">
                       <div>Set Unloading</div>
-                      {isPendingSetUnloading && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      {isPendingSetUnloading && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
                     </div>
                   </button>
                 )}
@@ -127,7 +127,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetUnloading, toggle
                       onClick={() => toggleModalSetComplete(data.id)}
                       disabled={isPendingSetComplete}
                     >
-                      {isPendingSetComplete ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+                      {isPendingSetComplete ? <ImSpinner2 className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
                     </button>
                     <button
                       className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
@@ -145,7 +145,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetUnloading, toggle
                   >
                     <div className="flex">
                       <div>Surat Terima</div>
-                      {isPendingDeliveryRecipt && <AiOutlineLoading3Quarters className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      {isPendingDeliveryRecipt && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
                     </div>
                   </button>
                 )}

@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import { GetServerSideProps, NextPage } from "next/types";
 import { useEffect, useState } from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { ImSpinner2 } from 'react-icons/im';
 import { RiPencilLine } from "react-icons/ri";
 import ModalEditPurchaseorder from "@/components/modal/modal-edit-purchaseorder";
 import MainAdmin from "@/components/layout/main-admin";
@@ -464,7 +464,7 @@ const Index: NextPage<Props> = ({ id }) => {
           {isLoading ? (
             <div className="flex justify-center items-center">
               <div className="py-20">
-                <AiOutlineLoading3Quarters className={'animate-spin'} size={'5rem'} />
+                <ImSpinner2 className={'animate-spin'} size={'5rem'} />
               </div>
             </div>
           ) : (

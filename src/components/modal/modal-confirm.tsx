@@ -1,6 +1,6 @@
 import Modal from '@/components/modal/modal';
 import { NextPage } from 'next';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { ImSpinner2 } from 'react-icons/im';
 import { MdClose } from 'react-icons/md';
 
 type Props = {
@@ -27,7 +27,7 @@ const ModalConfirm: NextPage<Props> = ({ show, onClickOverlay, onConfirm, isLoad
         </div>
         <div className={'flex justify-end'}>
           <button className='px-4 py-2 w-36 flex justify-center items-center bg-primary-600 hover:bg-primary-700 disabled:bg-primary-300 disabled:cursor-not-allowed duration-300 rounded-md text-gray-50 font-semibold' onClick={() => onConfirm()} disabled={isLoading}>
-            {isLoading ? <AiOutlineLoading3Quarters className={'animate-spin'} size={'1.2rem'} /> : 'Simpan'}
+            {isLoading ? <ImSpinner2 className={'animate-spin'} size={'1.2rem'} /> : 'Simpan'}
           </button>
         </div>
       </div>

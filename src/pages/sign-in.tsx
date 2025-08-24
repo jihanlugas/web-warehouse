@@ -12,6 +12,8 @@ import notif from '@/utils/notif';
 import PageWithLayoutType from '@/types/layout';
 import Main from '@/components/layout/main';
 import { USER_ROLE_ADMIN } from '@/utils/constant';
+import Link from 'next/link';
+import { FcGoogle } from 'react-icons/fc';
 
 type Props = object
 
@@ -116,19 +118,19 @@ const SingIn: NextPage<Props> = () => {
                 );
               }}
             </Formik>
-          </div>
-          {/* <div className={'flex'}>
-            <div className={'mr-1'}>
-              {'Don\'t have an account yet?'}
+            {/* <div className="flex items-center mt-4">
+              <div className="flex-grow border-t-2 border-gray-300"></div>
+              <span className="mx-4 text-gray-500">OR</span>
+              <div className="flex-grow border-t-2 border-gray-300"></div>
             </div>
-            <Link href={'/sign-up'} passHref>
-              <a className={'text-primary-500'}>
-                <div>Register Now</div>
-              </a>
-            </Link>
-          </div> */}
+            <div>
+              <Link href="http://localhost:1323/auth/google/login" className='flex items-center justify-center p-2 border-2 border-gray-300 rounded mt-4'>
+                <FcGoogle size={'1.2rem'} className='mr-2' />
+                <div>Login with Google</div>
+              </Link>
+            </div> */}
+          </div>
         </div>
-        {/* <div className='absolute text-8xl -rotate-45'>Test</div> */}
       </div>
 
     </>
