@@ -69,13 +69,13 @@ const ChangePasswordPage: NextPage<Props> = ({ loginUser }) => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Akun', path: '/dashboard' },
+            { name: 'Akun', path: '/account' },
             { name: 'Ganti Password', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Buat User</div>
+            <div className='text-xl'>Ganti Password</div>
           </div>
           <div>
             <Formik

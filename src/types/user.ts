@@ -1,6 +1,7 @@
 import { LocationView } from "./location";
 import { Paging } from "./pagination";
 import { UserprivilegeView } from "./userprivilage";
+import { UserproviderView } from "./userprovider";
 import { WarehouseView } from "./warehouse";
 
 export declare interface UserView {
@@ -27,6 +28,7 @@ export declare interface UserView {
     createName: string;
     updateName: string;
     userprivilege?: UserprivilegeView;
+    userproviders?: UserproviderView[];
     warehouse?: WarehouseView;
     location?: LocationView;
 }

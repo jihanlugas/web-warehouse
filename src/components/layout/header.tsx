@@ -89,12 +89,12 @@ const Header: React.FC<Props> = ({ sidebar, setSidebar, loginUser }) => {
             <div className={`absolute right-4 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white focus:outline-none duration-300 ease-in-out ${!profileBar && 'scale-0 shadow-none'}`}>
               <div className="" role="none">
                 <div className='border-b-2 border-gray-100'>
+                  <Link href={'/account'}>
+                    <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700'}>{'Akun'}</div>
+                  </Link>
                   <Link href={'/account/change-password'}>
                     <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700'}>{'Ganti Password'}</div>
                   </Link>
-                  {/* <Link href={'/setting'}>
-                    <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700'}>{'Setting'}</div>
-                  </Link> */}
                 </div>
                 <button onClick={handleLogout} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
                   {'Sign Out'}
