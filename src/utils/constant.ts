@@ -1,5 +1,6 @@
 export const USER_ROLE_ADMIN = 'ADMIN'
 export const USER_ROLE_OPERATOR = 'OPERATOR'
+export const USER_ROLE_VIEWER = 'VIEWER'
 
 export const TRANSACTION_TYPE_DEBIT = 1;
 export const TRANSACTION_TYPE_KREDIT = -1;

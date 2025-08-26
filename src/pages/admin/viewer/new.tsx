@@ -5,7 +5,7 @@ import TextField from '@/components/formik/text-field';
 import { Api } from '@/lib/api';
 import { CreateUser } from '@/types/user';
 import PageWithLayoutType from '@/types/layout';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
 import { NextPage } from 'next';
 import Head from 'next/head';
@@ -15,18 +15,13 @@ import notif from "@/utils/notif";
 import PasswordField from '@/components/formik/password-field';
 import DateField from '@/components/formik/date-field';
 import { displayDateForm } from '@/utils/formater';
-import CheckboxField from '@/components/formik/checkbox-field';
-import { useEffect, useState } from 'react';
-import { PageWarehouse, WarehouseView } from '@/types/warehouse';
-import DropdownField from '@/components/formik/dropdown-field';
 import MainAdmin from '@/components/layout/main-admin';
-import { USER_ROLE_OPERATOR } from '@/utils/constant';
+import { USER_ROLE_VIEWER } from '@/utils/constant';
 
 
 type Props = object
 
 const schema = Yup.object().shape({
-  warehouseId: Yup.string().required('Required field'),
   fullname: Yup.string().required('Required field'),
   email: Yup.string().email('Invalid email').required('Required field'),
   username: Yup.string().required('Required field').min(4, "Username must be at least 6 characters").lowercase(),
@@ -41,7 +36,7 @@ const initFormikValue: CreateUser = {
   warehouseId: '',
   fullname: '',
   email: '',
-  userRole: USER_ROLE_OPERATOR,
+  userRole: USER_ROLE_VIEWER,
   address: '',
   phoneNumber: '',
   username: '',
@@ -55,23 +50,12 @@ const initFormikValue: CreateUser = {
   retail: false,
 }
 
-const pageRequestWarehouse: PageWarehouse = {
-  limit: -1,
-}
-
 const New: NextPage<Props> = () => {
   const router = useRouter();
-
-  const [warehouses, setWarehouses] = useState<WarehouseView[]>([]);
 
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['user', 'create'],
     mutationFn: (val: FormikValues) => Api.post('/user', val),
-  });
-
-  const { isLoading: isLoadingWarehouse, data: dataWarehouse } = useQuery({
-    queryKey: ['warehouse', pageRequestWarehouse],
-    queryFn: ({ queryKey }) => Api.get('/warehouse', queryKey[1] as object),
   });
 
   const handleSubmit = async (values: CreateUser, formikHelpers: FormikHelpers<CreateUser>) => {
@@ -83,7 +67,7 @@ const New: NextPage<Props> = () => {
         if (status) {
           notif.success(message);
           // formikHelpers.resetForm();
-          router.push('/admin/operator')
+          router.push('/admin/viewer')
         } else if (payload?.listError) {
           if (values.birthDt) {
             values.birthDt = displayDateForm(values.birthDt)
@@ -105,27 +89,21 @@ const New: NextPage<Props> = () => {
     setFieldValue('birthDt', '')
   }
 
-  useEffect(() => {
-    if (dataWarehouse?.status) {
-      setWarehouses(dataWarehouse.payload.list);
-    }
-  }, [dataWarehouse]);
-
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Buat operator'}</title>
+        <title>{process.env.APP_NAME + ' - Buat viewer'}</title>
       </Head>
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Operator', path: '/admin/operator' },
+            { name: 'Operator', path: '/admin/viewer' },
             { name: 'Buat', path: '' },
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
           <div className='mb-4'>
-            <div className='text-xl'>Buat operator</div>
+            <div className='text-xl'>Buat viewer</div>
           </div>
           <div>
             <Formik
@@ -137,20 +115,6 @@ const New: NextPage<Props> = () => {
               {({ values, errors, setFieldValue }) => {
                 return (
                   <Form noValidate={true}>
-                    <div className="mb-4 max-w-xl">
-                      <DropdownField
-                        label={"Warehouse"}
-                        name={"warehouseId"}
-                        items={warehouses}
-                        keyValue={"id"}
-                        keyLabel={"name"}
-                        isLoading={isLoadingWarehouse}
-                        placeholder="Pilih Warehouse"
-                        placeholderValue={""}
-                        field={true}
-                        required
-                      />
-                    </div>
                     <div className="mb-4 max-w-xl">
                       <TextField
                         label={'Name User'}
@@ -219,43 +183,6 @@ const New: NextPage<Props> = () => {
                         type={'date'}
                         handleClear={() => handleClearBirthDt(setFieldValue)}
                       />
-                    </div>
-                    <div>
-                      <div className='mb-4'>
-                        <div className='text-lg'>Privillege</div>
-                      </div>
-                      <div className="mb-4 max-w-xl grid grid-cols-2 gap-4">
-                        <div className="">
-                          <CheckboxField
-                            name="stockIn"
-                            label="Stock Masuk"
-                          />
-                        </div>
-                        <div className="">
-                          <CheckboxField
-                            name="transferIn"
-                            label="Pengiriman Masuk"
-                          />
-                        </div>
-                        <div className="">
-                          <CheckboxField
-                            name="transferOut"
-                            label="Pengiriman Keluar"
-                          />
-                        </div>
-                        <div className="">
-                          <CheckboxField
-                            name="purchaseorder"
-                            label="Purchase Order"
-                          />
-                        </div>
-                        <div className="">
-                          <CheckboxField
-                            name="retail"
-                            label="Retail"
-                          />
-                        </div>
-                      </div>
                     </div>
                     <div className="mb-8 max-w-xl">
                       <ButtonSubmit

@@ -43,6 +43,7 @@ export declare interface CreateUser {
     warehouseId: string;
     fullname: string;
     email: string;
+    userRole: string;
     phoneNumber: string;
     username: string;
     passwd: string;
@@ -70,6 +71,7 @@ export declare interface PageUser extends Paging {
     warehouseId?: string;
     fullname?: string;
     email?: string;
+    userRole?: string;
     phoneNumber?: string;
     username?: string;
     address?: string;

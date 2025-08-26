@@ -5,7 +5,7 @@ import { Api } from "@/lib/api";
 import { UserView, PageUser } from "@/types/user";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo } from "@/types/pagination";
-import { displayBoolean, displayPhoneNumber } from "@/utils/formater";
+import { displayPhoneNumber } from "@/utils/formater";
 import { removeEmptyValues } from "@/utils/helper";
 import notif from "@/utils/notif";
 import { isEmptyObject } from "@/utils/validate";
@@ -20,7 +20,7 @@ import { CgChevronDown } from "react-icons/cg";
 import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import ModalFilter from "@/components/modal/modal-filter-user";
 import MainAdmin from "@/components/layout/main-admin";
-import { USER_ROLE_OPERATOR } from "@/utils/constant";
+import { USER_ROLE_VIEWER } from "@/utils/constant";
 
 type Props = object
 
@@ -65,7 +65,7 @@ const DropdownMore: NextPage<CellContext<UserView, unknown> & PropsDropdownMore>
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          <Link href={{ pathname: '/admin/operator/[id]', query: { id: row.original.id } }}>
+          <Link href={{ pathname: '/admin/viewer/[id]', query: { id: row.original.id } }}>
             <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'} title='Edit'>
               {'Detail'}
             </div>
@@ -109,7 +109,7 @@ const Index: NextPage<Props> = () => {
     limit: 10,
     page: 1,
     preloads: 'Userprivilege,Warehouse,Warehouse.Location',
-    userRole: USER_ROLE_OPERATOR,
+    userRole: USER_ROLE_VIEWER,
   });
 
   const column: ColumnDef<UserView>[] = [
@@ -119,7 +119,7 @@ const Index: NextPage<Props> = () => {
       header: () => {
         return (
           <div className='whitespace-nowrap'>
-            {"Operator Name"}
+            {"Viewer Name"}
           </div>
         );
       },
@@ -181,139 +181,6 @@ const Index: NextPage<Props> = () => {
         return (
           <div className='w-full'>
             <span>{getValue() as string}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'location',
-      accessorKey: 'warehouse.location.name',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Location"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span>{(getValue() as string)}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'warehouse',
-      accessorKey: 'warehouse.name',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Warehouse"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span>{(getValue() as string)}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'stock_in',
-      accessorKey: 'userprivilege.stockIn',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Stock Masuk"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span>{displayBoolean(getValue() as boolean, 'Ya', 'Tidak')}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'transfer_in',
-      accessorKey: 'userprivilege.transferIn',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Pengiriman Masuk"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span>{displayBoolean(getValue() as boolean, 'Ya', 'Tidak')}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'transfer_out',
-      accessorKey: 'userprivilege.transferOut',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Pengiriman Keluar"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span>{displayBoolean(getValue() as boolean, 'Ya', 'Tidak')}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'purchase_order',
-      accessorKey: 'userprivilege.purchaseorder',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Purchase Order"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span>{displayBoolean(getValue() as boolean, 'Ya', 'Tidak')}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'retail',
-      accessorKey: 'userprivilege.retail',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Retail"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span>{displayBoolean(getValue() as boolean, 'Ya', 'Tidak')}</span>
           </div>
         )
       },
@@ -398,7 +265,7 @@ const Index: NextPage<Props> = () => {
   return (
     <>
       <Head>
-        <title>{process.env.APP_NAME + ' - Operator'}</title>
+        <title>{process.env.APP_NAME + ' - Viewer'}</title>
       </Head>
       <ModalFilter
         show={showModalFilter}
@@ -421,7 +288,7 @@ const Index: NextPage<Props> = () => {
       <div className='p-4'>
         <Breadcrumb
           links={[
-            { name: 'Operator', path: '/admin/operator' },
+            { name: 'Viewer', path: '/admin/viewer' },
           ]}
         />
         <div className='bg-white mb-20 p-4 rounded shadow'>
@@ -437,10 +304,10 @@ const Index: NextPage<Props> = () => {
                   </button>
                 </div>
                 <div className='ml-4'>
-                  <Link href={{ pathname: '/admin/operator/new' }}>
+                  <Link href={{ pathname: '/admin/viewer/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Operator</div>
+                      <div>New Viewer</div>
                     </div>
                   </Link>
                 </div>
