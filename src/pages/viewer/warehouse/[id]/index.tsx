@@ -23,6 +23,7 @@ import { StockmovementvehiclephotoView } from "@/types/stockmovementvehiclephoto
 import ModalPhoto from "@/components/modal/modal-photo";
 import ModalAdjustmentStock from "@/components/modal/modal-adjusment-stock";
 import { FaRightLeft } from "react-icons/fa6";
+import { PiFolderOpenDuotone } from "react-icons/pi";
 
 
 
@@ -43,7 +44,7 @@ type PropsTransferOut = {
   warehouse: WarehouseView
 }
 
-const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView> }> = ({ value, row }) => {
+const RenderStatus: NextPage<{ stockmovementvehicle: StockmovementvehicleView }> = ({ stockmovementvehicle }) => {
 
   const TooltipIn = ({ id }) => {
     return (
@@ -118,92 +119,92 @@ const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView>
     )
   }
 
-  switch (row.original.stockmovementvehicleType) {
+  switch (stockmovementvehicle.stockmovementvehicleType) {
     case "IN":
-      switch (value) {
+      switch (stockmovementvehicle.stockmovementvehicleStatus) {
         case "COMPLETED":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipIn id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipIn id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         case "UNLOADING":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-amber-600 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipIn id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-amber-600 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipIn id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         default:
           return null
       }
     case "TRANSFER":
-      switch (value) {
+      switch (stockmovementvehicle.stockmovementvehicleStatus) {
         case "LOADING":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipTransfer id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         case "IN_TRANSIT":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipTransfer id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         case "UNLOADING":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-amber-600 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-amber-600 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipTransfer id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         case "COMPLETED":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipTransfer id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         default:
           return null
       }
     case "RETAIL":
-      switch (value) {
+      switch (stockmovementvehicle.stockmovementvehicleStatus) {
         case "COMPLETED":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipRetail id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipRetail id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         case "LOADING":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipRetail id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipRetail id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         default:
           return null
       }
     case "PURCHASE_ORDER":
-      switch (value) {
+      switch (stockmovementvehicle.stockmovementvehicleStatus) {
         case "COMPLETED":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipPurchaseorder id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-green-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipPurchaseorder id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         case "LOADING":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
-              <TooltipPurchaseorder id={`tootltip-status-${row.original.id}`} />
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-yellow-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${stockmovementvehicle.id}`}>{stockmovementvehicle.stockmovementvehicleStatus}</span>
+              <TooltipPurchaseorder id={`tootltip-status-${stockmovementvehicle.id}`} />
             </div>
           )
         default:
@@ -238,628 +239,230 @@ const RenderType = ({ type }) => {
 }
 
 const TransferIn: NextPage<PropsTransferIn> = ({ warehouse }) => {
-  const [stockmovementvehicle, setStockmovementvehicle] = useState<StockmovementvehicleView[]>([]);
-  const [selectedId, setSelectedId] = useState<string>('')
-  const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
+  const [stockmovementvehicles, setStockmovementvehicles] = useState<StockmovementvehicleView[]>([]);
+  // const [selectedId, setSelectedId] = useState<string>('')
+  // const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
 
-  const [pageInfo, setPageInfo] = useState<PageInfo>({
-    pageSize: 0,
-    pageCount: 0,
-    totalData: 0,
-    page: 0,
-  });
-
-  const [pageRequest, setPageRequest] = useState<PageStockmovementvehicle>({
+  const [pageRequest] = useState<PageStockmovementvehicle>({
     limit: 10,
     page: 1,
     toWarehouseId: warehouse.id,
-    preloads: "FromWarehouse,ToWarehouse,Stockmovementvehiclephotos",
+    preloads: "FromWarehouse,ToWarehouse,Stockmovementvehiclephotos,Vehicle",
   });
 
-  const { isLoading, data, refetch } = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: ['stockmovementvehicle', pageRequest],
     queryFn: ({ queryKey }) => Api.get('/stockmovementvehicle', queryKey[1] as object),
   });
 
-  const toggleModalPhoto = (id = '', refresh = false) => {
-    if (refresh) {
-      refetch()
-    }
-    setSelectedId(id)
-    setShowModalPhoto(!showModalPhoto);
-  };
-
-  const column: ColumnDef<StockmovementvehicleView>[] = [
-    {
-      id: 'number',
-      accessorKey: 'number',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Nomor Pengiriman"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{getValue() as string}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'stockmovementvehicleType',
-      accessorKey: 'stockmovementvehicleType',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Type"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <RenderType type={getValue() as string} />
-          </div>
-        )
-      },
-    },
-    {
-      id: 'fromWarehouse',
-      accessorKey: 'fromWarehouse',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Sumber"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        const fromWarehouse: WarehouseView = getValue() as WarehouseView
-        return (
-          <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{fromWarehouse?.name || '-'}</span>
-          </div>
-        )
-      },
-    },
-    // {
-    //   id: 'toWarehouse',
-    //   accessorKey: 'toWarehouse',
-    //   enableSorting: false,
-    //   header: () => {
-    //     return (
-    //       <div className='whitespace-nowrap'>
-    //         {"Tujuan"}
-    //       </div>
-    //     );
-    //   },
-    //   cell: ({ getValue, row }) => {
-    //     const toWarehouse: WarehouseView = getValue() as WarehouseView
-    //     return (
-    //       <div className='w-full capitalize'>
-    //         <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{toWarehouse?.name || '-'}</span>
-    //       </div>
-    //     )
-    //   },
-    // },
-    {
-      id: 'stockmovementvehicleStatus',
-      accessorKey: 'stockmovementvehicleStatus',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Status"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <RenderStatus value={getValue() as string} row={row} />
-        )
-      },
-    },
-    {
-      id: 'stockmovementvehiclephotos',
-      accessorKey: 'stockmovementvehiclephotos',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Photo"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        const data = getValue() as StockmovementvehiclephotoView[]
-        return (
-          <div className="text-left">
-            <button className='w-full capitalize text-left cursor-pointer' onClick={() => toggleModalPhoto(row.original.id)} >
-              <span className="text-primary-500 " data-tooltip-id={`tootltip-number-${row.original.id}`}>{data ? data?.length + ' Photos' : '0 Photos'}</span>
-            </button>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'sent_net_quantity',
-      accessorKey: 'sentNetQuantity',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Berat Dikirim"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-sent-${row.original.id}`}>{displayTon(getValue() as number) || '-'}</span>
-            <Tooltip id={`tootltip-sent-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Berat Dikirim"}</div>
-              <hr className='border-gray-500 border-1 my-2' />
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">Tanggal Dikirim</div>
-                <div>{row.original.sentTime ? displayDateTime(row.original.sentTime) : ' - '}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">GROSS</div>
-                <div>{displayTon(row.original.sentGrossQuantity)}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">TARE</div>
-                <div>{displayTon(row.original.sentTareQuantity)}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">NET</div>
-                <div>{displayTon(row.original.sentNetQuantity)}</div>
-              </div>
-            </Tooltip>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'received_net_quantity',
-      accessorKey: 'receivedNetQuantity',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Berat Diterima"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-received-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
-            <Tooltip id={`tootltip-received-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Berat Diterima"}</div>
-              <hr className='border-gray-500 border-1 my-2' />
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">Tanggal Diterima</div>
-                <div>{row.original.receivedTime ? displayDateTime(row.original.receivedTime) : ' - '}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">GROSS</div>
-                <div>{displayTon(row.original.receivedGrossQuantity)}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">TARE</div>
-                <div>{displayTon(row.original.receivedTareQuantity)}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">NET</div>
-                <div>{displayTon(row.original.receivedNetQuantity)}</div>
-              </div>
-            </Tooltip>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'shrinkage',
-      accessorKey: 'shrinkage',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Penyusutan"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'create_dt',
-      accessorKey: 'createDt',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Tanggal"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            {displayDateTime(getValue() as string)}
-          </div>
-        )
-      },
-    },
-    // {
-    //   id: 'id',
-    //   header: 'Action',
-    //   enableSorting: false,
-    //   enableResizing: false,
-    //   size: 50,
-    //   maxSize: 50,
-    //   cell: (props) => {
-    //     return (
-    //       <DropdownMore
-    //         toggleModalDelete={toggleModalDelete}
-    //         {...props}
-    //       />
-    //     );
-    //   },
-    // },
-  ]
+  // const toggleModalPhoto = (id = '', refresh = false) => {
+  //   if (refresh) {
+  //     refetch()
+  //   }
+  //   setSelectedId(id)
+  //   setShowModalPhoto(!showModalPhoto);
+  // };
 
   useEffect(() => {
     if (data?.status) {
-      setStockmovementvehicle(data.payload.list);
-      setPageInfo({
-        pageCount: data.payload.totalPage,
-        pageSize: data.payload.dataPerPage,
-        totalData: data.payload.totalData,
-        page: data.payload.page,
-      });
+      setStockmovementvehicles(data.payload.list);
     }
   }, [data]);
 
   return (
     <div className=''>
-      <ModalPhoto
+      {/* <ModalPhoto
         show={showModalPhoto}
         onClickOverlay={toggleModalPhoto}
         id={selectedId}
-      />
-      <Table
-        columns={column}
-        data={stockmovementvehicle}
-        setPageRequest={setPageRequest}
-        pageRequest={pageRequest}
-        pageInfo={pageInfo}
-        isLoading={isLoading}
-      />
+      /> */}
+      {isLoading ? (
+        <div className="flex justify-center items-center">
+          <div className="py-20">
+            <ImSpinner2 className={'animate-spin'} size={'5rem'} />
+          </div>
+        </div>
+      ) : (
+        <div>
+          {stockmovementvehicles.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-4">
+              {stockmovementvehicles.map((stockmovementvehicle) => {
+                return (
+                  <div key={stockmovementvehicle.id} className="p-2 border-l-4 border-gray-400 rounded text-sm">
+                    <div className="mb-2 font-bold">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="">{stockmovementvehicle.number}</div>
+                          <RenderType type={stockmovementvehicle.stockmovementvehicleType} />
+                        </div>
+                        <div>
+                          <RenderStatus stockmovementvehicle={stockmovementvehicle} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>{"Kendaran"}</div>
+                      <div>{stockmovementvehicle.vehicle ? stockmovementvehicle.vehicle.driverName + ' | ' + stockmovementvehicle.vehicle.plateNumber : '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>{"Dari"}</div>
+                      <div>{stockmovementvehicle.fromWarehouse?.name || '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Tanggal Dikirim</div>
+                      <div>{displayDateTime(stockmovementvehicle.sentTime) || '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Berat Dikirim</div>
+                      <div>{displayTon(stockmovementvehicle.sentNetQuantity)}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Tanggal Diterima</div>
+                      <div>{displayDateTime(stockmovementvehicle.receivedTime) || '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Berat Diterima</div>
+                      <div>{stockmovementvehicle.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(stockmovementvehicle.receivedNetQuantity) : '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Penyusutan</div>
+                      <div>{stockmovementvehicle.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(stockmovementvehicle.shrinkage) : '-'}</div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className='w-full text-center my-4'>
+              <div className='flex justify-center items-center mb-4'>
+                <PiFolderOpenDuotone size={'3rem'} className={'text-gray-500'} />
+              </div>
+              <div>
+                {'Data Tidak Ditemukan'}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
 
 const TransferOut: NextPage<PropsTransferOut> = ({ warehouse }) => {
-  const [stockmovementvehicle, setStockmovementvehicle] = useState<StockmovementvehicleView[]>([]);
-  const [selectedId, setSelectedId] = useState<string>('')
-  const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
+  const [stockmovementvehicles, setStockmovementvehicles] = useState<StockmovementvehicleView[]>([]);
+  // const [selectedId, setSelectedId] = useState<string>('')
+  // const [showModalPhoto, setShowModalPhoto] = useState<boolean>(false);
 
-  const [pageInfo, setPageInfo] = useState<PageInfo>({
-    pageSize: 0,
-    pageCount: 0,
-    totalData: 0,
-    page: 0,
-  });
 
-  const [pageRequest, setPageRequest] = useState<PageStockmovementvehicle>({
+  const [pageRequest] = useState<PageStockmovementvehicle>({
     limit: 10,
     page: 1,
     fromWarehouseId: warehouse.id,
-    preloads: "FromWarehouse,ToWarehouse,Stockmovementvehiclephotos",
+    preloads: "FromWarehouse,ToWarehouse,Stockmovementvehiclephotos,Vehicle",
   });
 
-  const { isLoading, data, refetch } = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: ['stockmovementvehicle', pageRequest],
     queryFn: ({ queryKey }) => Api.get('/stockmovementvehicle', queryKey[1] as object),
   });
 
-  const toggleModalPhoto = (id = '', refresh = false,) => {
-    if (refresh) {
-      refetch()
-    }
-    setSelectedId(id)
-    setShowModalPhoto(!showModalPhoto);
-  };
+  // const toggleModalPhoto = (id = '', refresh = false,) => {
+  //   if (refresh) {
+  //     refetch()
+  //   }
+  //   setSelectedId(id)
+  //   setShowModalPhoto(!showModalPhoto);
+  // };
 
-  const column: ColumnDef<StockmovementvehicleView>[] = [
-    {
-      id: 'number',
-      accessorKey: 'number',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Nomor Pengiriman"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{getValue() as string}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'stockmovementvehicleType',
-      accessorKey: 'stockmovementvehicleType',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Type"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            <RenderType type={getValue() as string} />
-          </div>
-        )
-      },
-    },
-    // {
-    //   id: 'fromWarehouse',
-    //   accessorKey: 'fromWarehouse',
-    //   enableSorting: false,
-    //   header: () => {
-    //     return (
-    //       <div className='whitespace-nowrap'>
-    //         {"Sumber"}
-    //       </div>
-    //     );
-    //   },
-    //   cell: ({ getValue, row }) => {
-    //     const fromWarehouse: WarehouseView = getValue() as WarehouseView
-    //     return (
-    //       <div className='w-full capitalize'>
-    //         <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{fromWarehouse?.name || '-'}</span>
-    //       </div>
-    //     )
-    //   },
-    // },
-    {
-      id: 'toWarehouse',
-      accessorKey: 'toWarehouse',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Tujuan"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        const toWarehouse: WarehouseView = getValue() as WarehouseView
-        return (
-          <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{toWarehouse?.name || '-'}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'stockmovementvehicleStatus',
-      accessorKey: 'stockmovementvehicleStatus',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Status"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <RenderStatus value={getValue() as string} row={row} />
-        )
-      },
-    },
-    {
-      id: 'stockmovementvehiclephotos',
-      accessorKey: 'stockmovementvehiclephotos',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Photo"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        const data = getValue() as StockmovementvehiclephotoView[]
-        return (
-          <div className="text-left">
-            <button className='w-full capitalize text-left cursor-pointer' onClick={() => toggleModalPhoto(row.original.id)} >
-              <span className="text-primary-500 " data-tooltip-id={`tootltip-number-${row.original.id}`}>{data ? data?.length + ' Photos' : '0 Photos'}</span>
-            </button>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'sent_net_quantity',
-      accessorKey: 'sentNetQuantity',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Berat Dikirim"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-sent-${row.original.id}`}>{displayTon(getValue() as number) || '-'}</span>
-            <Tooltip id={`tootltip-sent-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Berat Dikirim"}</div>
-              <hr className='border-gray-500 border-1 my-2' />
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">Tanggal Dikirim</div>
-                <div>{row.original.sentTime ? displayDateTime(row.original.sentTime) : ' - '}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">GROSS</div>
-                <div>{displayTon(row.original.sentGrossQuantity)}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">TARE</div>
-                <div>{displayTon(row.original.sentTareQuantity)}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">NET</div>
-                <div>{displayTon(row.original.sentNetQuantity)}</div>
-              </div>
-            </Tooltip>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'received_net_quantity',
-      accessorKey: 'receivedNetQuantity',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Berat Diterima"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-received-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
-            <Tooltip id={`tootltip-received-${row.original.id}`} className="text-left">
-              <div className="font-bold">{"Berat Diterima"}</div>
-              <hr className='border-gray-500 border-1 my-2' />
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">Tanggal Diterima</div>
-                <div>{row.original.receivedTime ? displayDateTime(row.original.receivedTime) : ' - '}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">GROSS</div>
-                <div>{displayTon(row.original.receivedGrossQuantity)}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">TARE</div>
-                <div>{displayTon(row.original.receivedTareQuantity)}</div>
-              </div>
-              <div className="flex justify-between">
-                <div className="w-20 font-bold">NET</div>
-                <div>{displayTon(row.original.receivedNetQuantity)}</div>
-              </div>
-            </Tooltip>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'shrinkage',
-      accessorKey: 'shrinkage',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Penyusutan"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span data-tooltip-id={`tootltip-number-${row.original.id}`}>{row.original.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(getValue() as number) : '-'}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'create_dt',
-      accessorKey: 'createDt',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Tanggal"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            {displayDateTime(getValue() as string)}
-          </div>
-        )
-      },
-    },
-    // {
-    //   id: 'id',
-    //   header: 'Action',
-    //   enableSorting: false,
-    //   enableResizing: false,
-    //   size: 50,
-    //   maxSize: 50,
-    //   cell: (props) => {
-    //     return (
-    //       <DropdownMore
-    //         toggleModalDelete={toggleModalDelete}
-    //         {...props}
-    //       />
-    //     );
-    //   },
-    // },
-  ]
 
   useEffect(() => {
     if (data?.status) {
-      setStockmovementvehicle(data.payload.list);
-      setPageInfo({
-        pageCount: data.payload.totalPage,
-        pageSize: data.payload.dataPerPage,
-        totalData: data.payload.totalData,
-        page: data.payload.page,
-      });
+      setStockmovementvehicles(data.payload.list);
     }
   }, [data]);
 
   return (
     <div className=''>
-      <ModalPhoto
+      {/* <ModalPhoto
         show={showModalPhoto}
         onClickOverlay={toggleModalPhoto}
         id={selectedId}
-      />
-      <Table
-        columns={column}
-        data={stockmovementvehicle}
-        setPageRequest={setPageRequest}
-        pageRequest={pageRequest}
-        pageInfo={pageInfo}
-        isLoading={isLoading}
-      />
+      /> */}
+      {isLoading ? (
+        <div className="flex justify-center items-center">
+          <div className="py-20">
+            <ImSpinner2 className={'animate-spin'} size={'5rem'} />
+          </div>
+        </div>
+      ) : (
+        <div>
+          {stockmovementvehicles.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-4">
+              {stockmovementvehicles.map((stockmovementvehicle) => {
+                return (
+                  <div key={stockmovementvehicle.id} className="p-2 border-l-4 border-gray-400 rounded text-sm">
+                    <div className="mb-2 font-bold">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="">{stockmovementvehicle.number}</div>
+                          <RenderType type={stockmovementvehicle.stockmovementvehicleType} />
+                        </div>
+                        <div>
+                          <RenderStatus stockmovementvehicle={stockmovementvehicle} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>{"Kendaran"}</div>
+                      <div>{stockmovementvehicle.vehicle ? stockmovementvehicle.vehicle.driverName + ' | ' + stockmovementvehicle.vehicle.plateNumber : '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>{"Tujuan"}</div>
+                      <div>{stockmovementvehicle.toWarehouse?.name || '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Tanggal Dikirim</div>
+                      <div>{displayDateTime(stockmovementvehicle.sentTime) || '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Berat Dikirim</div>
+                      <div>{displayTon(stockmovementvehicle.sentNetQuantity)}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Tanggal Diterima</div>
+                      <div>{displayDateTime(stockmovementvehicle.receivedTime) || '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Berat Diterima</div>
+                      <div>{stockmovementvehicle.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(stockmovementvehicle.receivedNetQuantity) : '-'}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div>Penyusutan</div>
+                      <div>{stockmovementvehicle.stockmovementvehicleStatus === 'COMPLETED' ? displayTon(stockmovementvehicle.shrinkage) : '-'}</div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className='w-full text-center my-4'>
+              <div className='flex justify-center items-center mb-4'>
+                <PiFolderOpenDuotone size={'3rem'} className={'text-gray-500'} />
+              </div>
+              <div>
+                {'Data Tidak Ditemukan'}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
 
-const Stock: NextPage<PropsStock> = ({ stock, refetch }) => {
+const Stock: NextPage<PropsStock> = ({ stock }) => {
 
   const [stocklogs, setStocklogs] = useState<StocklogView[]>([]);
-  const [showModalDetail, setShowModalDetail] = useState<boolean>(false);
-  const [selectedId, setSelectedId] = useState<string>('')
 
   const [filter] = useState<PageStocklog>({
     stockmovementId: '',
@@ -878,13 +481,6 @@ const Stock: NextPage<PropsStock> = ({ stock, refetch }) => {
     endCreateDt: '',
   })
 
-  const [pageInfo, setPageInfo] = useState<PageInfo>({
-    pageSize: 0,
-    pageCount: 0,
-    totalData: 0,
-    page: 0,
-  });
-
   const [pageRequest, setPageRequest] = useState<PageStocklog>({
     limit: 10,
     page: 1,
@@ -893,171 +489,14 @@ const Stock: NextPage<PropsStock> = ({ stock, refetch }) => {
     stockId: stock.id,
   });
 
-  const { isLoading, data, refetch: refetchStocklog } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['stocklog', pageRequest],
     queryFn: ({ queryKey }) => Api.get('/stocklog', queryKey[1] as object),
   });
 
-
-  const column: ColumnDef<StocklogView>[] = [
-    {
-      id: 'stocklogType',
-      accessorKey: 'stocklogType',
-      enableSorting: false,
-      enableResizing: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Type"}
-          </div>
-        );
-      },
-      cell: ({ getValue, row }) => {
-        switch (getValue()) {
-          case "IN":
-            return (
-              <div className='w-full capitalize text-right'>
-                <div className="flex items-center">
-                  <ImArrowDown size={"1rem"} className="text-sky-500 mr-4" />
-                  <RenderType type={row.original.stockmovementvehicle?.stockmovementvehicleType} />
-                </div>
-              </div>
-            )
-          case "OUT":
-            return (
-              <div className='w-full capitalize text-right'>
-                <div className="flex items-center">
-                  <ImArrowUp size={"1rem"} className="text-rose-500 mr-4" />
-                  <RenderType type={row.original.stockmovementvehicle?.stockmovementvehicleType} />
-                </div>
-              </div>
-            )
-          case "ADJUSTMENT":
-            return (
-              <div className='w-full capitalize text-right'>
-                <div className="flex items-center">
-                  <FaRightLeft size={"1rem"} className="text-amber-500 mr-4" />
-                  <div>{"ADJUSTMENT"}</div>
-                </div>
-              </div>
-            )
-          default:
-            break;
-        }
-      },
-    },
-    {
-      id: 'vehicle',
-      accessorKey: 'vehicle',
-      enableSorting: false,
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Kendaraan"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        const vehicle: VehicleView = getValue() as VehicleView
-        return (
-          <div className='w-full capitalize'>
-            <span>{vehicle ? vehicle.name + ' (' + vehicle.plateNumber + ')' : '-'}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'gross_quantity',
-      accessorKey: 'grossQuantity',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Berat Kotor"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span>{displayTon(getValue() as number)}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'tare_quantity',
-      accessorKey: 'tareQuantity',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Berat Kosong"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span>{displayTon(getValue() as number)}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'net_quantity',
-      accessorKey: 'netQuantity',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Berat Bersih"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize text-right'>
-            <span>{displayTon(getValue() as number)}</span>
-          </div>
-        )
-      },
-    },
-    {
-      id: 'create_dt',
-      accessorKey: 'createDt',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"Tanggal"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            {displayDateTime(getValue() as string)}
-          </div>
-        )
-      },
-    },
-  ]
-
-  const toggleModalAdjustment = (id = '', refresh = false) => {
-    if (refresh) {
-      refetch()
-      refetchStocklog()
-    }
-    setSelectedId(id)
-    setShowModalDetail(!showModalDetail);
-  }
-
   useEffect(() => {
     if (data?.status) {
       setStocklogs(data.payload.list);
-      setPageInfo({
-        pageCount: data.payload.totalPage,
-        pageSize: data.payload.dataPerPage,
-        totalData: data.payload.totalData,
-        page: data.payload.page,
-      });
     }
   }, [data]);
 
@@ -1072,41 +511,84 @@ const Stock: NextPage<PropsStock> = ({ stock, refetch }) => {
 
   return (
     <div>
-      <ModalAdjustmentStock
-        show={showModalDetail}
-        onClickOverlay={toggleModalAdjustment}
-        id={selectedId}
-      />
-      <div className="my-4">
-        <div className="flex justify-between items-center">
-          <div className="text-lg text-gray-600 flex">
-            <div className="mr-4">{stock.product?.name || stock.id}</div>
-            <div className="font-bold mr-4">{displayTon(stock.quantity)}</div>
+      {isLoading ? (
+        <div className="flex justify-center items-center">
+          <div className="py-20">
+            <ImSpinner2 className={'animate-spin'} size={'5rem'} />
           </div>
-          <button type="button" onClick={() => toggleModalAdjustment(stock.id)} className='w-60 h-10 bg-amber-500 hover:bg-amber-600 rounded text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
-            <FaRightLeft className='mr-2' size={'1rem'} />
-            <div>Adjustment Stock</div>
-          </button>
         </div>
-      </div>
-      <div className=''>
-        <Table
-          columns={column}
-          data={stocklogs}
-          setPageRequest={setPageRequest}
-          pageRequest={pageRequest}
-          pageInfo={pageInfo}
-          isLoading={isLoading}
-        />
-      </div>
+      ) : (
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <div className="text-lg text-gray-600 flex">
+              <div className="mr-4">{stock.product?.name || stock.id}</div>
+              <div className="font-bold mr-4">{displayTon(stock.quantity)}</div>
+            </div>
+          </div>
+          {stocklogs.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-4">
+              {stocklogs.map((stocklog) => {
+                return (
+                  <div key={stocklog.id} className="p-2 border-l-4 border-gray-400 rounded text-sm">
+                    <div className="mb-1">
+                      {stocklog.stocklogType === "IN" && (
+                        <div className='w-full capitalize text-right'>
+                          <div className="flex items-center">
+                            <ImArrowDown size={"0.8rem"} className="text-sky-500 mr-2" />
+                            <RenderType type={stocklog.stockmovementvehicle?.stockmovementvehicleType} />
+                          </div>
+                        </div>
+                      )}
+                      {stocklog.stocklogType === "OUT" && (
+                        <div className='w-full capitalize text-right'>
+                          <div className="flex items-center">
+                            <ImArrowUp size={"0.8rem"} className="text-rose-500 mr-2" />
+                            <RenderType type={stocklog.stockmovementvehicle?.stockmovementvehicleType} />
+                          </div>
+                        </div>
+                      )}
+                      {stocklog.stocklogType === "ADJUSTMENT" && (
+                        <div className='w-full capitalize text-right'>
+                          <div className="flex items-center">
+                            <FaRightLeft size={"0.8rem"} className="text-amber-500 mr-2" />
+                            <div>{"ADJUSTMENT"}</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex justify-between">
+                      <div>{displayDateTime(stocklog.createDt)}</div>
+                      <div>{displayTon(stocklog.netQuantity)}</div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className='w-full text-center my-4'>
+              <div className='flex justify-center items-center mb-4'>
+                <PiFolderOpenDuotone size={'3rem'} className={'text-gray-500'} />
+              </div>
+              <div>
+                {'Data Tidak Ditemukan'}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
 
 const Index: NextPage<Props> = ({ id }) => {
 
+  const tabStock = "STOCKLOG"
+  const tabTransferin = "TRANSFERIN"
+  const tabTransferout = "TRANSFEROUT"
+
 
   const [warehouse, setWarehouse] = useState<WarehouseView>(null)
+  const [tab, setTab] = useState(tabStock)
 
   const preloads = 'Stocks,Stocks.Product'
   const { data, isLoading, refetch } = useQuery({
@@ -1150,7 +632,68 @@ const Index: NextPage<Props> = ({ id }) => {
             <div>
               {warehouse && (
                 <>
-                  {warehouse.isTransferIn && (
+                  <div className="bg-white mb-4 p-2 rounded shadow">
+                    <div className="flex max-w-lg ">
+                      <button
+                        type="button"
+                        onClick={() => setTab(tabStock)}
+                        className={`flex-1 px-4 py-2 text-center ${tab === tabStock
+                          ? "border-gray-500 text-primary-600 font-semibold"
+                          : "text-gray-600 hover:text-primary-500"
+                          }`}
+                      >
+                        Stock Product
+                      </button>
+
+                      {true && (
+                        <button
+                          type="button"
+                          onClick={() => setTab(tabTransferin)}
+                          className={`flex-1 px-4 py-2 text-center ${tab === tabTransferin
+                            ? "border-gray-500 text-primary-600 font-semibold"
+                            : "text-gray-600 hover:text-primary-500"
+                            }`}
+                        >
+                          Pengiriman Masuk
+                        </button>
+                      )}
+
+                      {true && (
+                        <button
+                          type="button"
+                          onClick={() => setTab(tabTransferout)}
+                          className={`flex-1 px-4 py-2 text-center ${tab === tabTransferout
+                            ? "border-gray-500 text-primary-600 font-semibold"
+                            : "text-gray-600 hover:text-primary-500"
+                            }`}
+                        >
+                          Pengiriman Keluar
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className='bg-white mb-4 p-4 rounded shadow'>
+                    {tab === tabStock && (
+                      <div className='mb-4'>
+                        {warehouse?.stocks.map((stock) => (
+                          <Stock key={stock.id} stock={stock} refetch={refetch} />
+                        ))}
+                      </div>
+                    )}
+                    {tab === tabTransferin && (
+                      <div className='mb-4'>
+                        <TransferIn warehouse={warehouse} />
+                      </div>
+                    )}
+                    {tab === tabTransferout && (
+                      <div className='mb-4'>
+                        <TransferOut warehouse={warehouse} />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* {warehouse.isTransferIn && (
                     <div className='bg-white mb-4 p-4 rounded shadow'>
                       <div className="text-xl flex justify-between items-center mb-2">
                         <div>Pengiriman Masuk</div>
@@ -1171,13 +714,10 @@ const Index: NextPage<Props> = ({ id }) => {
                     </div>
                   )}
                   <div className='bg-white mb-4 p-4 rounded shadow'>
-                    <div className="text-xl flex justify-between items-center mb-2">
-                      <div>Stock Product</div>
-                    </div>
                     {warehouse?.stocks.map((stock) => (
                       <Stock key={stock.id} stock={stock} refetch={refetch} />
                     ))}
-                  </div>
+                  </div> */}
                 </>
               )}
             </div>

@@ -8,8 +8,6 @@ import { Api } from '@/lib/api';
 import { LoginUser } from '@/types/auth';
 import { NextPage } from 'next/types';
 import { displayNumber, displayTon } from '@/utils/formater';
-import { PagePurchaseorder, PurchaseorderView } from '@/types/purchaseorder';
-import { PageRetail, RetailView } from '@/types/retail';
 import { AiOutlineLoading } from 'react-icons/ai';
 import { LocationView, PageLocation } from '@/types/location';
 import { ImArrowDown, ImArrowUp } from 'react-icons/im';
@@ -99,7 +97,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
                     <hr className="my-4 border-gray-200" />
                     {data.warehouses.map((warehouse) => (
                       <div key={warehouse.id} className="my-4">
-                        <Link href={{ pathname: '/admin/warehouse/[id]', query: { id: warehouse.id } }}>
+                        <Link href={{ pathname: '/viewer/warehouse/[id]', query: { id: warehouse.id } }}>
                           <div className="text-xl font-bold duration-300 text-primary-500 hover:text-primary-400">{warehouse.name}</div>
                         </Link>
                         <div className='ml-4 my-2'>

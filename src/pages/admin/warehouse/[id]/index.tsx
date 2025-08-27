@@ -1150,26 +1150,22 @@ const Index: NextPage<Props> = ({ id }) => {
             <div>
               {warehouse && (
                 <>
-                  {warehouse.isTransferIn && (
-                    <div className='bg-white mb-4 p-4 rounded shadow'>
-                      <div className="text-xl flex justify-between items-center mb-2">
-                        <div>Pengiriman Masuk</div>
-                      </div>
-                      <div>
-                        <TransferIn warehouse={warehouse} />
-                      </div>
+                  <div className='bg-white mb-4 p-4 rounded shadow'>
+                    <div className="text-xl flex justify-between items-center mb-2">
+                      <div>Pengiriman Masuk</div>
                     </div>
-                  )}
-                  {warehouse.isTransferOut && (
-                    <div className='bg-white mb-4 p-4 rounded shadow'>
-                      <div className="text-xl flex justify-between items-center mb-2">
-                        <div>Pengiriman Keluar</div>
-                      </div>
-                      <div>
-                        <TransferOut warehouse={warehouse} />
-                      </div>
+                    <div>
+                      <TransferIn warehouse={warehouse} />
                     </div>
-                  )}
+                  </div>
+                  <div className='bg-white mb-4 p-4 rounded shadow'>
+                    <div className="text-xl flex justify-between items-center mb-2">
+                      <div>Pengiriman Keluar</div>
+                    </div>
+                    <div>
+                      <TransferOut warehouse={warehouse} />
+                    </div>
+                  </div>
                   <div className='bg-white mb-4 p-4 rounded shadow'>
                     <div className="text-xl flex justify-between items-center mb-2">
                       <div>Stock Product</div>

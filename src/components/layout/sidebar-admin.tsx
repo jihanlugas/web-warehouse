@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { BsList } from 'react-icons/bs';
 import { FiHome } from 'react-icons/fi';
 import { FaUsers } from 'react-icons/fa6';
-import { LuUserCog, LuClipboardList, LuReceiptText } from 'react-icons/lu';
+import { LuUserCog, LuUser, LuClipboardList, LuReceiptText } from 'react-icons/lu';
 import { RiShoppingBag4Line, RiArrowLeftRightLine } from 'react-icons/ri';
 import { TbPackage } from 'react-icons/tb';
 
@@ -20,6 +20,7 @@ const icons = {
   FaUsers,
   TbPackage,
   LuUserCog,
+  LuUser,
   LuClipboardList,
   RiShoppingBag4Line,
   RiArrowLeftRightLine,
@@ -41,6 +42,11 @@ const defaultMenu = [
     name: 'Operator',
     icon: 'LuUserCog',
     path: '/admin/operator',
+  },
+  {
+    name: 'Viewer',
+    icon: 'LuUser',
+    path: '/admin/viewer',
   },
   {
     name: 'Product',

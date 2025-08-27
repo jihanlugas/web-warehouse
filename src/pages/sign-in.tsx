@@ -11,7 +11,7 @@ import { Api } from '@/lib/api';
 import notif from '@/utils/notif';
 import PageWithLayoutType from '@/types/layout';
 import Main from '@/components/layout/main';
-import { USER_ROLE_ADMIN } from '@/utils/constant';
+import { USER_ROLE_ADMIN, USER_ROLE_OPERATOR, USER_ROLE_VIEWER } from '@/utils/constant';
 import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
 
@@ -47,8 +47,12 @@ const SingIn: NextPage<Props> = () => {
             // } else {
             if (res.payload.userLogin?.userRole === USER_ROLE_ADMIN) {
               router.push('/admin/dashboard');
-            } else {
+            } else if (res.payload.userLogin?.userRole === USER_ROLE_VIEWER) {
+              router.push('/viewer/dashboard');
+            } else if (res.payload.userLogin?.userRole === USER_ROLE_OPERATOR) {
               router.push('/dashboard');
+            } else {
+              router.push('/404');
             }
             // }
           } else {

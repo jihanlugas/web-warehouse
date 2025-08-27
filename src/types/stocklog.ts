@@ -14,7 +14,7 @@ export declare interface StocklogView {
     stockmovementvehicleId: string;
     productId: string;
     vehicleId: string;
-    type: string;
+    stocklogType: string;
     grossQuantity: number;
     tareQuantity: number;
     netQuantity: number;

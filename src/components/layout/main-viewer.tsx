@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Header from '@/components/layout/header';
-import SidebarAdmin from '@/components/layout/sidebar-admin';
+import SidebarViewer from '@/components/layout/sidebar-viewer';
 import { Api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
 import { AiOutlineLoading } from 'react-icons/ai'
@@ -21,7 +21,7 @@ const Loading: React.FC = () => {
   )
 }
 
-const MainAdmin: React.FC<Props> = ({ children }) => {
+const MainViewer: React.FC<Props> = ({ children }) => {
   const router = useRouter();
 
   const [sidebar, setSidebar] = useState<boolean>(false);
@@ -54,14 +54,11 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
-    setLoginUser(dataLoginUser?.payload)
-  }, [dataLoginUser])
-
-  useEffect(() => {
-    if (dataLoginUser?.user && dataLoginUser?.user?.userRole !== USER_ROLE_VIEWER) {
-      router.replace('/404')
-    }
-  }, [dataLoginUser])
+      setLoginUser(dataLoginUser?.payload)
+      if (dataLoginUser?.payload.user && dataLoginUser?.payload.user?.userRole !== USER_ROLE_VIEWER) {
+        router.replace('/404')
+      }
+    }, [dataLoginUser])
 
 
   return (
@@ -73,7 +70,7 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
         {!isLoading && loginUser ? (
           <>
             <Header sidebar={sidebar} setSidebar={setSidebar} loginUser={loginUser} />
-            <SidebarAdmin sidebar={sidebar} onClickOverlay={onClickOverlay} />
+            <SidebarViewer sidebar={sidebar} onClickOverlay={onClickOverlay} />
             <div className={`block duration-300 ease-in-out pt-16 min-h-svh overflow-y-auto`}>
               {React.isValidElement(children) ? React.cloneElement(children, { loginUser }) : children}
             </div>
@@ -88,4 +85,4 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
   );
 };
 
-export default MainAdmin;
+export default MainViewer;

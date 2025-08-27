@@ -28,7 +28,7 @@ const TextFieldNumber: NextPage<Props> = ({ name, ...props }) => {
 	};
 
 	const handleChange = (e) => {
-		const rawValue = isNaN(parseInt(e.target.value.replace(/\D/g, ''))) ? '' : parseInt(e.target.value.replace(/\D/g, ''));
+		const rawValue = isNaN(parseInt(e.target.value.replace(/[^\d-]/g, ''))) ? '' : parseInt(e.target.value.replace(/[^\d-]/g, ''));
 		helpers.setValue(rawValue);
 		props.onChange?.(e);
 	};

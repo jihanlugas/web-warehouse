@@ -15,7 +15,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { NextPage } from "next/types"
 import { useEffect, useRef, useState } from "react";
-import { BiPlus } from "react-icons/bi";
 import { CgChevronDown } from "react-icons/cg";
 import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import ModalFilter from "@/components/modal/modal-filter-transaction";
@@ -124,7 +123,7 @@ const Index: NextPage<Props> = () => {
       cell: ({ getValue, row }) => {
         return (
           <div className='w-full capitalize'>
-            <span data-tooltip-id={`tootltip-name-${row.original.id}`}>{getValue() as string}</span>
+            <span data-tooltip-id={`tootltip-name-${row.original.id}`}>{(getValue() as string).replace('_', ' ')}</span>
           </div>
         )
       },

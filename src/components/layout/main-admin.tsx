@@ -55,10 +55,7 @@ const MainAdmin: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     setLoginUser(dataLoginUser?.payload)
-  }, [dataLoginUser])
-
-  useEffect(() => {
-    if (dataLoginUser?.user && dataLoginUser?.user?.userRole !== USER_ROLE_ADMIN) {
+    if (dataLoginUser?.payload.user && dataLoginUser?.payload.user?.userRole !== USER_ROLE_ADMIN) {
       router.replace('/404')
     }
   }, [dataLoginUser])
