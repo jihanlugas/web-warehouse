@@ -1,5 +1,5 @@
 import Modal from "@/components/modal/modal";
-import { PagePurchaseorder } from "@/types/purchaseorder";
+import { PageUser } from "@/types/user";
 import { NextPage } from "next/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
@@ -7,55 +7,39 @@ import { Form, Formik } from "formik";
 import * as Yup from 'yup';
 import ButtonSubmit from "@/components/formik/button-submit";
 import TextField from "@/components/formik/text-field";
+import TextAreaField from "@/components/formik/text-area-field";
 import DateField from "@/components/formik/date-field";
-import { Api } from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
-import { CustomerView, PageCustomer } from "@/types/customer";
-import DropdownField from "../formik/dropdown-field";
-import TextFieldNumber from "../formik/text-field-number";
-import TextAreaField from "../formik/text-area-field";
 
 
 type Props = {
   show: boolean;
   onClickOverlay: () => void;
-  filter: PagePurchaseorder
-  setFilter: Dispatch<SetStateAction<PagePurchaseorder>>
-}
-
-const pageRequestCustomer: PageCustomer = {
-  limit: -1,
+  filter: PageUser
+  setFilter: Dispatch<SetStateAction<PageUser>>
 }
 
 const schema = Yup.object().shape({
 });
 
-const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
+const ModalFilterViewer: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
 
-  const [initFormikValue, setInitFormikValue] = useState<PagePurchaseorder>(filter)
-  const [customers, setCustomers] = useState<CustomerView[]>([]);
+  const [initFormikValue, setInitFormikValue] = useState<PageUser>(filter)
 
-  const { isLoading: isLoadingCustomer, data: dataCustomer } = useQuery({
-    queryKey: ['customer', pageRequestCustomer],
-    queryFn: ({ queryKey }) => Api.get('/customer', queryKey[1] as object),
-  });
-
-  const handleSubmit = async (values: PagePurchaseorder) => {
+  const handleSubmit = async (values: PageUser) => {
     setFilter(values)
     onClickOverlay()
   }
 
   const handleClear = () => {
     setFilter({
-      customerId: '',
-      notes: '',
+      warehouseId: '',
+      fullname: '',
+      email: '',
+      phoneNumber: '',
+      username: '',
+      address: '',
+      birthPlace: '',
       createName: '',
-      startTotalPrice: '',
-      endTotalPrice: '',
-      startTotalPayment: '',
-      endTotalPayment: '',
-      startOutstanding: '',
-      endOutstanding: '',
       startCreateDt: '',
       endCreateDt: '',
     })
@@ -76,18 +60,12 @@ const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filte
     }
   }, [show])
 
-  useEffect(() => {
-    if (dataCustomer?.status) {
-      setCustomers(dataCustomer.payload.list);
-    }
-  }, [dataCustomer]);
-
 
   return (
     <Modal show={show} onClickOverlay={() => onClickOverlay()} layout={'sm:max-w-2xl'}>
       <div className="p-4">
         <div className={'text-xl mb-4 flex justify-between items-center'}>
-          <div>Filter Purchase Order</div>
+          <div>Filter User</div>
           <button type="button" onClick={() => onClickOverlay()} className={'h-10 w-10 flex justify-center items-center duration-300 rounded shadow text-rose-500 hover:scale-110'}>
             <IoClose size={'1.5rem'} className="text-rose-500" />
           </button>
@@ -106,67 +84,49 @@ const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filte
                   <Form noValidate={true}>
                     <div className="mb-4">
                       <TextField
-                        label={'Number'}
-                        name={'number'}
+                        label={'Name User'}
+                        name={'fullname'}
                         type={'text'}
-                        placeholder={'Number'}
+                        placeholder={'Name User'}
                       />
                     </div>
                     <div className="mb-4">
-                      <DropdownField
-                        label={"Customer"}
-                        name={"customerId"}
-                        items={customers}
-                        keyValue={"id"}
-                        keyLabel={"name"}
-                        isLoading={isLoadingCustomer}
-                        placeholder="Pilih Customer"
-                        placeholderValue={""}
-                        field={true}
+                      <TextField
+                        label={'Username'}
+                        name={'username'}
+                        type={'text'}
+                        placeholder={'Username'}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <TextField
+                        label={'Email'}
+                        name={'email'}
+                        type={'email'}
+                        placeholder={'Email'}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <TextField
+                        label={'Nomor Telepon'}
+                        name={'phoneNumber'}
+                        type={'text'}
+                        placeholder={'Nomor Telepon'}
                       />
                     </div>
                     <div className="mb-4">
                       <TextAreaField
-                        label={'Catatan'}
-                        name={'notes'}
+                        label={'Address'}
+                        name={'address'}
+                        placeholder={'Address'}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <TextField
+                        label={'Tempat Lahir'}
+                        name={'birthPlace'}
                         type={'text'}
-                        placeholder={'Catatan'}
-                      />
-                    </div>
-                    <div className="mb-4 grid grid-cols-2 gap-2">
-                      <TextFieldNumber
-                        label={'Total Price From'}
-                        name={'startTotalPrice'}
-                        placeholder={'1...'}
-                      />
-                      <TextFieldNumber
-                        label={'Total Price To'}
-                        name={'endTotalPrice'}
-                        placeholder={'1...'}
-                      />
-                    </div>
-                    <div className="mb-4 grid grid-cols-2 gap-2">
-                      <TextFieldNumber
-                        label={'Total Payment From'}
-                        name={'startTotalPayment'}
-                        placeholder={'1...'}
-                      />
-                      <TextFieldNumber
-                        label={'Total Payment To'}
-                        name={'endTotalPayment'}
-                        placeholder={'1...'}
-                      />
-                    </div>
-                    <div className="mb-4 grid grid-cols-2 gap-2">
-                      <TextFieldNumber
-                        label={'Outstanding From'}
-                        name={'startOutstanding'}
-                        placeholder={'1...'}
-                      />
-                      <TextFieldNumber
-                        label={'Outstanding To'}
-                        name={'endOutstanding'}
-                        placeholder={'1...'}
+                        placeholder={'Tempat Lahir'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
@@ -205,4 +165,4 @@ const ModalFilterPurchaseorder: NextPage<Props> = ({ show, onClickOverlay, filte
   )
 }
 
-export default ModalFilterPurchaseorder;
+export default ModalFilterViewer;

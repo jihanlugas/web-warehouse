@@ -320,7 +320,7 @@ const Index: NextPage<Props> = () => {
                   <Link href={{ pathname: '/admin/customer/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Customer</div>
+                      <div>Buat Customer</div>
                     </div>
                   </Link>
                 </div>

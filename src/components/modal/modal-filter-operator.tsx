@@ -29,7 +29,7 @@ const pageRequestWarehouse: PageWarehouse = {
 const schema = Yup.object().shape({
 });
 
-const ModalFilterUser: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
+const ModalFilterOperator: NextPage<Props> = ({ show, onClickOverlay, filter, setFilter }) => {
 
   const [initFormikValue, setInitFormikValue] = useState<PageUser>(filter)
   const [warehouses, setWarehouses] = useState<WarehouseView[]>([]);
@@ -198,4 +198,4 @@ const ModalFilterUser: NextPage<Props> = ({ show, onClickOverlay, filter, setFil
   )
 }
 
-export default ModalFilterUser;
+export default ModalFilterOperator;

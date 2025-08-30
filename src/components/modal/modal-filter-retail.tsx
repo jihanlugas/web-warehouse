@@ -104,6 +104,14 @@ const ModalFilterRetail: NextPage<Props> = ({ show, onClickOverlay, filter, setF
                 return (
                   <Form noValidate={true}>
                     <div className="mb-4">
+                      <TextField
+                        label={'Number'}
+                        name={'number'}
+                        type={'text'}
+                        placeholder={'Number'}
+                      />
+                    </div>
+                    <div className="mb-4">
                       <DropdownField
                         label={"Customer"}
                         name={"customerId"}

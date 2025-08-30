@@ -492,7 +492,7 @@ const Index: NextPage<Props> = ({ id }) => {
                         <>
                           <div className="text-gray-600">{'Product'}</div>
                           <div className="col-span-1 sm:col-span-4">{purchaseorderproduct?.product?.name}</div>
-                          <div className="text-gray-600">{'Unit Price'}</div>
+                          <div className="text-gray-600">{'Harga Per Ton'}</div>
                           <div className="col-span-1 sm:col-span-4">{displayMoney(purchaseorderproduct?.unitPrice)}</div>
                         </>
                       ))}

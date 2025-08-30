@@ -127,7 +127,7 @@ const New: NextPage<Props> = () => {
                     </div>
                     <div className="mb-4 max-w-xl">
                       <TextFieldNumber
-                        label={'Berat Bersih'}
+                        label={'Berat Bersih (Ton)'}
                         name={`netQuantity`}
                         placeholder={'1...'}
                         required

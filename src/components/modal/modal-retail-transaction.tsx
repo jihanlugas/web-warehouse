@@ -174,7 +174,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                           <div className="p-2 text-base font-normal">Status</div>
                         </th>
                         <th className="border-2 border-gray-400">
-                          <div className="p-2 text-base font-normal">Unit Price</div>
+                          <div className="p-2 text-base font-normal">Harga Per Ton</div>
                         </th>
                         <th className="border-2 border-gray-400">
                           <div className="p-2 text-base font-normal">Net</div>
@@ -313,7 +313,7 @@ const ModalRetailTransaction: NextPage<Props> = ({ show, onClickOverlay, id }) =
                           enableReinitialize={true}
                           onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
                         >
-                          {({ values, errors, setFieldValue }) => {
+                          {({ values, errors }) => {
                             return (
                               <Form noValidate={true}>
                                 <div className="mb-4">

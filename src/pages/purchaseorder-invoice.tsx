@@ -43,7 +43,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
             <tr className="text-left">
               <th className='px-2 border-2 border-gray-400 py-4'>Tanggal Dikirim</th>
               <th className='px-2 border-2 border-gray-400 py-4'>Produk</th>
-              <th className='px-2 border-2 border-gray-400 py-4'>Unit Price</th>
+              <th className='px-2 border-2 border-gray-400 py-4'>Harga Per Ton</th>
               <th className='px-2 border-2 border-gray-400 py-4'>Net</th>
               <th className='px-2 border-2 border-gray-400 py-4'>Price</th>
             </tr>

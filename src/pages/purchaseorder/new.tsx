@@ -324,14 +324,14 @@ const New: NextPage<Props> = ({ loginUser }) => {
                       )}
                       <div className="mb-4 max-w-xl">
                         <TextFieldNumber
-                          label={'Berat Kosong'}
+                          label={'Berat Kosong (Ton)'}
                           name={`sentTareQuantity`}
                           placeholder={'1...'}
                         />
                       </div>
                       <div className="mb-4 max-w-xl">
                         <TextFieldNumber
-                          label={'Berat Kotor'}
+                          label={'Berat Kotor (Ton)'}
                           name={`sentGrossQuantity`}
                           placeholder={'1...'}
                         />

@@ -13,6 +13,8 @@ import { PageWarehouse, WarehouseView } from "@/types/warehouse";
 import { useQuery } from "@tanstack/react-query";
 import { Api } from "@/lib/api";
 import DropdownField from "../formik/dropdown-field";
+import { STOCKMOVEMENTVEHICLE_STATUSES, STOCKMOVEMENTVEHICLE_TYPES } from "@/utils/constant";
+import TextFieldNumber from "../formik/text-field-number";
 
 
 type Props = {
@@ -49,12 +51,12 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
     setFilter({
       fromWarehouseId: '',
       toWarehouseId: '',
-      type: '',
+      stockmovementvehicleType: '',
       relatedId: '',
       productId: '',
       vehicleId: '',
       number: '',
-      status: '',
+      stockmovementvehicleStatus: '',
       startSentGrossQuantity: '',
       startSentTareQuantity: '',
       startSentNetQuantity: '',
@@ -62,6 +64,7 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
       startReceivedGrossQuantity: '',
       startReceivedTareQuantity: '',
       startReceivedNetQuantity: '',
+      startShrinkage: '',
       startReceivedTime: '',
       endSentGrossQuantity: '',
       endSentTareQuantity: '',
@@ -70,6 +73,7 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
       endReceivedGrossQuantity: '',
       endReceivedTareQuantity: '',
       endReceivedNetQuantity: '',
+      endShrinkage: '',
       endReceivedTime: '',
       createName: '',
       startCreateDt: '',
@@ -130,6 +134,28 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <DropdownField
+                        label={"Type"}
+                        name={"stockmovementvehicleType"}
+                        items={STOCKMOVEMENTVEHICLE_TYPES}
+                        keyValue={"value"}
+                        keyLabel={"label"}
+                        placeholder="Pilih Type"
+                        placeholderValue={""}
+                        field={true}
+                      />
+                      <DropdownField
+                        label={"Status"}
+                        name={"stockmovementvehicleStatus"}
+                        items={STOCKMOVEMENTVEHICLE_STATUSES}
+                        keyValue={"value"}
+                        keyLabel={"label"}
+                        placeholder="Pilih Status"
+                        placeholderValue={""}
+                        field={true}
+                      />
+                    </div>
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <DropdownField
                         label={"Sumber Warehouse"}
                         name={"fromWarehouseId"}
                         items={warehouses}
@@ -150,6 +176,42 @@ const ModalFilterStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
                         placeholder="Pilih Tujuan Warehouse"
                         placeholderValue={""}
                         field={true}
+                      />
+                    </div>
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <TextFieldNumber
+                        label={'Berat Dikirim Dari'}
+                        name={'startSentNetQuantity'}
+                        placeholder={'1...'}
+                      />
+                      <TextFieldNumber
+                        label={'Berat Dikirim Hingga'}
+                        name={'endSentNetQuantity'}
+                        placeholder={'1...'}
+                      />
+                    </div>
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <TextFieldNumber
+                        label={'Berat Diterima Dari'}
+                        name={'startReceivedNetQuantity'}
+                        placeholder={'1...'}
+                      />
+                      <TextFieldNumber
+                        label={'Berat Diterima Hingga'}
+                        name={'endReceivedNetQuantity'}
+                        placeholder={'1...'}
+                      />
+                    </div>
+                    <div className="mb-4 grid grid-cols-2 gap-2">
+                      <TextFieldNumber
+                        label={'Penyusutan Dari'}
+                        name={'startShrinkage'}
+                        placeholder={'1...'}
+                      />
+                      <TextFieldNumber
+                        label={'Penyusutan Hingga'}
+                        name={'endShrinkage'}
+                        placeholder={'1...'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">

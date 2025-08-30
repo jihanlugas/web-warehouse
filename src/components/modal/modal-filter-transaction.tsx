@@ -14,6 +14,7 @@ import { CustomerView, PageCustomer } from "@/types/customer";
 import { Api } from "@/lib/api";
 import DropdownField from "../formik/dropdown-field";
 import { useQuery } from "@tanstack/react-query";
+import { STOCKMOVEMENTVEHICLE_TYPES } from "@/utils/constant";
 
 
 type Props = {
@@ -101,6 +102,19 @@ const ModalFilterTransaction: NextPage<Props> = ({ show, onClickOverlay, filter,
               {({ setFieldValue }) => {
                 return (
                   <Form noValidate={true}>
+
+                    <div className="mb-4">
+                      <DropdownField
+                        label={"Type"}
+                        name={"transactionRelated"}
+                        items={STOCKMOVEMENTVEHICLE_TYPES}
+                        keyValue={"value"}
+                        keyLabel={"label"}
+                        placeholder="Pilih Type"
+                        placeholderValue={""}
+                        field={true}
+                      />
+                    </div>
                     <div className="mb-4">
                       <DropdownField
                         label={"Customer"}
@@ -115,11 +129,11 @@ const ModalFilterTransaction: NextPage<Props> = ({ show, onClickOverlay, filter,
                       />
                     </div>
                     <div className="mb-4">
-                      <TextField
-                        label={'Transaction Name'}
-                        name={'name'}
+                      <TextAreaField
+                        label={'Catatan'}
+                        name={'notes'}
                         type={'text'}
-                        placeholder={'Transaction Name'}
+                        placeholder={'Catatan'}
                       />
                     </div>
                     <div className="mb-4 grid grid-cols-2 gap-2">

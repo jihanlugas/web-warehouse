@@ -174,7 +174,7 @@ const ModalPurchaseorderTransaction: NextPage<Props> = ({ show, onClickOverlay, 
                           <div className="p-2 text-base font-normal">Status</div>
                         </th>
                         <th className="border-2 border-gray-400">
-                          <div className="p-2 text-base font-normal">Unit Price</div>
+                          <div className="p-2 text-base font-normal">Harga Per Ton</div>
                         </th>
                         <th className="border-2 border-gray-400">
                           <div className="p-2 text-base font-normal">Net</div>

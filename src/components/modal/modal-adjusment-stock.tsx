@@ -127,7 +127,7 @@ const ModalAdjustmentStock: NextPage<Props> = ({ show, onClickOverlay, id }) => 
                         <Form noValidate={true}>
                           <div className="mb-4">
                             <TextFieldNumber
-                              label={'Berat'}
+                              label={'Berat (Ton)'}
                               name={`quantity`}
                               placeholder={'1...'}
                             />

@@ -254,7 +254,7 @@ const New: NextPage<Props> = () => {
                                 </div>
                                 <div className="mb-4 max-w-xl">
                                   <TextFieldNumber
-                                    label={'Unit Price'}
+                                    label={'Harga Per Ton'}
                                     name={`products.${key}.unitPrice`}
                                     placeholder={'1...'}
                                     required

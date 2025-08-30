@@ -214,7 +214,7 @@ const RenderStatus: NextPage<{ value: string, row: Row<StockmovementvehicleView>
         case "IN_TRANSIT":
           return (
             <div className='w-full'>
-              <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value}</span>
+              <span className={"px-2 py-1 rounded-full text-gray-50 bg-blue-500 text-xs font-bold"} data-tooltip-id={`tootltip-status-${row.original.id}`}>{value.replace('_', ' ')}</span>
               <TooltipTransfer id={`tootltip-status-${row.original.id}`} />
             </div>
           )
@@ -303,6 +303,7 @@ const Index: NextPage<Props> = () => {
     startReceivedGrossQuantity: '',
     startReceivedTareQuantity: '',
     startReceivedNetQuantity: '',
+    startShrinkage: '',
     startReceivedTime: '',
     endSentGrossQuantity: '',
     endSentTareQuantity: '',
@@ -311,6 +312,7 @@ const Index: NextPage<Props> = () => {
     endReceivedGrossQuantity: '',
     endReceivedTareQuantity: '',
     endReceivedNetQuantity: '',
+    endShrinkage: '',
     endReceivedTime: '',
     createName: '',
     startCreateDt: '',
@@ -704,7 +706,7 @@ const Index: NextPage<Props> = () => {
                   <Link href={{ pathname: '/admin/stockmovementvehicle/new' }}>
                     <div className='w-60 h-10 bg-primary-500 hover:bg-primary-600 rounded mb-4 text-gray-50 font-bold flex justify-center items-center duration-300 hover:scale-105'>
                       <BiPlus className='mr-2' size={'1.5rem'} />
-                      <div>New Stockmovementvehicle</div>
+                      <div>Buat Stockmovementvehicle</div>
                     </div>
                   </Link>
                 </div> */}

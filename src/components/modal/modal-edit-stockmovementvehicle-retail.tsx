@@ -122,14 +122,14 @@ const ModalEditStockmovementvehiclePurchasorder: NextPage<Props> = ({ show, onCl
                     <Form noValidate={true}>
                       <div className="mb-4">
                         <TextFieldNumber
-                          label={'Berat Kosong'}
+                          label={'Berat Kosong (Ton)'}
                           name={`sentTareQuantity`}
                           placeholder={'1...'}
                         />
                       </div>
                       <div className="mb-4">
                         <TextFieldNumber
-                          label={'Berat Kotor'}
+                          label={'Berat Kotor (Ton)'}
                           name={`sentGrossQuantity`}
                           placeholder={'1...'}
                         />

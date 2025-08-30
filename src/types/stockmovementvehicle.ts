@@ -50,11 +50,11 @@ export declare interface StockmovementvehicleView {
 export declare interface PageStockmovementvehicle extends Paging {
     fromWarehouseId?: string;
     toWarehouseId?: string;
-    type?: string;
+    stockmovementvehicleType?: string;
     productId?: string;
     vehicleId?: string;
     relatedId?: string;
-    status?: string;
+    stockmovementvehicleStatus?: string;
     number?: string;
     startSentGrossQuantity?: string | number;
     startSentTareQuantity?: string | number;
@@ -63,6 +63,7 @@ export declare interface PageStockmovementvehicle extends Paging {
     startReceivedGrossQuantity?: string | number;
     startReceivedTareQuantity?: string | number;
     startReceivedNetQuantity?: string | number;
+    startShrinkage?: string | number;
     startReceivedTime?: string;
     endSentGrossQuantity?: string | number;
     endSentTareQuantity?: string | number;
@@ -71,6 +72,7 @@ export declare interface PageStockmovementvehicle extends Paging {
     endReceivedGrossQuantity?: string | number;
     endReceivedTareQuantity?: string | number;
     endReceivedNetQuantity?: string | number;
+    endShrinkage?: string | number;
     endReceivedTime?: string;
     createName?: string;
     startCreateDt?: string | DateConstructor;
