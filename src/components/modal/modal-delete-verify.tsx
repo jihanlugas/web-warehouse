@@ -1,6 +1,6 @@
 import Modal from '@/components/modal/modal';
 import { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 import { MdClose } from 'react-icons/md';
 
@@ -16,6 +16,10 @@ type Props = {
 const ModalDelete: NextPage<Props> = ({ show, onClickOverlay, onDelete, isLoading = false, verify, children }) => {
 
   const [verifyValue, setVerifyValue] = useState('');
+
+  useEffect(() => {
+    setVerifyValue('');
+  }, [show]);
 
   return (
     <Modal show={show} onClickOverlay={onClickOverlay} layout={'sm:max-w-lg'}>
