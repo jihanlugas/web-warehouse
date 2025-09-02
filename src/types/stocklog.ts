@@ -1,7 +1,6 @@
 import { Paging } from "./pagination";
 import { ProductView } from "./product";
 import { StockView } from "./stock";
-import { StockmovementView } from "./stockmovement";
 import { StockmovementvehicleView } from "./stockmovementvehicle";
 import { VehicleView } from "./vehicle";
 import { WarehouseView } from "./warehouse";
@@ -27,7 +26,6 @@ export declare interface StocklogView {
     updateName: string;
     warehouse?: WarehouseView;
     stock?: StockView;
-    stockmovement?: StockmovementView;
     stockmovementvehicle?: StockmovementvehicleView;
     product?: ProductView;
     vehicle?: VehicleView;

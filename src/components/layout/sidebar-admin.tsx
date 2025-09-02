@@ -8,6 +8,7 @@ import { FaUsers } from 'react-icons/fa6';
 import { LuUserCog, LuUser, LuClipboardList, LuReceiptText } from 'react-icons/lu';
 import { RiShoppingBag4Line, RiArrowLeftRightLine } from 'react-icons/ri';
 import { TbPackage } from 'react-icons/tb';
+import { AiOutlineAudit } from 'react-icons/ai';
 
 interface Props {
   sidebar: boolean,
@@ -25,6 +26,7 @@ const icons = {
   RiShoppingBag4Line,
   RiArrowLeftRightLine,
   LuReceiptText,
+  AiOutlineAudit,
 };
 
 const defaultMenu = [
@@ -77,6 +79,11 @@ const defaultMenu = [
     name: 'Transaction',
     icon: 'LuReceiptText',
     path: '/admin/transaction',
+  },
+  {
+    name: 'Audit Log',
+    icon: 'AiOutlineAudit',
+    path: '/admin/auditlog',
   },
 ];
 

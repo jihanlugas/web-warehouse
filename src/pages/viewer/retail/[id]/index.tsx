@@ -13,7 +13,6 @@ import ModalEditRetail from "@/components/modal/modal-edit-retail";
 import MainAdmin from "@/components/layout/main-admin";
 import { PageInfo } from "@/types/pagination";
 import { PageStockmovementvehicle, StockmovementvehicleView } from "@/types/stockmovementvehicle";
-import { StockmovementView } from "@/types/stockmovement";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import Table from "@/components/table/table";
 import { ProductView } from "@/types/product";

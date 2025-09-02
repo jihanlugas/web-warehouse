@@ -1,7 +1,6 @@
 import { CustomerView } from "./customer";
 import { Paging } from "./pagination";
 import { Purchaseorderproduct, PurchaseorderproductView } from "./purchaseorderproduct";
-import { StockmovementView } from "./stockmovement";
 import { StockmovementvehicleView } from "./stockmovementvehicle";
 import { TransactionView } from "./transaction";
 
@@ -22,7 +21,6 @@ export declare interface PurchaseorderView {
     updateName: string;
     customer?: CustomerView;
     transactions?: TransactionView[];
-    stockmovements?: StockmovementView[];
     stockmovementvehicles?: StockmovementvehicleView[];
     purchaseorderproducts?: PurchaseorderproductView[];
 }
