@@ -85,6 +85,11 @@ const DropdownMore: NextPage<CellContext<StockmovementvehicleView, unknown> & Pr
     toggleModalDelete(id, name)
   }
 
+  const handleClickDetail = () => {
+    setMoreBar(false);
+    toggleModalDetail(row.original.id)
+  }
+
   return (
     <div className="relative inline-block py-2 text-right" ref={refMore}>
       <button className="flex justify-center items-center text-primary-500" type="button" onClick={() => setMoreBar(!moreBar)} >
@@ -93,7 +98,7 @@ const DropdownMore: NextPage<CellContext<StockmovementvehicleView, unknown> & Pr
       </button>
       <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
         <div className="" role="none">
-          <button onClick={() => toggleModalDetail(row.original.id)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
+          <button onClick={handleClickDetail} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>
             {'Detail'}
           </button>
           <button onClick={() => handleClickDelete(row.original.id, row.original.number)} className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}>

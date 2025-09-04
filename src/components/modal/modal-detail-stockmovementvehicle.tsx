@@ -6,7 +6,8 @@ import { Api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { NextPage } from "next/types";
 import { StockmovementvehicleView } from "@/types/stockmovementvehicle";
-import { displayDateTime, displayNumber, displayPhoneNumber, displayTon } from "@/utils/formater";
+import { displayDateTime, displayPhoneNumber, displayTon } from "@/utils/formater";
+import { AuditlogView } from '@/types/auditlog';
 
 
 
@@ -77,7 +78,7 @@ const ModalDetailStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
   const [stockmovementvehicle, setStockmovementvehicle] = useState<StockmovementvehicleView>(null)
 
 
-  const preloads = 'Vehicle,Product,FromWarehouse,ToWarehouse,Purchaseorder,Purchaseorder.Customer,Retail,Retail.Customer'
+  const preloads = 'Vehicle,Product,FromWarehouse,ToWarehouse,Purchaseorder,Purchaseorder.Customer,Retail,Retail.Customer,Auditlogs'
   const { data, isLoading } = useQuery({
     queryKey: ['stockmovementvehicle', selectedId, preloads],
     queryFn: ({ queryKey }) => {
@@ -131,6 +132,7 @@ const ModalDetailStockmovementvehicle: NextPage<Props> = ({ show, onClickOverlay
                   <div><RenderStatus status={stockmovementvehicle.stockmovementvehicleStatus} /></div>
                 </div>
                 <RenderData stockmovementvehicle={stockmovementvehicle} />
+                <RenderAuditlog auditlogs={stockmovementvehicle.auditlogs} />
               </div>
             )}
           </>
@@ -264,6 +266,35 @@ const RenderData: NextPage<{ stockmovementvehicle: StockmovementvehicleView }> =
     default:
       return null
   }
+}
+
+const RenderAuditlog: NextPage<{ auditlogs: AuditlogView[] }> = ({ auditlogs }) => {
+  return (
+    <div className="mb-4">
+      <div className="mb-4">
+        <div className="mb-4">
+          <div className="text-lg mb-4">Audit Log</div>
+          {auditlogs
+            .slice() // biar tidak mutasi array asli
+            .sort((a, b) => new Date(b.createDt).getTime() - new Date(a.createDt).getTime())
+            .map((auditlog) => {
+              return (
+                <div key={auditlog.id} className='grid grid-cols-3 gap-2 mb-2 border-b border-gray-200 text-sm'>
+                  <div className='col-span-1'>
+                    <div className='font-bold'>{auditlog.createName || '-'}</div>
+                    <div className='text-sm'>{displayDateTime(auditlog.createDt) || '-'}</div>
+                  </div>
+                  <div className='col-span-2'>
+                    <div className={auditlog.auditlogType === 'SUCCESS' ? 'font-bold text-green-500' : 'font-bold text-rose-500'}>{auditlog.title || '-'}</div>
+                    <div className='text-sm'>{auditlog.description || '-'}</div>
+                  </div>
+                </div>
+              )
+            })}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 

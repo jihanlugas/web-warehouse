@@ -1,3 +1,4 @@
+import { AuditlogView } from "./auditlog";
 import { LocationView } from "./location";
 import { Paging } from "./pagination";
 import { ProductView } from "./product";
@@ -45,6 +46,7 @@ export declare interface StockmovementvehicleView {
     purchaseorder?: PurchaseorderView;
     retail?: RetailView;
     stockmovementvehiclephotos?: StockmovementvehiclephotoView[];
+    auditlogs?: AuditlogView[];
 }
 
 export declare interface PageStockmovementvehicle extends Paging {

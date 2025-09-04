@@ -77,6 +77,7 @@ const Account: NextPage<Props> = ({ loginUser }) => {
           ]}
         />
         <div className='bg-white mb-4 p-4 rounded shadow'>
+          <div className='tetx-xl font-bold mb-4'>Akun Detail</div>
           <div className='grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-4 mb-4'>
             <div className=''>Nama</div>
             <div className='col-span-1 sm:col-span-4'>{user.fullname}</div>
@@ -99,7 +100,7 @@ const Account: NextPage<Props> = ({ loginUser }) => {
           </div>
         </div>
         <div className='bg-white mb-4 p-4 rounded shadow'>
-          <div className='tetx-xl'>Link Akun</div>
+          <div className='tetx-xl font-bold'>Link Akun</div>
           <div>
             {user.userproviders?.find(data => data.providerName === 'google').email ? (
               <button onClick={() => toogleModalUnlink()} className='flex items-center justify-center p-2 border-2 border-gray-300 rounded mt-4 w-full max-w-lg'>

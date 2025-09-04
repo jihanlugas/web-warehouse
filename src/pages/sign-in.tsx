@@ -99,7 +99,7 @@ const SingIn: NextPage<Props> = () => {
                           name={'username'}
                           type={'text'}
                           placeholder={'Username Atau Email'}
-                          autoFocus
+                          // autoFocus
                         />
                       </div>
                       <div className="">

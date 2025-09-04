@@ -5,69 +5,21 @@ import { Api } from "@/lib/api";
 import { AuditlogView, PageAuditlog } from "@/types/auditlog";
 import PageWithLayoutType from "@/types/layout";
 import { PageInfo } from "@/types/pagination";
-import { displayDateTime, displayPhoneNumber } from "@/utils/formater";
+import { displayDateTime } from "@/utils/formater";
 import { removeEmptyValues } from "@/utils/helper";
 import notif from "@/utils/notif";
 import { isEmptyObject } from "@/utils/validate";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CellContext, ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import Head from "next/head";
-import Link from "next/link";
 import { NextPage } from "next/types"
-import { useEffect, useRef, useState } from "react";
-import { BiPlus } from "react-icons/bi";
-import { CgChevronDown } from "react-icons/cg";
+import { useEffect, useState } from "react";
 import { TbFilter, TbFilterFilled } from "react-icons/tb";
 import ModalFilter from "@/components/modal/modal-filter-auditlog";
 import MainAdmin from "@/components/layout/main-admin";
 import { WarehouseView } from "@/types/warehouse";
 
 type Props = object
-
-type PropsDropdownMore = {
-}
-
-const DropdownMore: NextPage<CellContext<AuditlogView, unknown> & PropsDropdownMore> = ({
-  row,
-}) => {
-  const refMore = useRef<HTMLDivElement>(null);
-  const [moreBar, setMoreBar] = useState(false);
-
-  useEffect(() => {
-    const checkIfClickedOutside = e => {
-      // If the menu is open and the clicked target is not within the menu,
-      // then close the menu
-      if (moreBar && refMore.current && !refMore.current.contains(e.target)) {
-        setMoreBar(false);
-      }
-    };
-
-    document.addEventListener('mousedown', checkIfClickedOutside);
-
-    return () => {
-      // Cleanup the event listener
-      document.removeEventListener('mousedown', checkIfClickedOutside);
-    };
-  }, [moreBar]);
-
-  return (
-    <div className="relative inline-block py-2 text-right" ref={refMore}>
-      <button className="flex justify-center items-center text-primary-500" type="button" onClick={() => setMoreBar(!moreBar)} >
-        <div>Lainnya</div>
-        <CgChevronDown size={'1.2rem'} className={'ml-2'} />
-      </button>
-      <div className={`z-50 absolute right-0 mt-2 w-56 rounded-md overflow-hidden origin-top-right shadow-lg bg-white border-2 border-gray-200 focus:outline-none duration-300 ease-in-out ${!moreBar && 'scale-0 shadow-none ring-0'}`}>
-        <div className="" role="none">
-          <Link href={{ pathname: '/admin/auditlog/[id]', query: { id: row.original.id } }}>
-            <div className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'} title='Edit'>
-              {'Detail'}
-            </div>
-          </Link>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 const Index: NextPage<Props> = () => {
 
@@ -101,6 +53,24 @@ const Index: NextPage<Props> = () => {
   });
 
   const column: ColumnDef<AuditlogView>[] = [
+    {
+      id: 'create_name',
+      accessorKey: 'createName',
+      header: () => {
+        return (
+          <div className='whitespace-nowrap'>
+            {"User"}
+          </div>
+        );
+      },
+      cell: ({ getValue }) => {
+        return (
+          <div className='w-full capitalize'>
+            {getValue() as string}
+          </div>
+        )
+      },
+    },
     {
       id: 'title',
       accessorKey: 'title',
@@ -169,24 +139,6 @@ const Index: NextPage<Props> = () => {
       },
     },
     {
-      id: 'create_name',
-      accessorKey: 'createName',
-      header: () => {
-        return (
-          <div className='whitespace-nowrap'>
-            {"User"}
-          </div>
-        );
-      },
-      cell: ({ getValue }) => {
-        return (
-          <div className='w-full capitalize'>
-            {getValue() as string}
-          </div>
-        )
-      },
-    },
-    {
       id: 'create_dt',
       accessorKey: 'createDt',
       header: () => {
@@ -204,21 +156,6 @@ const Index: NextPage<Props> = () => {
         )
       },
     },
-    // {
-    //   id: 'id',
-    //   header: 'Action',
-    //   enableSorting: false,
-    //   enableResizing: false,
-    //   size: 50,
-    //   maxSize: 50,
-    //   cell: (props) => {
-    //     return (
-    //       <DropdownMore
-    //         {...props}
-    //       />
-    //     );
-    //   },
-    // },
   ]
 
   const { isLoading, data, refetch } = useQuery({
