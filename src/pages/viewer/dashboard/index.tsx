@@ -81,7 +81,15 @@ const Index: NextPage<Props> = ({ loginUser }) => {
               });
               data.warehouses.forEach((warehouse) => {
                 warehouse.stocks.forEach((stock) => {
-                  locationStock.find((item) => item.id === stock.product.id).quantity += stock.quantity;
+                  const found = locationStock.find((item) => item.id === stock.product.id);
+                  if (found) {
+                    found.quantity += stock.quantity;
+                  } else {
+                    locationStock.push({
+                      id: stock.product.id,
+                      quantity: stock.quantity,
+                    });
+                  }
                 });
               });
               return (

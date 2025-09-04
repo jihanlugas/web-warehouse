@@ -5,6 +5,7 @@ import Main from '@/components/layout/main';
 import { useRouter } from "next/router";
 import { ImSpinner2 } from 'react-icons/im';
 import { useEffect } from 'react';
+import notif from '@/utils/notif';
 
 
 type Props = object
@@ -12,21 +13,48 @@ type Props = object
 
 const Callback: NextPage<Props> = () => {
   const router = useRouter();
-  const { token, role } = router.query;
+  const { status, state, token, role, message } = router.query;
 
   useEffect(() => {
     if (!router.isReady) return; // tunggu router siap
 
-    if (token && role) {
-      localStorage.setItem("token", token as string);
-
-      if ((role as string).toLowerCase() === "admin") {
-        router.push("/admin/dashboard");
-      } else {
-        router.push("/dashboard");
+    if (status !== "success") {
+      switch (state) {
+        case "sign-in":
+          notif.error(message as string);
+          router.push("/sign-in");
+          break;
+        case "link":
+          notif.error(message as string);
+          router.push("/sign-in");
+          break;
+        default:
+          router.push("/sign-in");
+          break;
       }
     } else {
-      router.push("/sign-in");
+      switch (state) {
+        case "sign-in":
+          if (token && role) {
+            localStorage.setItem("token", token as string);
+
+            if ((role as string).toLowerCase() === "admin") {
+              router.push("/admin/dashboard");
+            } else {
+              router.push("/dashboard");
+            }
+          } else {
+            router.push("/sign-in");
+          }
+          break;
+        case "link":
+          notif.success(message as string);
+          router.push("/account");
+          break;
+        default:
+          router.push("/account");
+          break;
+      }
     }
   }, [router.isReady, token, role, router]);
 

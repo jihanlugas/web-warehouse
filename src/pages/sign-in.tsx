@@ -122,17 +122,17 @@ const SingIn: NextPage<Props> = () => {
                 );
               }}
             </Formik>
-            {/* <div className="flex items-center mt-4">
+            <div className="flex items-center mt-4">
               <div className="flex-grow border-t-2 border-gray-300"></div>
               <span className="mx-4 text-gray-500">OR</span>
               <div className="flex-grow border-t-2 border-gray-300"></div>
             </div>
             <div>
-              <Link href="http://localhost:1323/auth/google/login" className='flex items-center justify-center p-2 border-2 border-gray-300 rounded mt-4'>
+              <Link href={process.env.API_END_POINT + "/auth/google/login"} className='flex items-center justify-center p-2 border-2 border-gray-300 rounded mt-4'>
                 <FcGoogle size={'1.2rem'} className='mr-2' />
                 <div>Login with Google</div>
               </Link>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
