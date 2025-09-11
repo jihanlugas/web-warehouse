@@ -5,9 +5,9 @@ import SidebarUser from '@/components/layout/sidebar-operator';
 import SidebarAdmin from '@/components/layout/sidebar-admin';
 import { Api } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
-import { AiOutlineLoading } from 'react-icons/ai'
 import { USER_ROLE_ADMIN } from '@/utils/constant';
 import { LoginUser } from '@/types/auth';
+import { ImSpinner2 } from 'react-icons/im';
 
 type Props = {
   children: React.ReactElement<{ loginUser: LoginUser }>
@@ -15,11 +15,9 @@ type Props = {
 
 const Loading: React.FC = () => {
   return (
-    <>
-      <div className='h-dvh w-screen flex justify-center items-center'>
-        <AiOutlineLoading className={'absolute animate-spin '} size={'6em'} />
-      </div>
-    </>
+    <div className='h-dvh w-screen flex justify-center items-center'>
+      <ImSpinner2 className={'absolute animate-spin text-blue-500'} size={'6em'} />
+    </div>
   )
 }
 

@@ -343,7 +343,11 @@ const Index: NextPage<Props> = () => {
             </div>
             <div>
               {isLoading ? (
-                <div>Loading</div>
+                <div className="flex justify-center items-center">
+                  <div className="py-20">
+                    <ImSpinner2 className={'animate-spin text-blue-500'} size={'5rem'} />
+                  </div>
+                </div>
               ) : (
                 <div>
                   {stockins.length > 0 ? (

@@ -62,7 +62,7 @@ const DropdownField: NextPage<Props> = ({ label, name, items, required, placehol
 						)
 					})}
 				</FieldComponent>
-				{isLoading && <ImSpinner2 className={'animate-spin absolute top-3 right-8'} size={'1.2rem'} />}
+				{isLoading && <ImSpinner2 className={'animate-spin absolute top-3 right-8 text-blue-500'} size={'1.2rem'} />}
 			</div>
 			<ErrorMessage name={name}>
 				{(msg) => {

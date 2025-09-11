@@ -8,9 +8,8 @@ import { Api } from '@/lib/api';
 import { LoginUser } from '@/types/auth';
 import { NextPage } from 'next/types';
 import { displayNumber, displayTon } from '@/utils/formater';
-import { AiOutlineLoading } from 'react-icons/ai';
 import { LocationView, PageLocation } from '@/types/location';
-import { ImArrowDown, ImArrowUp } from 'react-icons/im';
+import { ImArrowDown, ImArrowUp, ImSpinner2 } from 'react-icons/im';
 import { PageProduct, ProductView } from '@/types/product';
 import Link from 'next/link';
 
@@ -70,7 +69,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
         />
         {isLoadingLocation || isLoadingProduct ? (
           <div className='h-40 w-full flex justify-center items-center'>
-            <AiOutlineLoading className={'absolute animate-spin '} size={'4rem'} />
+            <ImSpinner2 className={'absolute animate-spin text-blue-500'} size={'4rem'} />
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">

@@ -8,11 +8,8 @@ import MainOperator from '@/components/layout/main-operator';
 import { NextPage } from 'next/types';
 import { WarehouseView } from '@/types/warehouse';
 import { LoginUser } from '@/types/auth';
-import Link from 'next/link';
 import { displayTon, displayNumber } from '@/utils/formater';
-import { data } from 'autoprefixer';
-import { AiOutlineLoading } from 'react-icons/ai';
-import { ImArrowDown, ImArrowUp } from 'react-icons/im';
+import { ImArrowDown, ImArrowUp, ImSpinner2 } from 'react-icons/im';
 
 type Props = {
   loginUser: LoginUser
@@ -47,7 +44,7 @@ const Index: NextPage<Props> = ({ loginUser }) => {
         />
         {isLoadingWarehouse ? (
           <div className='h-40 w-full flex justify-center items-center'>
-            <AiOutlineLoading className={'absolute animate-spin '} size={'4rem'} />
+            <ImSpinner2 className={'absolute animate-spin text-blue-500'} size={'4rem'} />
           </div>
         ) : (
           <>{warehouse && (

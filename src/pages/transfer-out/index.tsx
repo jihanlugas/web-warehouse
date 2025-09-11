@@ -119,7 +119,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalD
                     >
                       <div className="flex">
                         <div>Set In Transit</div>
-                        {isPendingSetInTransit && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                        {isPendingSetInTransit && <ImSpinner2 className={'ml-4 animate-spin text-blue-500'} size={'1.2rem'} />}
                       </div>
                     </button>
                     <button
@@ -135,7 +135,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalD
                     >
                       <div className="flex">
                         <div>Delete</div>
-                        {isPendingDelete && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                        {isPendingDelete && <ImSpinner2 className={'ml-4 animate-spin text-blue-500'} size={'1.2rem'} />}
                       </div>
                     </button>
                   </>
@@ -147,7 +147,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalDelete, toggleModalD
                   >
                     <div className="flex">
                       <div>Surat Jalan</div>
-                      {isPendingDeliveryOrder && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      {isPendingDeliveryOrder && <ImSpinner2 className={'ml-4 animate-spin text-blue-500'} size={'1.2rem'} />}
                     </div>
                   </button>
                 )}
@@ -496,7 +496,11 @@ const Index: NextPage<Props> = () => {
             </div>
             <div>
               {isLoading ? (
-                <div>Loading</div>
+                <div className="flex justify-center items-center">
+                  <div className="py-20">
+                    <ImSpinner2 className={'animate-spin text-blue-500'} size={'5rem'} />
+                  </div>
+                </div>
               ) : (
                 <div>
                   {transferouts.length > 0 ? (

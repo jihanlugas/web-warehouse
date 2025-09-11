@@ -93,7 +93,7 @@ const Index: NextPage<Props> = () => {
           {isLoading ? (
             <div className="flex justify-center items-center">
               <div className="py-20">
-                <ImSpinner2 className={'animate-spin'} size={'5rem'} />
+                <ImSpinner2 className={'animate-spin text-blue-500'} size={'5rem'} />
               </div>
             </div>
           ) : (

@@ -2,18 +2,18 @@ import Breadcrumb from '@/components/component/breadcrumb';
 import ButtonSubmit from '@/components/formik/button-submit';
 import TextAreaField from '@/components/formik/text-area-field';
 import TextField from '@/components/formik/text-field';
-import MainAuth from '@/components/layout/main-auth';
 import { Api } from '@/lib/api';
 import { CreateCustomer } from '@/types/customer';
 import PageWithLayoutType from '@/types/layout';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Form, Formik, FormikHelpers, FormikValues } from 'formik';
+import { useMutation } from '@tanstack/react-query';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import notif from "@/utils/notif";
 import MainAdmin from '@/components/layout/main-admin';
+import { useRef } from 'react';
 
 
 type Props = object
@@ -33,38 +33,29 @@ const initFormikValue: CreateCustomer = {
 }
 
 const New: NextPage<Props> = () => {
+  const formikRef = useRef<FormikProps<CreateCustomer>>(null);
   const router = useRouter();
 
 
-  const { data: loginUser } = useQuery({
-    queryKey: ['init'],
-    queryFn: () => Api.get('/auth/init'),
-  })
-  
   const { mutate: mutateSubmit, isPending } = useMutation({
     mutationKey: ['customer', 'create'],
-    mutationFn: (val: FormikValues) => Api.post('/customer', val),
-  });
-
-  const handleSubmit = async (values: CreateCustomer, formikHelpers: FormikHelpers<CreateCustomer>) => {
-    mutateSubmit(values, {
-      onSuccess: ({ status, message, payload }) => {
-        if (status) {
-          notif.success(message);
-          // formikHelpers.resetForm();
-          router.push('/admin/customer')
-        } else if (payload?.listError) {
-          formikHelpers.setErrors(payload.listError);
-        } else {
-          notif.error(message);
-        }
-      },
-      onError: () => {
-        notif.error('Please cek you connection');
+    mutationFn: (val: CreateCustomer) => Api.post('/customer', val),
+    onSuccess: ({ status, message, payload }) => {
+      if (status) {
+        notif.success(message);
+        // formikHelpers.resetForm();
+        router.push('/admin/customer')
+      } else if (payload?.listError) {
+        formikRef.current?.setErrors(payload.listError);
+      } else {
+        notif.error(message);
       }
-    });
-  }
-
+    },
+    onError: () => {
+      notif.error('Please cek you connection');
+    }
+  });
+  
   return (
     <>
       <Head>
@@ -83,10 +74,11 @@ const New: NextPage<Props> = () => {
           </div>
           <div>
             <Formik
+              innerRef={formikRef}
               initialValues={initFormikValue}
               validationSchema={schema}
               enableReinitialize={true}
-              onSubmit={(values, formikHelpers) => handleSubmit(values, formikHelpers)}
+              onSubmit={(values) => mutateSubmit(values)}
             >
               {({ values, errors }) => {
                 return (

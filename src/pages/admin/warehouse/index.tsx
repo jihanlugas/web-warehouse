@@ -10,7 +10,7 @@ import { NextPage } from "next/types"
 import { useEffect, useState } from "react";
 import MainAdmin from "@/components/layout/main-admin";
 import { AiOutlineLoading } from "react-icons/ai";
-import { ImArrowDown, ImArrowUp } from "react-icons/im";
+import { ImArrowDown, ImArrowUp, ImSpinner2 } from "react-icons/im";
 
 type Props = object
 
@@ -47,8 +47,10 @@ const Index: NextPage<Props> = () => {
           ]}
         />
         {isLoading ? (
-          <div className='h-80 w-screen flex justify-center items-center'>
-            <AiOutlineLoading className={'absolute animate-spin '} size={'4rem'} />
+          <div className="flex justify-center items-center">
+            <div className="py-20">
+              <ImSpinner2 className={'animate-spin text-blue-500'} size={'5rem'} />
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">

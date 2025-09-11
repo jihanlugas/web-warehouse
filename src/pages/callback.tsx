@@ -65,7 +65,7 @@ const Callback: NextPage<Props> = () => {
         <meta name="theme-color" content={"#FAF5FF"} />
       </Head>
       <div className="h-dvh w-screen flex justify-center items-center">
-        <ImSpinner2 className="animate-spin" size={"5rem"} />
+        <ImSpinner2 className="animate-spin text-blue-500" size={"5rem"} />
       </div>
     </>
   );

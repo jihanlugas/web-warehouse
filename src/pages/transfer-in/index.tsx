@@ -116,7 +116,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetUnloading, toggle
                   >
                     <div className="flex">
                       <div>Set Unloading</div>
-                      {isPendingSetUnloading && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      {isPendingSetUnloading && <ImSpinner2 className={'ml-4 animate-spin text-blue-500'} size={'1.2rem'} />}
                     </div>
                   </button>
                 )}
@@ -127,7 +127,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetUnloading, toggle
                       onClick={() => toggleModalSetComplete(data.id)}
                       disabled={isPendingSetComplete}
                     >
-                      {isPendingSetComplete ? <ImSpinner2 className={'animate-spin'} size={'1.2rem'} /> : <div>Set Complete</div>}
+                      {isPendingSetComplete ? <ImSpinner2 className={'animate-spin text-blue-500'} size={'1.2rem'} /> : <div>Set Complete</div>}
                     </button>
                     <button
                       className={'block px-4 py-3 text-gray-600 text-sm capitalize duration-300 hover:bg-primary-100 hover:text-gray-700 w-full text-left'}
@@ -145,7 +145,7 @@ const RenderCard: NextPage<PropsCard> = ({ data, toggleModalSetUnloading, toggle
                   >
                     <div className="flex">
                       <div>Surat Terima</div>
-                      {isPendingDeliveryRecipt && <ImSpinner2 className={'ml-4 animate-spin'} size={'1.2rem'} />}
+                      {isPendingDeliveryRecipt && <ImSpinner2 className={'ml-4 animate-spin text-blue-500'} size={'1.2rem'} />}
                     </div>
                   </button>
                 )}
@@ -596,7 +596,11 @@ const Index: NextPage<Props> = () => {
           <div className='w-full rounded-sm'>
             <div>
               {isLoading ? (
-                <div>Loading</div>
+                <div className="flex justify-center items-center">
+                  <div className="py-20">
+                    <ImSpinner2 className={'animate-spin text-blue-500'} size={'5rem'} />
+                  </div>
+                </div>
               ) : (
                 <div>
                   {transferins.length > 0 ? (
